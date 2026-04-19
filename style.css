@@ -252,7 +252,43 @@ nav {
     flex-wrap: wrap; /* Faz os botões empilharem se não couberem */
 }
 
+/* --- Ajuste Responsivo do Botão CTA Final --- */
 @media (max-width: 600px) {
+    /* Ajusta a caixa que envolve o botão */
+    .cta-box {
+        padding: 40px 15px; /* Reduz o respiro lateral */
+    }
+
+    .cta-box h2 {
+        font-size: 1.8rem; /* Diminui o título para não empurrar o botão */
+        margin-bottom: 1rem;
+    }
+
+    .cta-box p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    .btn-solis-premium {
+    /* ... seus outros estilos ... */
+    text-align: center;
+    white-space: normal; /* Permite que o texto quebre em duas linhas se for muito grande */
+    line-height: 1.2;
+}
+
+    /* O ajuste principal do botão aqui */
+    .btn-solis-premium {
+        padding: 15px 20px; /* Reduzido de 22px 50px */
+        font-size: 1rem;    /* Reduzido de 1.25rem */
+        width: 100%;        /* Garante que ele use a largura disponível sem transbordar */
+        justify-content: center;
+        gap: 10px;
+        border-radius: 12px; /* Um pouco menos arredondado fica melhor em telas pequenas */
+    }
+
+    .btn-solis-premium i {
+        font-size: 1.2rem;
+    }
+}@media (max-width: 600px) {
     .hero-btns {
         flex-direction: column; /* Botões um em cima do outro no celular */
         align-items: stretch;
