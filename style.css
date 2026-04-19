@@ -625,3 +625,36 @@ nav {
     .pricing-card.featured { transform: scale(1); }
     .maintenance-section { padding: 30px 15px; }
 }
+/* Ajuste de Responsividade para Botões Premium e de Orçamento */
+.btn-solis-premium, .btn-modern, .btn-nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 30px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    max-width: 100%; /* Impede que o botão saia da tela */
+    box-sizing: border-box; /* Garante que o padding não aumente a largura final */
+}
+
+/* Regra específica para Celulares (telas menores que 768px) */
+@media (max-width: 768px) {
+    .btn-solis-premium {
+        width: 100%; /* O botão ocupa a largura total disponível no mobile */
+        font-size: 0.9rem; /* Diminui levemente a fonte para caber em telas pequenas */
+        padding: 15px 20px;
+        display: flex; /* Garante que o ícone e o texto fiquem alinhados */
+    }
+
+    .cta-box {
+        padding: 40px 20px; /* Garante que o container do botão também tenha respiro */
+    }
+    
+    .cta-box h2 {
+        font-size: 1.8rem; /* Ajusta o título para não empurrar o botão */
+    }
+}
