@@ -288,31 +288,40 @@ nav {
     .btn-solis-premium i {
         font-size: 1.2rem;
     }
-}@media (max-width: 600px) {
-    .hero-btns {
-        flex-direction: column; /* Botões um em cima do outro no celular */
-        align-items: stretch;
-    }
-    
-    .btn-modern {
-        justify-content: center; /* Centraliza texto e ícone no botão */
-        width: 100%;
+@media (max-width: 600px) {
+    /* Ajuste da caixa externa para ganhar espaço */
+    .cta-box {
+        padding: 30px 15px !important; 
     }
 
-    .hero h1 {
-        font-size: 2.2rem; /* Título levemente menor para não quebrar no celular */
+    .cta-box h2 {
+        font-size: 1.6rem !important;
+        line-height: 1.2;
     }
-    
-    .cta-box {
-        padding: 40px 20px;
+
+    .cta-box p {
+        font-size: 0.95rem !important;
+        margin-bottom: 1.5rem !important;
     }
-    
+
+    /* AJUSTE AGRESSIVO NO BOTÃO */
     .btn-solis-premium {
-        padding: 18px 25px;
-        font-size: 1rem;
-        width: 100%;
-        justify-content: center;
+        display: flex !important;
+        width: 100% !important;      /* Ocupa a largura da caixa */
+        max-width: 280px;            /* Limita a largura para não ficar esticado */
+        margin: 0 auto;              /* Centraliza */
+        padding: 12px 15px !important; /* Reduzi drasticamente a altura */
+        font-size: 0.9rem !important;  /* Diminuí o texto */
+        gap: 8px !important;
+        border-radius: 50px !important;
+        justify-content: center !important;
+        white-space: nowrap;         /* Impede o texto de quebrar em 2 linhas */
     }
+
+    .btn-solis-premium i {
+        font-size: 1.1rem !important;
+    }
+}
 }
 
 /* --- Depoimentos --- */
