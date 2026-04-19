@@ -1,108 +1,86 @@
-/**
- * Solis Web Design - Script de Interatividade Premium
- * Assistente: Gemini 2026
- * Cliente: Dr. Celso Sol
- */
+/* SOLIS WEB - JavaScript Professional Control 
+   Desenvolvido para: Dr. Celso Sol
+*/
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // --- 1. Seletores Principais ---
-    const header = document.querySelector('#header');
-    const mobileMenuBtn = document.querySelector('#mobile-menu');
-    const navLinksContainer = document.querySelector('#nav-links');
-    const navLinks = document.querySelectorAll('.nav-links a');
+    // --- 1. SELETORES ---
+    const header = document.querySelector('header');
+    const mobileMenuBtn = document.querySelector('#mobile-menu'); // Certifique-se de ter este ID no seu botão de menu
+    const navLinksContainer = document.querySelector('.nav-links');
     const revealElements = document.querySelectorAll('.reveal');
 
-    // --- 2. Controle do Header (Efeito de sombra ao rolar) ---
-    const updateHeader = () => {
-        if (!header) return;
-        // Adiciona uma sombra suave ao header quando o usuário rola a página
-        if (window.scrollY > 20) {
-            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.05)';
-            header.style.background = 'rgba(255, 255, 255, 0.95)';
+    // --- 2. EFEITO DE SCROLL NO HEADER ---
+    // Adiciona uma sombra ao menu superior quando você desce a página
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.style.background = 'rgba(255, 255, 255, 0.98)';
+            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
         } else {
-            header.style.boxShadow = 'none';
             header.style.background = 'rgba(255, 255, 255, 0.85)';
+            header.style.boxShadow = 'none';
         }
-    };
+    });
 
-    window.addEventListener('scroll', updateHeader, { passive: true });
-
-    // --- 3. Menu Mobile (Abre e fecha) ---
-    if (mobileMenuBtn && navLinksContainer) {
-        const toggleMenu = () => {
+    // --- 3. MENU MOBILE (ABRIR / FECHAR) ---
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
             navLinksContainer.classList.toggle('active');
             
-            // Alterna o ícone entre Barras e "X"
+            // Troca o ícone se estiver usando FontAwesome
             const icon = mobileMenuBtn.querySelector('i');
-            if (navLinksContainer.classList.contains('active')) {
-                icon.classList.replace('fa-bars', 'fa-times');
-                navLinksContainer.style.display = 'flex';
-                navLinksContainer.style.flexDirection = 'column';
-                navLinksContainer.style.position = 'absolute';
-                navLinksContainer.style.top = '100%';
-                navLinksContainer.style.left = '0';
-                navLinksContainer.style.width = '100%';
-                navLinksContainer.style.background = '#ffffff';
-                navLinksContainer.style.padding = '2rem';
-                navLinksContainer.style.borderBottom = '1px solid #e2e8f0';
-            } else {
-                icon.classList.replace('fa-times', 'fa-bars');
-                navLinksContainer.style.display = ''; // Volta ao padrão do CSS
+            if (icon) {
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
             }
-        };
-
-        mobileMenuBtn.addEventListener('click', toggleMenu);
-
-        // Fecha o menu automaticamente ao clicar em qualquer link
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (navLinksContainer.classList.contains('active')) toggleMenu();
-            });
         });
     }
 
-    // --- 4. Scroll Reveal (Animação de surgimento dos itens) ---
-    // Faz os elementos aparecerem com um efeito de "subida" ao rolar a página
-    const revealOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+    // Fecha o menu mobile ao clicar em qualquer link (melhora a experiência)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinksContainer.classList.contains('active')) {
+                navLinksContainer.classList.remove('active');
+            }
+        });
+    });
+
+    // --- 4. SCROLL REVEAL (ANIMAÇÃO DE ENTRADA) ---
+    // Faz os elementos aparecerem suavemente ao subir a página
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
     };
 
-    const revealOnScroll = new IntersectionObserver((entries, observer) => {
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                observer.unobserve(entry.target); // Anima apenas uma vez
             }
         });
-    }, revealOptions);
+    }, observerOptions);
 
-    revealElements.forEach(el => revealOnScroll.observe(el));
+    revealElements.forEach(el => revealObserver.observe(el));
 
-    // --- 5. Smooth Scroll (Navegação Suave) ---
-    // Faz a página deslizar suavemente até a seção desejada
+    // --- 5. NAVEGAÇÃO SUAVE (SMOOTH SCROLL) ---
+    // Faz o "pulo" para as seções ser um deslize elegante
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            if (targetId === '#') return; 
+            if (targetId === '#') return;
 
-            const target = document.querySelector(targetId);
-            if (target) {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
                 e.preventDefault();
-                const headerHeight = header ? header.offsetHeight : 70;
-                const elementPosition = target.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+                const headerHeight = header.offsetHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
                 window.scrollTo({
-                    top: offsetPosition,
+                    top: targetPosition,
                     behavior: 'smooth'
                 });
             }
         });
     });
-
-    // Inicializa o estado do header
-    updateHeader();
 });

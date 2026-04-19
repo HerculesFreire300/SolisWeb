@@ -1,6 +1,5 @@
-/* SOLIS WEB DESIGN - GLOBAL STYLESHEET 
+/* SOLIS WEB DESIGN - GLOBAL STYLESHEET (ULTRA MODERN LIGHT VERSION)
    Branding: Dr. Celso Sol
-   Versão: Ultra Responsiva 2026
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap');
@@ -9,20 +8,22 @@
     /* Cores Principais */
     --primary: #2563eb;
     --primary-dim: #1d4ed8;
+    --primary-glow: rgba(37, 99, 235, 0.2);
     --secondary: #00d2ff;
     --accent: #22c55e;
     
     /* Neutros (Tema Claro) */
     --bg-white: #ffffff;
     --bg-soft: #f8fafc;
-    --text-main: #0f172a;
-    --text-body: #475569;
+    --text-main: #0f172a;    /* Azul Marinho Profundo */
+    --text-body: #475569;    /* Cinza Chumbo */
+    --text-muted: #94a3b8;
     --border: #e2e8f0;
     
     /* Layout & Animações */
     --radius-lg: 24px;
     --radius-md: 16px;
-    --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     --container-width: 1200px;
 }
 
@@ -43,13 +44,13 @@ body {
     background-color: var(--bg-white);
     color: var(--text-body);
     line-height: 1.6;
-    overflow-x: hidden; /* Evita scroll horizontal */
+    overflow-x: hidden;
 }
 
 .container {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
 }
 
 /* --- Header & Nav --- */
@@ -57,12 +58,13 @@ header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 1rem 0;
+    padding: 1.2rem 0;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
     border-bottom: 1px solid var(--border);
+    transition: var(--transition);
 }
 
 nav {
@@ -72,8 +74,9 @@ nav {
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 800;
+    letter-spacing: -1px;
     color: var(--text-main);
 }
 
@@ -82,7 +85,7 @@ nav {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 2.5rem;
     align-items: center;
 }
 
@@ -98,8 +101,9 @@ nav {
 .btn-nav-cta {
     background: var(--primary);
     color: white !important;
-    padding: 0.6rem 1.2rem;
+    padding: 0.6rem 1.5rem;
     border-radius: 50px;
+    text-decoration: none;
 }
 
 /* --- Hero Section --- */
@@ -108,13 +112,14 @@ nav {
     display: flex;
     align-items: center;
     background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
-    padding: 120px 0 60px;
+    padding-top: 80px;
 }
 
 .hero h1 {
-    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
     color: var(--text-main);
     margin-bottom: 1.5rem;
 }
@@ -126,94 +131,116 @@ nav {
 }
 
 .hero p {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    margin-bottom: 2.5rem;
-    max-width: 650px;
+    font-size: 1.25rem;
+    color: var(--text-body);
+    font-weight: 500;
+    margin-bottom: 3rem;
+    max-width: 600px;
 }
 
-.hero-btns {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap; /* Importante para responsividade */
-}
+.hero-btns { display: flex; gap: 1.2rem; }
 
-/* --- Botões Modernos --- */
+/* Estilo Base do Botão Moderno */
 .btn-modern {
-    padding: 16px 30px;
+    padding: 18px 35px;
     border-radius: var(--radius-md);
     font-weight: 700;
+    font-size: 1.05rem;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 10px;
     transition: var(--transition);
+    border: none;
     cursor: pointer;
+}
+
+/* Botão Secundário (Falar com Especialista) */
+.btn-secondary-modern {
+    background: #ffffff;
+    color: var(--text-main);
+    border: 2px solid var(--border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.btn-secondary-modern:hover {
+    background: #f8fafc;
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Ajuste do ícone dentro do botão */
+.btn-secondary-modern i {
+    color: #22c55e; /* Cor verde do WhatsApp no ícone */
+    font-size: 1.2rem;
 }
 
 .btn-primary-modern {
     background: var(--text-main);
     color: white;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
 }
 
-.btn-secondary-modern {
-    background: white;
-    color: var(--text-main);
-    border: 2px solid var(--border);
-}
-
-.btn-primary-modern:hover, .btn-secondary-modern:hover {
+.btn-primary-modern:hover {
+    background: var(--primary);
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 /* --- Serviços --- */
 .services {
-    padding: 6rem 0;
+    padding: 8rem 0;
     background: var(--bg-soft);
 }
 
 .section-title {
     text-align: center;
-    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 3.5rem;
+    margin-bottom: 4rem;
     color: var(--text-main);
 }
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 }
 
 .service-card {
-    background: white;
-    padding: 2.5rem;
+    background: var(--bg-white);
+    padding: 3rem;
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     transition: var(--transition);
 }
 
-.service-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+.service-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+}
 
-/* --- Portfólio (Responsividade da Imagem) --- */
+/* --- Portfólio (Estático e Transparente) --- */
 .portfolio {
-    padding: 6rem 0;
+    padding: 8rem 0;
+    background: transparent;
 }
 
 .image-container {
-    width: 100%;
     display: flex;
     justify-content: center;
-    padding: 0 10px;
+    align-items: center;
+    padding: 2rem 0;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.08));
 }
 
 .interactive-img {
-    max-width: 100%; /* Nunca passa da tela */
-    height: auto;    /* Mantém proporção */
-    width: 850px;    /* Tamanho ideal em desktop */
-    border-radius: 12px;
-    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+    max-width: 100%;
+    width: 700px;
+    height: auto;
+    background: transparent;
+    transition: none; /* Removido movimento */
 }
 
 /* --- Depoimentos --- */
@@ -224,61 +251,225 @@ nav {
 
 .testimonial-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
 }
 
 .testimonial-card {
-    background: white;
-    padding: 2rem;
-    border-radius: var(--radius-md);
+    background: #ffffff;
+    padding: 1.8rem;
+    border-radius: 18px;
     border: 1px solid var(--border);
+    transition: var(--transition);
 }
 
-/* --- Final CTA --- */
-.final-cta { padding: 80px 0; }
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+}
+
+.stars { color: #facc15; margin-bottom: 0.8rem; }
+
+/* --- CTA Final (Cor Escura e Botão Branco/Azul) --- */
+.final-cta {
+    padding: 100px 0;
+    background: transparent;
+}
 
 .cta-box {
-    background: #0f172a;
-    padding: 60px 30px;
+    background-color: #0f172a; /* Azul Escuro Sólido */
+    padding: 80px 40px;
     border-radius: 30px;
     text-align: center;
     color: white;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cta-box h2 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+
+.cta-box p {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    margin-bottom: 3.5rem;
+    max-width: 600px;
+    margin: 0 auto 3.5rem auto;
 }
 
 .btn-solis-premium {
     display: inline-flex;
-    padding: 20px 40px;
-    background: var(--primary);
-    color: white !important;
+    align-items: center;
+    gap: 15px;
+    padding: 22px 50px;
+    background: #2563eb; /* Azul Royal */
+    color: #ffffff !important; /* Letra Branca */
     text-decoration: none;
+    font-size: 1.25rem;
     font-weight: 800;
     border-radius: 100px;
     transition: var(--transition);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
 }
 
-/* --- Footer --- */
+.btn-solis-premium:hover {
+    transform: scale(1.05) translateY(-5px);
+    background: #3b82f6;
+}
+
+/* --- Footer Ultra Moderno --- */
 .modern-footer {
-    background: #0f172a;
-    color: white;
-    padding: 60px 0 30px;
+    background-color: #0f172a; /* Azul Marinho Profundo */
+    color: #ffffff;
+    padding: 80px 0 30px;
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 3rem;
-    margin-bottom: 40px;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 4rem;
+    margin-bottom: 50px;
 }
 
-.footer-nav ul { list-style: none; }
-.footer-nav a { color: #94a3b8; text-decoration: none; }
+.footer-brand .logo {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
 
+.footer-brand p {
+    color: #94a3b8;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.footer-nav h4, .footer-contact h4 {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.8rem;
+    position: relative;
+}
+
+/* Linha decorativa embaixo dos títulos */
+.footer-nav h4::after, .footer-contact h4::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background: var(--primary);
+    margin-top: 8px;
+}
+
+.footer-nav ul {
+    list-style: none;
+}
+
+.footer-nav li {
+    margin-bottom: 12px;
+}
+
+.footer-nav a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.footer-nav a:hover {
+    color: var(--primary);
+    padding-left: 8px;
+}
+
+.footer-contact ul {
+    list-style: none;
+}
+
+.footer-contact li {
+    color: #94a3b8;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+}
+
+.footer-contact i {
+    color: var(--primary);
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.social-icons a {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: all 0.4s ease;
+}
+
+.social-icons a:hover {
+    background: var(--primary);
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 30px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* Responsividade do Rodapé */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+    }
+    .footer-nav h4::after, .footer-contact h4::after {
+        margin: 8px auto 0;
+    }
+    .social-icons {
+        justify-content: center;
+    }
+    .footer-contact li {
+        justify-content: center;
+    }
+}
 /* --- Floating WhatsApp --- */
 .whatsapp-float {
     position: fixed;
-    bottom: 25px;
-    right: 25px;
+    bottom: 30px;
+    right: 30px;
     background: var(--accent);
     color: white;
     width: 60px;
@@ -288,89 +479,19 @@ nav {
     align-items: center;
     justify-content: center;
     font-size: 2rem;
+    box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
     z-index: 1000;
 }
 
-/* --- MEDIA QUERIES (Ajustes para Celular) --- */
+/* --- Responsividade --- */
+@media (max-width: 992px) {
+    .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr; text-align: center; }
+}
 
 @media (max-width: 768px) {
-    .nav-links { display: none; } /* Esconde menu padrão */
-    
-    .hero { padding-top: 100px; text-align: center; }
-    .hero p { margin: 0 auto 2.5rem; }
-    
-    .hero-btns {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-modern {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .cta-box h2 { font-size: 1.8rem; }
-}
-
-@media (max-width: 480px) {
-    .section-title { font-size: 1.8rem; }
-    .container { padding: 0 1rem; }
-}
-
-/* Classes para animação do Script.js */
-.reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out;
-}
-
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.delay-1 { transition-delay: 0.2s; }
-.delay-2 { transition-delay: 0.4s; }
-/* Garante que o contêiner dos botões permita quebra de linha */
-.hero-btns {
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap; /* Permite que os botões pulem de linha se não couberem */
-    justify-content: flex-start;
-}
-
-/* Estilo base do botão de orçamento (Premium) */
-.btn-solis-premium {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 18px 35px;
-    background-color: var(--primary); /* Sua cor principal */
-    color: #ffffff !important;
-    font-weight: 700;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: var(--transition);
-    border: none;
-    cursor: pointer;
-    white-space: nowrap; /* Evita que o texto do botão quebre em duas linhas */
-}
-
-/* --- REGRAS DE RESPONSIVIDADE (Mobile) --- */
-@media (max-width: 768px) {
-    .hero-btns {
-        flex-direction: column; /* Empilha um botão sobre o outro */
-        align-items: stretch;    /* Faz os botões ocuparem a mesma largura */
-        width: 100%;
-        gap: 1rem;
-    }
-
-    .btn-solis-premium, 
-    .btn-modern {
-        width: 100%;            /* Botão ocupa a largura total da tela do celular */
-        padding: 16px 20px;
-        font-size: 1.1rem;      /* Ajusta o tamanho da fonte para melhor leitura */
-        text-align: center;
-        white-space: normal;    /* Se o texto for muito longo, ele quebra dentro do botão */
-    }
+    .nav-links { display: none; }
+    .hero h1 { font-size: 2.8rem; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .interactive-img { width: 95%; }
 }
