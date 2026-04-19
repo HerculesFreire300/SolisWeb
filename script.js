@@ -1,45 +1,61 @@
 /**
  * Solis Web Design - Script de Interatividade Premium
- * Branding: Dr. Celso Sol
+ * Assistente: Gemini 2026
+ * Cliente: Dr. Celso Sol
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
-    // --- Seletores de Elementos ---
-    const header = document.querySelector('header') || document.querySelector('#header');
+    // --- 1. Seletores Principais ---
+    const header = document.querySelector('#header');
     const mobileMenuBtn = document.querySelector('#mobile-menu');
-    const navLinksContainer = document.querySelector('.nav-links') || document.querySelector('#nav-links');
+    const navLinksContainer = document.querySelector('#nav-links');
     const navLinks = document.querySelectorAll('.nav-links a');
     const revealElements = document.querySelectorAll('.reveal');
 
-    // --- 1. Controle do Header (Efeito ao rolar) ---
+    // --- 2. Controle do Header (Efeito de sombra ao rolar) ---
     const updateHeader = () => {
         if (!header) return;
-        window.scrollY > 50 
-            ? header.classList.add('scrolled') 
-            : header.classList.remove('scrolled');
+        // Adiciona uma sombra suave ao header quando o usuário rola a página
+        if (window.scrollY > 20) {
+            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.05)';
+            header.style.background = 'rgba(255, 255, 255, 0.95)';
+        } else {
+            header.style.boxShadow = 'none';
+            header.style.background = 'rgba(255, 255, 255, 0.85)';
+        }
     };
 
     window.addEventListener('scroll', updateHeader, { passive: true });
 
-    // --- 2. Menu Mobile ---
+    // --- 3. Menu Mobile (Abre e fecha) ---
     if (mobileMenuBtn && navLinksContainer) {
         const toggleMenu = () => {
             navLinksContainer.classList.toggle('active');
-            const icon = mobileMenuBtn.querySelector('i');
             
+            // Alterna o ícone entre Barras e "X"
+            const icon = mobileMenuBtn.querySelector('i');
             if (navLinksContainer.classList.contains('active')) {
-                if (icon) icon.classList.replace('fa-bars', 'fa-times');
-                document.body.style.overflow = 'hidden'; 
+                icon.classList.replace('fa-bars', 'fa-times');
+                navLinksContainer.style.display = 'flex';
+                navLinksContainer.style.flexDirection = 'column';
+                navLinksContainer.style.position = 'absolute';
+                navLinksContainer.style.top = '100%';
+                navLinksContainer.style.left = '0';
+                navLinksContainer.style.width = '100%';
+                navLinksContainer.style.background = '#ffffff';
+                navLinksContainer.style.padding = '2rem';
+                navLinksContainer.style.borderBottom = '1px solid #e2e8f0';
             } else {
-                if (icon) icon.classList.replace('fa-times', 'fa-bars');
-                document.body.style.overflow = 'auto';
+                icon.classList.replace('fa-times', 'fa-bars');
+                navLinksContainer.style.display = ''; // Volta ao padrão do CSS
             }
         };
 
         mobileMenuBtn.addEventListener('click', toggleMenu);
 
+        // Fecha o menu automaticamente ao clicar em qualquer link
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 if (navLinksContainer.classList.contains('active')) toggleMenu();
@@ -47,9 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 3. Scroll Reveal (Intersection Observer) ---
+    // --- 4. Scroll Reveal (Animação de surgimento dos itens) ---
+    // Faz os elementos aparecerem com um efeito de "subida" ao rolar a página
     const revealOptions = {
-        threshold: 0.15,
+        threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
 
@@ -57,14 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                observer.unobserve(entry.target);
+                observer.unobserve(entry.target); // Anima apenas uma vez
             }
         });
     }, revealOptions);
 
     revealElements.forEach(el => revealOnScroll.observe(el));
 
-    // --- 4. Smooth Scroll (Navegação Suave Corrigida) ---
+    // --- 5. Smooth Scroll (Navegação Suave) ---
+    // Faz a página deslizar suavemente até a seção desejada
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
@@ -73,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = document.querySelector(targetId);
             if (target) {
                 e.preventDefault();
-                const headerHeight = header ? header.offsetHeight : 80;
+                const headerHeight = header ? header.offsetHeight : 70;
                 const elementPosition = target.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 
@@ -85,9 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 5. Efeito de Perspectiva 3D na Imagem (REMOVIDO) ---
-    // O código que adicionava movimento à imagem (.interactive-img) 
-    // baseada no mouse foi removido para que ela permaneça estática.
-
+    // Inicializa o estado do header
     updateHeader();
 });
