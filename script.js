@@ -1,5 +1,5 @@
 /* SOLIS WEB - JavaScript Professional Control 
-   Desenvolvido para: Dr. Celso Sol
+   Desenvolvido para: Solis Web
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,28 +7,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. SELETORES ---
     const header = document.querySelector('header');
-    const mobileMenuBtn = document.querySelector('#mobile-menu'); // Certifique-se de ter este ID no seu botão de menu
+    const mobileMenuBtn = document.querySelector('#mobile-menu');
     const navLinksContainer = document.querySelector('.nav-links');
     const revealElements = document.querySelectorAll('.reveal');
 
     // --- 2. EFEITO DE SCROLL NO HEADER ---
-    // Adiciona uma sombra ao menu superior quando você desce a página
-    window.addEventListener('scroll', () => {
+    // Melhora a visibilidade do menu ao rolar a página
+    const handleScroll = () => {
         if (window.scrollY > 50) {
             header.style.background = 'rgba(255, 255, 255, 0.98)';
-            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
+            header.style.padding = '0.8rem 0'; // Reduz levemente a altura ao rolar
         } else {
             header.style.background = 'rgba(255, 255, 255, 0.85)';
             header.style.boxShadow = 'none';
+            header.style.padding = '1.2rem 0';
         }
-    });
+    };
+
+    window.addEventListener('scroll', handleScroll);
 
     // --- 3. MENU MOBILE (ABRIR / FECHAR) ---
-    if (mobileMenuBtn) {
+    if (mobileMenuBtn && navLinksContainer) {
         mobileMenuBtn.addEventListener('click', () => {
             navLinksContainer.classList.toggle('active');
             
-            // Troca o ícone se estiver usando FontAwesome
+            // Troca o ícone (Bars/Times)
             const icon = mobileMenuBtn.querySelector('i');
             if (icon) {
                 icon.classList.toggle('fa-bars');
@@ -37,17 +41,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fecha o menu mobile ao clicar em qualquer link (melhora a experiência)
+    // Fecha o menu mobile ao clicar em um link
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => {
             if (navLinksContainer.classList.contains('active')) {
                 navLinksContainer.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.add('fa-bars');
+                    icon.classList.remove('fa-times');
+                }
             }
         });
     });
 
-    // --- 4. SCROLL REVEAL (ANIMAÇÃO DE ENTRADA) ---
-    // Faz os elementos aparecerem suavemente ao subir a página
+    // --- 4. INTERSECTION OBSERVER (REVEAL ON SCROLL) ---
     const observerOptions = {
         threshold: 0.15,
         rootMargin: "0px 0px -50px 0px"
@@ -57,14 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
+                // Opcional: para a animação rodar apenas uma vez
+                revealObserver.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // --- 5. NAVEGAÇÃO SUAVE (SMOOTH SCROLL) ---
-    // Faz o "pulo" para as seções ser um deslize elegante
+    // --- 5. SMOOTH SCROLL (NAVEGAÇÃO INTELIGENTE) ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
@@ -73,8 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
+                
+                // Cálculo compensando a altura do header fixo
                 const headerHeight = header.offsetHeight;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
 
                 window.scrollTo({
                     top: targetPosition,
