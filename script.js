@@ -1,5 +1,5 @@
 /* SOLIS WEB - JavaScript Professional Control 
-   Versão Otimizada: Dr. Celso Sol | 2026
+   Desenvolvido para: Solis Web
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,113 +7,85 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. SELETORES ---
     const header = document.querySelector('header');
-    const mobileMenuBtn = document.querySelector('#mobile-menu'); // Certifique-se que o ID no HTML seja este
+    const mobileMenuBtn = document.querySelector('#mobile-menu');
     const navLinksContainer = document.querySelector('.nav-links');
     const revealElements = document.querySelectorAll('.reveal');
 
-    // --- 2. EFEITO DE SCROLL NO HEADER (Com Performance) ---
-    let isScrolling = false;
-
+    // --- 2. EFEITO DE SCROLL NO HEADER ---
+    // Melhora a visibilidade do menu ao rolar a página
     const handleScroll = () => {
-        if (!header) return;
-
         if (window.scrollY > 50) {
-            header.classList.add('header-scrolled'); // Recomendado usar classes CSS em vez de style direto
             header.style.background = 'rgba(255, 255, 255, 0.98)';
             header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
-            header.style.padding = '0.8rem 0';
+            header.style.padding = '0.8rem 0'; // Reduz levemente a altura ao rolar
         } else {
-            header.classList.remove('header-scrolled');
             header.style.background = 'rgba(255, 255, 255, 0.85)';
             header.style.boxShadow = 'none';
             header.style.padding = '1.2rem 0';
         }
-        isScrolling = false;
     };
 
-    window.addEventListener('scroll', () => {
-        if (!isScrolling) {
-            window.requestAnimationFrame(handleScroll);
-            isScrolling = true;
-        }
-    });
+    window.addEventListener('scroll', handleScroll);
 
-    // --- 3. MENU MOBILE (Lógica Consolidada) ---
-    const toggleMenu = (forceClose = false) => {
-        if (!navLinksContainer || !mobileMenuBtn) return;
-
-        const icon = mobileMenuBtn.querySelector('i');
-        const isActive = navLinksContainer.classList.contains('active');
-
-        if (forceClose || isActive) {
-            navLinksContainer.classList.remove('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    // --- 3. MENU MOBILE (ABRIR / FECHAR) ---
+    if (mobileMenuBtn && navLinksContainer) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+            
+            // Troca o ícone (Bars/Times)
+            const icon = mobileMenuBtn.querySelector('i');
             if (icon) {
-                icon.classList.add('fa-bars');
-                icon.classList.remove('fa-times');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
             }
-        } else {
-            navLinksContainer.classList.add('active');
-            mobileMenuBtn.setAttribute('aria-expanded', 'true');
-            if (icon) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            }
-        }
-    };
-
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMenu();
         });
     }
 
-    // Fecha ao clicar em links
+    // Fecha o menu mobile ao clicar em um link
     document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => toggleMenu(true));
-    });
-
-    // Fecha ao clicar fora do menu
-    document.addEventListener('click', (e) => {
-        if (navLinksContainer?.classList.contains('active') && 
-            !navLinksContainer.contains(e.target) && 
-            !mobileMenuBtn.contains(e.target)) {
-            toggleMenu(true);
-        }
-    });
-
-    // --- 4. INTERSECTION OBSERVER (Reveal on Scroll) ---
-    if (revealElements.length > 0) {
-        const observerOptions = {
-            threshold: 0.15,
-            rootMargin: "0px 0px -50px 0px"
-        };
-
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    revealObserver.unobserve(entry.target);
+        link.addEventListener('click', () => {
+            if (navLinksContainer.classList.contains('active')) {
+                navLinksContainer.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.add('fa-bars');
+                    icon.classList.remove('fa-times');
                 }
-            });
-        }, observerOptions);
+            }
+        });
+    });
 
-        revealElements.forEach(el => revealObserver.observe(el));
-    }
+    // --- 4. INTERSECTION OBSERVER (REVEAL ON SCROLL) ---
+    const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+    };
 
-    // --- 5. SMOOTH SCROLL (Navegação com Compensação de Header) ---
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                // Opcional: para a animação rodar apenas uma vez
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // --- 5. SMOOTH SCROLL (NAVEGAÇÃO INTELIGENTE) ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            if (targetId === '#' || !targetId.startsWith('#')) return;
+            if (targetId === '#') return;
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
                 
-                const headerHeight = header ? header.offsetHeight : 0;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                // Cálculo compensando a altura do header fixo
+                const headerHeight = header.offsetHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
 
                 window.scrollTo({
                     top: targetPosition,
