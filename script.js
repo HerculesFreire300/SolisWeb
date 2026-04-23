@@ -1,94 +1,63 @@
-/* SOLIS WEB - JavaScript Professional Control 
-   Desenvolvido para: Solis Web
-*/
+// SOLISWEB - Interatividade e Dinamismo
 
 document.addEventListener('DOMContentLoaded', () => {
-    'use strict';
+    const navbar = document.querySelector('.navbar');
+    const cards = document.querySelectorAll('.service-card, .price-card, .evolution-bubble, .testimonial-bubble');
 
-    // --- 1. SELETORES ---
-    const header = document.querySelector('header');
-    const mobileMenuBtn = document.querySelector('#mobile-menu');
-    const navLinksContainer = document.querySelector('.nav-links');
-    const revealElements = document.querySelectorAll('.reveal');
-
-    // --- 2. EFEITO DE SCROLL NO HEADER ---
-    // Melhora a visibilidade do menu ao rolar a página
-    const handleScroll = () => {
+    // 1. Efeito de Scroll na Navbar (Transparência Dinâmica)
+    window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            header.style.background = 'rgba(255, 255, 255, 0.98)';
-            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
-            header.style.padding = '0.8rem 0'; // Reduz levemente a altura ao rolar
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.padding = '10px 0';
+            navbar.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
         } else {
-            header.style.background = 'rgba(255, 255, 255, 0.85)';
-            header.style.boxShadow = 'none';
-            header.style.padding = '1.2rem 0';
+            navbar.style.background = 'rgba(255, 255, 255, 0.7)';
+            navbar.style.padding = '15px 0';
+            navbar.style.boxShadow = 'none';
         }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    // --- 3. MENU MOBILE (ABRIR / FECHAR) ---
-    if (mobileMenuBtn && navLinksContainer) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinksContainer.classList.toggle('active');
-            
-            // Troca o ícone (Bars/Times)
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            }
-        });
-    }
-
-    // Fecha o menu mobile ao clicar em um link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (navLinksContainer.classList.contains('active')) {
-                navLinksContainer.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                if (icon) {
-                    icon.classList.add('fa-bars');
-                    icon.classList.remove('fa-times');
-                }
-            }
-        });
     });
 
-    // --- 4. INTERSECTION OBSERVER (REVEAL ON SCROLL) ---
+    // 2. Animação de Revelação (Scroll Reveal Lite)
+    // Faz com que os elementos apareçam suavemente conforme você desce a página
     const observerOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
+        threshold: 0.1
     };
 
-    const revealObserver = new IntersectionObserver((entries) => {
+    const revealOnScroll = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                // Opcional: para a animação rodar apenas uma vez
-                revealObserver.unobserve(entry.target);
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
         });
     }, observerOptions);
 
-    revealElements.forEach(el => revealObserver.observe(el));
+    cards.forEach(card => {
+        // Estado inicial para animação
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease-out';
+        revealOnScroll.observe(card);
+    });
 
-    // --- 5. SMOOTH SCROLL (NAVEGAÇÃO INTELIGENTE) ---
+    // 3. Efeito de Clique nos Botões (Feedback Visual)
+    const buttons = document.querySelectorAll('a[href^="https://wa.me"]');
+    buttons.forEach(btn => {
+        btn.addEventListener('mousedown', () => {
+            btn.style.transform = 'scale(0.95)';
+        });
+        btn.addEventListener('mouseup', () => {
+            btn.style.transform = 'scale(1.05)';
+        });
+    });
+
+    // 4. Smooth Scroll para links internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                
-                // Cálculo compensando a altura do header fixo
-                const headerHeight = header.offsetHeight;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
-
-                window.scrollTo({
-                    top: targetPosition,
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
                     behavior: 'smooth'
                 });
             }
