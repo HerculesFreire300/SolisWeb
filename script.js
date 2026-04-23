@@ -1,97 +1,107 @@
-/* SOLIS WEB - JavaScript Professional Control 
-   Desenvolvido para: Solis Web
-*/
-
 document.addEventListener('DOMContentLoaded', () => {
-    'use strict';
-
-    // --- 1. SELETORES ---
-    const header = document.querySelector('header');
-    const mobileMenuBtn = document.querySelector('#mobile-menu');
-    const navLinksContainer = document.querySelector('.nav-links');
-    const revealElements = document.querySelectorAll('.reveal');
-
-    // --- 2. EFEITO DE SCROLL NO HEADER ---
-    // Melhora a visibilidade do menu ao rolar a página
-    const handleScroll = () => {
+    
+    // 1. EFEITO DE SCROLL NO HEADER
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            header.style.background = 'rgba(255, 255, 255, 0.98)';
-            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
-            header.style.padding = '0.8rem 0'; // Reduz levemente a altura ao rolar
+            header.classList.add('scrolled');
         } else {
-            header.style.background = 'rgba(255, 255, 255, 0.85)';
-            header.style.boxShadow = 'none';
-            header.style.padding = '1.2rem 0';
+            header.classList.remove('scrolled');
         }
-    };
+    });
 
-    window.addEventListener('scroll', handleScroll);
-
-    // --- 3. MENU MOBILE (ABRIR / FECHAR) ---
-    if (mobileMenuBtn && navLinksContainer) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinksContainer.classList.toggle('active');
+    // 2. ANIMAÇÃO DE REVELAÇÃO (REVEAL ON SCROLL)
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const revealOnScroll = () => {
+        revealElements.forEach(el => {
+            const elementTop = el.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
             
-            // Troca o ícone (Bars/Times)
-            const icon = mobileMenuBtn.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
+            if (elementTop < windowHeight - 100) {
+                el.classList.add('active');
             }
         });
-    }
+    };
 
-    // Fecha o menu mobile ao clicar em um link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            if (navLinksContainer.classList.contains('active')) {
-                navLinksContainer.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                if (icon) {
-                    icon.classList.add('fa-bars');
-                    icon.classList.remove('fa-times');
-                }
-            }
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Gatilho inicial para o que já está na tela
+
+    // 3. MENU MOBILE DINÂMICO
+    const mobileMenuIcon = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+
+    mobileMenuIcon.addEventListener('click', () => {
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        
+        // Estilo rápido para o menu mobile se aberto
+        if(navLinks.style.display === 'flex') {
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '80px';
+            navLinks.style.left = '0';
+            navLinks.style.width = '100%';
+            navLinks.style.background = 'white';
+            navLinks.style.padding = '20px';
+            navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+        }
+    });
+
+    // 4. INTERATIVIDADE NOS BOTÕES (Efeito de clique)
+    const buttons = document.querySelectorAll('.btn-modern, .btn-card, .btn-solis-premium');
+    
+    buttons.forEach(btn => {
+        btn.addEventListener('mousedown', () => {
+            btn.style.transform = 'scale(0.95)';
+        });
+        btn.addEventListener('mouseup', () => {
+            btn.style.transform = 'scale(1.05)';
         });
     });
 
-    // --- 4. INTERSECTION OBSERVER (REVEAL ON SCROLL) ---
-    const observerOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                // Opcional: para a animação rodar apenas uma vez
-                revealObserver.unobserve(entry.target);
-            }
+    // 5. PARALLAX SUAVE NA IMAGEM DO PORTFÓLIO
+    const portfolioImg = document.querySelector('.interactive-img');
+    if(portfolioImg) {
+        window.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            portfolioImg.style.transform = `translate(${moveX}px, ${moveY}px) rotateX(${moveY}deg) rotateY(${moveX}deg)`;
         });
-    }, observerOptions);
+    }
+});
+// Adicione este código dentro do seu document.addEventListener('DOMContentLoaded', ... )
 
-    revealElements.forEach(el => revealObserver.observe(el));
+// INTERATIVIDADE NOS BALÕES DE DEPOIMENTOS
+const balloons = document.querySelectorAll('.testimonial-card p');
 
-    // --- 5. SMOOTH SCROLL (NAVEGAÇÃO INTELIGENTE) ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
+balloons.forEach(balloon => {
+    balloon.addEventListener('mousemove', (e) => {
+        const { offsetWidth: width, offsetHeight: height } = balloon;
+        const { offsetX: x, offsetY: y } = e;
+        
+        // Calcula a inclinação baseada na posição do mouse dentro do balão
+        const moveX = (x / width - 0.5) * 10;
+        const moveY = (y / height - 0.5) * 10;
+        
+        balloon.style.transform = `translateY(-10px) rotateX(${-moveY}deg) rotateY(${moveX}deg)`;
+    });
 
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                
-                // Cálculo compensando a altura do header fixo
-                const headerHeight = header.offsetHeight;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
+    balloon.addEventListener('mouseleave', () => {
+        balloon.style.transform = `translateY(0px) rotateX(0deg) rotateY(0deg)`;
+    });
+});
 
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
+// EFEITO DE HOVER DINÂMICO NOS CARDS DE MANUTENÇÃO (Evolução Contínua)
+const mCards = document.querySelectorAll('.m-card');
+mCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        if(!card.classList.contains('vip')) {
+            card.style.borderColor = '#0077ff';
+        }
+    });
+    card.addEventListener('mouseleave', () => {
+        if(!card.classList.contains('vip')) {
+            card.style.borderColor = 'rgba(0, 119, 255, 0.1)';
+        }
     });
 });
