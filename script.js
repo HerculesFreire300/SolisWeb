@@ -1,47 +1,55 @@
-// SOLISWEB - Interatividade e Dinamismo
-
 document.addEventListener('DOMContentLoaded', () => {
-    const navbar = document.querySelector('.navbar');
-    const cards = document.querySelectorAll('.service-card, .price-card, .evolution-bubble, .testimonial-bubble');
-
-    // 1. Efeito de Scroll na Navbar (Transparência Dinâmica)
+    
+    // 1. EFEITO DE SCROLL NO HEADER
+    const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.padding = '10px 0';
-            navbar.style.boxShadow = '0 5px 20px rgba(0,0,0,0.1)';
+            header.classList.add('scrolled');
         } else {
-            navbar.style.background = 'rgba(255, 255, 255, 0.7)';
-            navbar.style.padding = '15px 0';
-            navbar.style.boxShadow = 'none';
+            header.classList.remove('scrolled');
         }
     });
 
-    // 2. Animação de Revelação (Scroll Reveal Lite)
-    // Faz com que os elementos apareçam suavemente conforme você desce a página
-    const observerOptions = {
-        threshold: 0.1
-    };
-
-    const revealOnScroll = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+    // 2. ANIMAÇÃO DE REVELAÇÃO (REVEAL ON SCROLL)
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const revealOnScroll = () => {
+        revealElements.forEach(el => {
+            const elementTop = el.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (elementTop < windowHeight - 100) {
+                el.classList.add('active');
             }
         });
-    }, observerOptions);
+    };
 
-    cards.forEach(card => {
-        // Estado inicial para animação
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = 'all 0.6s ease-out';
-        revealOnScroll.observe(card);
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Gatilho inicial para o que já está na tela
+
+    // 3. MENU MOBILE DINÂMICO
+    const mobileMenuIcon = document.getElementById('mobile-menu');
+    const navLinks = document.getElementById('nav-links');
+
+    mobileMenuIcon.addEventListener('click', () => {
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        
+        // Estilo rápido para o menu mobile se aberto
+        if(navLinks.style.display === 'flex') {
+            navLinks.style.flexDirection = 'column';
+            navLinks.style.position = 'absolute';
+            navLinks.style.top = '80px';
+            navLinks.style.left = '0';
+            navLinks.style.width = '100%';
+            navLinks.style.background = 'white';
+            navLinks.style.padding = '20px';
+            navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+        }
     });
 
-    // 3. Efeito de Clique nos Botões (Feedback Visual)
-    const buttons = document.querySelectorAll('a[href^="https://wa.me"]');
+    // 4. INTERATIVIDADE NOS BOTÕES (Efeito de clique)
+    const buttons = document.querySelectorAll('.btn-modern, .btn-card, .btn-solis-premium');
+    
     buttons.forEach(btn => {
         btn.addEventListener('mousedown', () => {
             btn.style.transform = 'scale(0.95)';
@@ -51,16 +59,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 4. Smooth Scroll para links internos
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
+    // 5. PARALLAX SUAVE NA IMAGEM DO PORTFÓLIO
+    const portfolioImg = document.querySelector('.interactive-img');
+    if(portfolioImg) {
+        window.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            portfolioImg.style.transform = `translate(${moveX}px, ${moveY}px) rotateX(${moveY}deg) rotateY(${moveX}deg)`;
         });
+    }
+});
+// Adicione este código dentro do seu document.addEventListener('DOMContentLoaded', ... )
+
+// INTERATIVIDADE NOS BALÕES DE DEPOIMENTOS
+const balloons = document.querySelectorAll('.testimonial-card p');
+
+balloons.forEach(balloon => {
+    balloon.addEventListener('mousemove', (e) => {
+        const { offsetWidth: width, offsetHeight: height } = balloon;
+        const { offsetX: x, offsetY: y } = e;
+        
+        // Calcula a inclinação baseada na posição do mouse dentro do balão
+        const moveX = (x / width - 0.5) * 10;
+        const moveY = (y / height - 0.5) * 10;
+        
+        balloon.style.transform = `translateY(-10px) rotateX(${-moveY}deg) rotateY(${moveX}deg)`;
+    });
+
+    balloon.addEventListener('mouseleave', () => {
+        balloon.style.transform = `translateY(0px) rotateX(0deg) rotateY(0deg)`;
+    });
+});
+
+// EFEITO DE HOVER DINÂMICO NOS CARDS DE MANUTENÇÃO (Evolução Contínua)
+const mCards = document.querySelectorAll('.m-card');
+mCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        if(!card.classList.contains('vip')) {
+            card.style.borderColor = '#0077ff';
+        }
+    });
+    card.addEventListener('mouseleave', () => {
+        if(!card.classList.contains('vip')) {
+            card.style.borderColor = 'rgba(0, 119, 255, 0.1)';
+        }
     });
 });
