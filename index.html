@@ -1,387 +1,362 @@
-
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solis Web | Sites Extraordinários</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css">
-    
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StudyFlow — Controle Inteligente de Estudos</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css"/>
 </head>
-<body>
-
-    <header id="header">
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    SOLIS<span>WEB</span>
-                </div>
-                
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#servicos">Serviços</a></li>
-                    <li><a href="#portfolio">Portfólio</a></li>
-                    <li><a href="#depoimentos">Clientes</a></li>
-                    <li><a href="orçamento.html" <li><a href="orçamento.html" class="btn-nav-cta">Orçamento</a></li>
-                </ul>
-
-                <div id="mobile-menu" class="mobile-menu-icon">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </nav>
+<body class="theme-dark">
+<div id="app" class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2.5"/><path d="M24 8L24 24L36 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="24" r="3" fill="currentColor"/><path d="M16 32 Q24 38 32 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
         </div>
-        <link rel="icon" type="image/png" href="favicon.png">
-
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <span class="logo-text">StudyFlow</span>
+      </div>
+      <button class="sidebar-close" id="btn-sidebar-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <nav class="nav-links">
+      <a href="#" class="nav-link active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-link" data-page="timer"><i class="fa-solid fa-stopwatch"></i><span>Cronômetro</span></a>
+      <a href="#" class="nav-link" data-page="subjects"><i class="fa-solid fa-book-open"></i><span>Matérias</span></a>
+      <a href="#" class="nav-link" data-page="history"><i class="fa-solid fa-clock-rotate-left"></i><span>Histórico</span></a>
+      <a href="#" class="nav-link" data-page="weekly"><i class="fa-solid fa-calendar-days"></i><span>Plano Semanal</span></a>
+      <a href="#" class="nav-link" data-page="longterm"><i class="fa-solid fa-map"></i><span>Plano Total</span></a>
+      <a href="#" class="nav-link" data-page="planner"><i class="fa-solid fa-calculator"></i><span>Calculadora</span></a>
+      <a href="#" class="nav-link" data-page="settings"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
+    </nav>
+    <div class="sidebar-streak">
+      <i class="fa-solid fa-fire"></i><span id="streak-count">0</span><span>dias seguidos</span>
+    </div>
+    <div class="theme-switcher">
+      <span class="theme-label">Tema</span>
+      <div class="theme-options">
+        <button class="theme-btn active" data-theme="theme-dark"></button>
+        <button class="theme-btn" data-theme="theme-light"></button>
+        <button class="theme-btn" data-theme="theme-rose"></button>
+        <button class="theme-btn" data-theme="theme-nature"></button>
+      </div>
+    </div>
+  </aside>
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" id="btn-menu-toggle"><i class="fa-solid fa-bars"></i></button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="streak-badge"><i class="fa-solid fa-fire"></i><span id="streak-top">0</span></div>
     </header>
 
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="reveal">
-                    Sua empresa merece um <br>
-                    <span class="highlight">site extraordinário.</span>
-                </h1>
-                
-                <p class="reveal delay-1">
-                    Interfaces modernas e focadas em converter visitantes <br> 
-                    em clientes reais de forma estratégica e profissional.
-                </p>
-                
-                <div class="hero-btns reveal delay-2">
-                    <a href="#servicos" class="btn-modern btn-primary-modern">
-                        Ver Serviços 
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                    <a href="https://wa.me/5565993085010" target="_blank" class="btn-modern btn-secondary-modern">
-    <i class="fab fa-whatsapp"></i>
-    Falar com Especialista
-</a>
-                </div>
-            </div>
+    <!-- DASHBOARD -->
+    <section class="page-content active" id="page-dashboard">
+      <div class="page-hero"><div><h2 id="dash-greeting">Olá!</h2><p class="page-sub">Acompanhe sua evolução de estudos.</p></div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-clock"></i></div><div class="stat-value" id="stat-total">0h 0m</div><div class="stat-label">Total de estudos</div></div>
+        <div class="stat-card accent"><div class="stat-icon"><i class="fa-solid fa-star"></i></div><div class="stat-value" id="stat-best">—</div><div class="stat-label">Matéria mais forte</div></div>
+        <div class="stat-card warn"><div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="stat-value" id="stat-weak">—</div><div class="stat-label">Precisa de foco</div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-calendar-week"></i></div><div class="stat-value" id="stat-week">0h 0m</div><div class="stat-label">Esta semana</div></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card"><div class="chart-header"><h3>Distribuição por Matéria</h3><span class="chart-tag">Pizza</span></div><div class="chart-wrap"><canvas id="chart-pie"></canvas></div><div id="pie-empty" class="chart-empty"><i class="fa-solid fa-chart-pie"></i><p>Registre sessões para ver</p></div></div>
+        <div class="chart-card"><div class="chart-header"><h3>Ranking de Horas</h3><span class="chart-tag">Barras</span></div><div class="chart-wrap"><canvas id="chart-bar"></canvas></div><div id="bar-empty" class="chart-empty"><i class="fa-solid fa-chart-bar"></i><p>Sem dados</p></div></div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card"><div class="chart-header"><h3>Evolução Diária (14 dias)</h3><span class="chart-tag">Linha</span></div><div class="chart-wrap"><canvas id="chart-line"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><h3>Equilíbrio</h3><span class="chart-tag">Radar</span></div><div class="chart-wrap"><canvas id="chart-radar"></canvas></div><div id="radar-empty" class="chart-empty"><i class="fa-solid fa-chart-line"></i><p>Mín. 3 matérias com sessões</p></div></div>
+      </div>
+      <div class="messages-section">
+        <h3 class="section-title"><i class="fa-solid fa-brain"></i> Análise Inteligente</h3>
+        <div class="messages-grid">
+          <div class="msg-card msg-success"><div class="msg-icon"><i class="fa-solid fa-trophy"></i></div><div><div class="msg-title">Destaque</div><div class="msg-text" id="msg-best">Registre estudos para ver insights.</div></div></div>
+          <div class="msg-card msg-warn"><div class="msg-icon"><i class="fa-solid fa-bullseye"></i></div><div><div class="msg-title">Foco Necessário</div><div class="msg-text" id="msg-weak">Adicione matérias e comece.</div></div></div>
+          <div class="msg-card msg-motive"><div class="msg-icon"><i class="fa-solid fa-rocket"></i></div><div><div class="msg-title">Motivação</div><div class="msg-text" id="msg-motive">"A disciplina é a ponte entre objetivos e realizações."</div></div></div>
         </div>
+      </div>
+      <div class="ranking-section">
+        <h3 class="section-title"><i class="fa-solid fa-list-ol"></i> Ranking de Matérias</h3>
+        <div id="ranking-list" class="ranking-list"><p class="empty-hint">Adicione matérias e registre estudos.</p></div>
+      <div style="margin-top:20px">
+        <h3 class="section-title"><i class="fa-solid fa-fire"></i> Atividade — Últimos 12 Meses</h3>
+        <div class="chart-card" style="margin-bottom:4px">
+          <div class="chart-header"><h3>Heatmap de Estudos</h3><span class="chart-tag">Ano</span></div>
+          <div id="heatmap-months" style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-muted);margin-bottom:4px;padding:0 2px"></div>
+          <div id="heatmap-grid" style="display:grid;grid-template-columns:repeat(53,1fr);gap:2px;overflow-x:auto"></div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:6px;font-size:.68rem;color:var(--text-muted);justify-content:flex-end">
+            <span>Menos</span>
+            <div style="width:10px;height:10px;border-radius:2px;background:var(--bg-elevated)"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:var(--accent);opacity:.25"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:var(--accent);opacity:.5"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:var(--accent);opacity:.75"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:var(--accent)"></div>
+            <span>Mais</span>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section class="services" id="servicos">
-        <div class="container">
-            <h2 class="section-title reveal">O que fazemos por você</h2>
-            
-            <div class="services-grid">
-                <div class="service-card reveal">
-                    <div class="icon-box">
-                        <i class="fas fa-laptop-code"></i>
-                    </div>
-                    <h3>Landing Pages</h3>
-                    <p>Páginas de alta conversão desenhadas para vender seu produto ou serviço 24h por dia.</p>
-                </div>
-
-                <div class="service-card reveal delay-1">
-                    <div class="icon-box">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h3>E-commerce</h3>
-                    <p>Lojas virtuais completas, seguras e otimizadas para a melhor experiência de compra.</p>
-                </div>
-
-                <div class="service-card reveal delay-2">
-                    <div class="icon-box">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>SEO & Performance</h3>
-                    <p>Garantimos que seu site seja rápido e encontrado pelo Google nos primeiros resultados.</p>
-                </div>
+    <!-- TIMER -->
+    <section class="page-content" id="page-timer">
+      <div class="page-hero"><h2>Cronômetro</h2><p class="page-sub">Registre sua sessão de estudos.</p></div>
+      <div class="timer-layout">
+        <div class="timer-card">
+          <div class="timer-tabs">
+            <button class="timer-tab active" data-mode="live">Cronômetro ao vivo</button>
+            <button class="timer-tab" data-mode="manual">Registro manual</button>
+          </div>
+          <div id="timer-live" class="timer-mode active">
+            <div class="clock-display" id="clock-display">00:00:00</div>
+            <div class="timer-controls">
+              <button class="btn-timer start" id="btn-start"><i class="fa-solid fa-play"></i> Iniciar</button>
+              <button class="btn-timer pause hidden" id="btn-pause"><i class="fa-solid fa-pause"></i> Pausar</button>
+              <button class="btn-timer stop hidden" id="btn-stop"><i class="fa-solid fa-stop"></i> Finalizar</button>
             </div>
+            <div id="timer-status" class="timer-status"></div>
+            <div>
+              <span class="timer-subject-label">Matéria</span>
+              <select id="timer-subject"><option value="">— Selecione a matéria —</option></select>
+            </div>
+            <div style="text-align:center;margin-top:6px;font-size:.7rem;color:var(--text-muted)"><kbd style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:monospace;font-size:.68rem">Espaço</kbd> pausar &nbsp;<kbd style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-family:monospace;font-size:.68rem">S</kbd> finalizar</div>
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+              <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-secondary);margin-bottom:10px;display:flex;align-items:center;gap:6px"><i class="fa-solid fa-circle" style="color:var(--danger);font-size:.5rem"></i> Pomodoro</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--text-muted);margin-bottom:10px;flex-wrap:wrap"><span>Foco:</span><input id="pomo-work" type="number" value="25" min="1" max="60" style="width:44px;padding:4px 6px;font-size:.72rem;font-family:JetBrains Mono,monospace;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);text-align:center"/><span>min &nbsp;Pausa:</span><input id="pomo-break" type="number" value="5" min="1" max="30" style="width:40px;padding:4px 6px;font-size:.72rem;font-family:JetBrains Mono,monospace;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);text-align:center"/><span>min</span></div>
+              <div style="text-align:center;margin-bottom:8px"><div id="pomo-display" style="font-family:JetBrains Mono,monospace;font-size:1.8rem;font-weight:600;line-height:1">25:00</div><div id="pomo-label" style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--danger);margin-top:3px">Foco</div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px">
+                <button id="btn-pomo-start" style="padding:7px 16px;border-radius:8px;font-size:.78rem;font-weight:700;font-family:Sora,sans-serif;border:none;cursor:pointer;background:var(--danger);color:#fff"><i class="fa-solid fa-play"></i> Iniciar</button>
+                <button id="btn-pomo-stop" style="padding:7px 16px;border-radius:8px;font-size:.78rem;font-weight:700;font-family:Sora,sans-serif;border:none;cursor:pointer;background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--border)"><i class="fa-solid fa-rotate-left"></i> Resetar</button>
+              </div>
+              <div id="pomo-dots" style="display:flex;gap:4px;justify-content:center"></div>
+            </div>
+          </div>
+          <div id="timer-manual" class="timer-mode">
+            <div class="manual-inputs">
+              <div class="manual-field"><input type="number" id="manual-hours" placeholder="0" min="0" max="23"/><label>Horas</label></div>
+              <span class="manual-sep">:</span>
+              <div class="manual-field"><input type="number" id="manual-minutes" placeholder="0" min="0" max="59"/><label>Minutos</label></div>
+            </div>
+            <div>
+              <span class="timer-subject-label">Matéria</span>
+              <select id="manual-subject"><option value="">— Selecione a matéria —</option></select>
+            </div>
+            <div class="form-group">
+              <label>Data da sessão</label>
+              <input type="date" id="manual-date"/>
+            </div>
+            <button class="btn-primary btn-full" id="btn-manual-save"><i class="fa-solid fa-floppy-disk"></i> Salvar sessão</button>
+          </div>
         </div>
+        <div class="today-card">
+          <h3>Sessões de hoje</h3>
+          <div id="today-sessions" class="sessions-list"><p class="empty-hint">Nenhuma sessão hoje.</p></div>
+          <div class="today-total">Total hoje: <strong id="today-total">0h 0m</strong></div>
+        <div style="height:7px;background:var(--bg-elevated);border-radius:99px;overflow:hidden;margin:10px 0 4px"><div id="goal-bar" style="height:100%;border-radius:99px;background:var(--accent);transition:width .6s cubic-bezier(.4,0,.2,1);width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:.74rem;color:var(--text-secondary)"><span>Meta diária</span><span id="goal-pct" style="font-weight:700;color:var(--accent)">0%</span></div>
+        </div>
+      </div>
     </section>
-<section class="portfolio" id="portfolio">
-        <div class="container">
-            <h2 class="section-title reveal">Nosso Portfólio</h2>
-            <div class="image-container reveal">
-                <img src="img01.png" class="interactive-img" alt="Demonstração de Portfólio Solis Web">
-            </div>
+
+    <!-- SUBJECTS -->
+    <section class="page-content" id="page-subjects">
+      <div class="page-hero"><h2>Matérias</h2><p class="page-sub">Gerencie suas matérias de estudo.</p></div>
+      <div class="subjects-layout">
+        <div class="add-subject-card">
+          <h3>Adicionar matéria</h3>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0"><label>Nome</label><input type="text" id="new-subject-name" placeholder="Ex: Direito Constitucional" maxlength="40"/></div>
+            <div class="color-picker-row"><label>Cor</label><div id="color-options" class="color-options"></div></div>
+          </div>
+          <button class="btn-primary" id="btn-add-subject" style="margin-top:16px"><i class="fa-solid fa-plus"></i> Adicionar</button>
+          <p class="hint" id="subject-limit-hint"></p>
         </div>
+        <div class="subjects-list-card">
+          <h3>Suas matérias (<span id="subject-count">0</span>/12)</h3>
+          <div id="subjects-list" class="subjects-list"><p class="empty-hint">Nenhuma matéria adicionada.</p></div>
+        </div>
+      </div>
     </section>
 
-<section class="pricing-premium" id="planos">
-    <div class="container">
-        <div class="pricing-intro reveal">
-            <span class="subtitle">Transparência & Tecnologia</span>
-            <h2 class="section-title">Soluções Digitais Sob Medida</h2>
-            <p class="intro-text">Transformamos sua presença online em uma máquina de autoridade e vendas com tecnologia de ponta e foco em conversão.</p>
+    <!-- HISTORY -->
+    <section class="page-content" id="page-history">
+      <div class="page-hero"><div><h2>Histórico</h2><p class="page-sub">Todas as suas sessões de estudo.</p></div><button class="btn-secondary" id="btn-export"><i class="fa-solid fa-file-export"></i> Exportar CSV</button></div>
+      <div class="history-filters">
+        <select id="filter-subject"><option value="">Todas as matérias</option></select>
+        <input type="date" id="filter-from"/><input type="date" id="filter-to"/>
+        <button class="btn-secondary small" id="btn-filter">Filtrar</button>
+        <button class="btn-ghost small" id="btn-clear-filter">Limpar</button>
+      </div>
+      <div class="history-table-wrap">
+        <table class="history-table"><thead><tr><th>Data</th><th>Matéria</th><th>Duração</th><th>Modo</th><th></th></tr></thead><tbody id="history-body"></tbody></table>
+        <div id="history-empty" class="chart-empty hidden"><i class="fa-solid fa-clock-rotate-left"></i><p>Nenhuma sessão encontrada.</p></div>
+      </div>
+    </section>
+
+    <!-- WEEKLY -->
+    <section class="page-content" id="page-weekly">
+      <div class="page-hero">
+        <div><h2>Plano Semanal</h2><p class="page-sub">Organize seus estudos dia a dia.</p></div>
+        <div class="week-nav">
+          <button class="week-nav-btn" id="week-prev"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="week-range-label" id="week-label">—</div>
+          <button class="week-nav-btn" id="week-next"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
+      </div>
+      <div class="week-summary-row">
+        <div class="week-stat"><div class="week-stat-val" id="wstat-planned">0h</div><div class="week-stat-label">Planejado</div></div>
+        <div class="week-stat"><div class="week-stat-val" id="wstat-studied">0h</div><div class="week-stat-label">Estudado</div></div>
+        <div class="week-stat"><div class="week-stat-val" id="wstat-pct">—</div><div class="week-stat-label">Cumprimento</div></div>
+        <div class="week-stat"><div class="week-stat-val" id="wstat-days">0/7</div><div class="week-stat-label">Dias ativos</div></div>
+      </div>
+      <div class="week-chart-card">
+        <h3>Planejado vs Estudado<span class="chart-tag">Por dia</span></h3>
+        <div class="week-chart-wrap"><canvas id="week-chart"></canvas></div>
+      </div>
+      <div class="week-grid" id="week-grid"></div>
+    </section>
 
-        <div class="pricing-grid">
-            <div class="pricing-card reveal">
-                <div class="card-header">
-                    <h3>Landing Page</h3>
-                    <p>Focada em Alta Conversão</p>
-                    <div class="price">R$ 997</div>
-                </div>
-                <ul class="features">
-                    <li><i class="fas fa-bolt"></i> Carregamento Instantâneo</li>
-                    <li><i class="fas fa-pen-nib"></i> Copywriting para Vendas</li>
-                    <li><i class="fas fa-code"></i> Integração com Pixel & Ads</li>
-                    <li><i class="fas fa-mobile-alt"></i> Design Mobile-First</li>
-                </ul>
-                <a href="https://wa.me/5565993085010" class="btn-card">Analisar Projeto</a>
-            </div>
-
-            <div class="pricing-card featured reveal delay-1">
-                <div class="badge">PROJETO COMPLETO</div>
-                <div class="card-header">
-                    <h3>Site Institucional</h3>
-                    <p>Autoridade para sua Marca</p>
-                    <div class="price">R$ 2.500</div>
-                </div>
-                <ul class="features">
-                    <li><i class="fas fa-layer-group"></i> Arquitetura de até 5 Páginas</li>
-                    <li><i class="fas fa-search"></i> SEO Estrutural (Google)</li>
-                    <li><i class="fas fa-user-cog"></i> Painel Administrativo Incluso</li>
-                    <li><i class="fas fa-newspaper"></i> Blog e Gestão de Conteúdo</li>
-                </ul>
-                <a href="https://wa.me/5565993085010" class="btn-card highlight">Iniciar Agora</a>
-            </div>
-
-            <div class="pricing-card reveal delay-2">
-                <div class="card-header">
-                    <h3>E-commerce</h3>
-                    <p>Loja Virtual de Alta Performance</p>
-                    <div class="price">R$ 4.900</div>
-                </div>
-                <ul class="features">
-                    <li><i class="fas fa-box"></i> Gestão de Vendas & Estoque</li>
-                    <li><i class="fas fa-credit-card"></i> Pagamento Seguro Integrado</li>
-                    <li><i class="fas fa-truck"></i> Cálculo de Frete Automático</li>
-                    <li><i class="fas fa-shield-alt"></i> Segurança SSL Avançada</li>
-                </ul>
-                <a href="https://wa.me/5565993085010" class="btn-card">Analisar Projeto</a>
-            </div>
+    <!-- LONGTERM -->
+    <section class="page-content" id="page-longterm">
+      <div class="page-hero"><div><h2>Plano Total</h2><p class="page-sub">Planejamento completo até a prova.</p></div></div>
+      <div class="lt-layout">
+        <div class="lt-setup-card">
+          <h3><i class="fa-solid fa-map"></i> Configurar Plano</h3>
+          <div class="lt-input-group">
+            <div class="lt-input-row"><label>Data de início</label><input type="date" id="lt-start"/></div>
+            <div class="lt-input-row"><label>Data da prova</label><input type="date" id="lt-end"/></div>
+            <div class="lt-input-row"><label>Horas de estudo por semana</label><input type="number" id="lt-hours-week" value="30" min="1" max="168"/></div>
+            <div class="lt-input-row"><label>% do tempo para revisão</label><input type="number" id="lt-review-pct" value="30" min="0" max="80"/></div>
+          </div>
+          <div class="lt-divider"></div>
+          <div class="lt-sub-header"><div>Matéria</div><div>Peso %</div><div>Prioridade</div></div>
+          <div id="lt-sub-list" class="lt-sub-list"><p class="plan-no-subjects">Adicione matérias primeiro.</p></div>
+          <button class="btn-primary btn-full" id="btn-lt-calc" style="margin-top:16px"><i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Plano Total</button>
         </div>
-
-        <div class="services-details grid-3 reveal">
-            <div class="detail-item">
-                <h4><i class="fas fa-bullseye"></i> Landing Pages (Foco em Vendas)</h4>
-                <p>Projetadas para campanhas de tráfego pago (Google/Meta Ads). O objetivo é uma única ação: converter o visitante em cliente.</p>
-                <div class="tags"><span>Velocidade Máxima</span><span>Testes A/B</span><span>LGPD Ready</span></div>
+        <div class="lt-main-card">
+          <h3><i class="fa-solid fa-bars-progress"></i> Plano de Estudos</h3>
+          <div id="lt-empty" style="text-align:center;padding:60px 0;color:var(--text-muted)"><i class="fa-solid fa-map" style="font-size:2.5rem;opacity:.25;display:block;margin-bottom:10px"></i><p style="font-size:.9rem">Configure e clique em <strong>Gerar Plano Total</strong></p></div>
+          <div id="lt-results" class="hidden">
+            <div class="lt-kpi-row">
+              <div class="lt-kpi"><div class="lt-kpi-val" id="ltkpi-weeks">—</div><div class="lt-kpi-label">Semanas</div></div>
+              <div class="lt-kpi"><div class="lt-kpi-val" id="ltkpi-total-h">—</div><div class="lt-kpi-label">Horas totais</div></div>
+              <div class="lt-kpi"><div class="lt-kpi-val" id="ltkpi-study-h">—</div><div class="lt-kpi-label">Estudo</div></div>
+              <div class="lt-kpi"><div class="lt-kpi-val" id="ltkpi-review-h">—</div><div class="lt-kpi-label">Revisão</div></div>
             </div>
-            <div class="detail-item">
-                <h4><i class="fas fa-building"></i> Site Institucional (Autoridade Digital)</h4>
-                <p>Um ecossistema completo para sua empresa. Ideal para busca orgânica (SEO) e para apresentar serviços e blog.</p>
-                <div class="tags"><span>SEO Avançado</span><span>Painel Gerenciável</span><span>Google Meu Negócio</span></div>
-            </div>
-            <div class="detail-item">
-                <h4><i class="fas fa-shopping-bag"></i> E-commerce (Venda Direta)</h4>
-                <p>Sua loja aberta 24h. Focamos em uma jornada de compra sem atritos para diminuir o abandono de carrinho.</p>
-                <div class="tags"><span>Checkout Transparente</span><span>Gestão de Estoque</span><span>Cupons</span></div>
-            </div>
+            <div class="lt-gantt-wrap"><div class="lt-gantt" id="lt-gantt"></div></div>
+            <div class="lt-phases-title">Fases do Plano</div>
+            <div id="lt-phases"></div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="comparison-table-wrapper reveal">
-    <h3 class="comparison-title">Comparativo Técnico</h3>
-    <table class="comparison-table">
-        <thead>
-            <tr>
-                <th>Recursos e Entregáveis</th>
-                <th>Landing Page</th>
-                <th>Site Institucional</th>
-                <th>Loja Virtual</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Desempenho e Velocidade</td>
-                <td><span class="score green">95-100 pts</span></td>
-                <td><span class="score blue">90+ pts</span></td>
-                <td><span class="score yellow">85+ pts</span></td>
-            </tr>
-            <tr>
-                <td>Blog e Gestão de Conteúdo</td>
-                <td><i class="fas fa-times-circle status-no"></i></td>
-                <td><i class="fas fa-check-circle status-yes"></i></td>
-                <td><i class="fas fa-check-circle status-yes"></i></td>
-            </tr>
-            <tr>
-                <td>Pagamentos Online (Checkout)</td>
-                <td><i class="fas fa-minus-circle status-neutral"></i></td>
-                <td><i class="fas fa-minus-circle status-neutral"></i></td>
-                <td><i class="fas fa-check-circle status-yes"></i></td>
-            </tr>
-            <tr>
-                <td>Otimização para o Google (SEO)</td>
-                <td>Básico</td>
-                <td>Avançado</td>
-                <td>Avançado</td>
-            </tr>
-            <tr>
-                <td>Consultoria de Hospedagem</td>
-                <td><i class="fas fa-check-circle status-yes"></i></td>
-                <td><i class="fas fa-check-circle status-yes"></i></td>
-                <td><i class="fas fa-check-circle status-yes"></i></td>
-            </tr>
-            <tr>
-                <td>Painel de Controle Próprio</td>
-                <td>Não</td>
-                <td>Sim</td>
-                <td>Sim</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- PLANNER (CALCULADORA) -->
+    <section class="page-content" id="page-planner">
+      <div class="page-hero"><div><h2>Calculadora de Horas</h2><p class="page-sub">Descubra quanto tempo dedicar a cada matéria.</p></div></div>
+      <div class="plan-hero-grid">
+        <div class="plan-setup-card">
+          <h3><i class="fa-solid fa-sliders"></i> Configuração</h3>
+          <div class="plan-global-inputs">
+            <div class="plan-input-row"><label>Horas semanais disponíveis</label><input type="number" id="plan-hours" value="30" min="1" max="168"/></div>
+            <div class="plan-input-row"><label>Total de pontos da prova</label><input type="number" id="plan-total-pts" value="100" min="1"/></div>
+          </div>
+          <div class="plan-divider"></div>
+          <div class="plan-subjects-title">Pontuação por matéria</div>
+          <div id="plan-subjects-inputs" class="plan-subjects-inputs"><p class="plan-no-subjects">Adicione matérias primeiro.</p></div>
+          <div class="plan-total-row"><span>Pontos alocados</span><span id="plan-pts-used" class="plan-total-val">0</span></div>
+          <button class="btn-primary btn-full" id="btn-calc-plan" style="margin-top:16px"><i class="fa-solid fa-calculator"></i> Calcular Plano</button>
+        </div>
+        <div class="plan-summary-card">
+          <h3><i class="fa-solid fa-chart-column"></i> Resumo</h3>
+          <div class="plan-kpi-row">
+            <div class="plan-kpi"><div class="plan-kpi-val" id="pkpi-hours">—</div><div class="plan-kpi-label">Horas/semana</div></div>
+            <div class="plan-kpi"><div class="plan-kpi-val" id="pkpi-pts">—</div><div class="plan-kpi-label">Pontos totais</div></div>
+            <div class="plan-kpi"><div class="plan-kpi-val" id="pkpi-mats">—</div><div class="plan-kpi-label">Matérias</div></div>
+          </div>
+          <div id="plan-table-wrap" class="plan-table-wrap" style="display:none">
+            <table class="plan-table"><thead><tr><th>Matéria</th><th>Pts</th><th>%</th><th>Meta/sem</th><th>Estudado</th><th>Progresso</th><th>Status</th></tr></thead><tbody id="plan-table-body"></tbody></table>
+          </div>
+          <div id="plan-empty-state" style="text-align:center;padding:40px 0;color:var(--text-muted)"><i class="fa-solid fa-calculator" style="font-size:2rem;opacity:.3;display:block;margin-bottom:8px"></i><p style="font-size:.88rem">Preencha os dados e calcule</p></div>
+        </div>
+      </div>
+      <div class="plan-charts-row">
+        <div class="plan-chart-card"><h3>Ideal vs Real<span class="chart-tag">Barras</span></h3><div class="plan-chart-wrap"><canvas id="plan-chart-compare"></canvas></div></div>
+        <div class="plan-chart-card"><h3>Equilíbrio<span class="chart-tag">Radar</span></h3><div class="plan-chart-wrap"><canvas id="plan-chart-radar"></canvas></div></div>
+      </div>
+      <div>
+        <h3 class="section-title"><i class="fa-solid fa-bell"></i> Alertas Inteligentes</h3>
+        <div id="plan-alerts-grid" class="plan-alert-grid">
+          <div class="plan-alert alert-ok"><div class="plan-alert-icon"><i class="fa-solid fa-circle-info"></i></div><div><div class="plan-alert-title">Aguardando cálculo</div><div class="plan-alert-text">Configure as pontuações e calcule o plano.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="page-content" id="page-settings">
+      <div class="page-hero"><h2>Configurações</h2><p class="page-sub">Personalize sua experiência.</p></div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>Tema</h3>
+          <div class="theme-grid">
+            <button class="theme-preview active" data-theme="theme-dark"><div class="theme-swatch dark"></div><span>Dark Premium</span></button>
+            <button class="theme-preview" data-theme="theme-light"><div class="theme-swatch light"></div><span>Clean Moderno</span></button>
+            <button class="theme-preview" data-theme="theme-rose"><div class="theme-swatch rose"></div><span>Elegante Rosa</span></button>
+            <button class="theme-preview" data-theme="theme-nature"><div class="theme-swatch nature"></div><span>Nature</span></button>
+          </div>
+        </div>
+        <div class="settings-card" style="margin-bottom:18px">
+          <h3>Meta Diária</h3>
+          <div class="form-group" style="margin-bottom:0"><label>Horas de estudo por dia</label><div style="display:flex;gap:10px;align-items:center"><input type="number" id="daily-goal-input" value="4" min="1" max="24" step="0.5" style="max-width:90px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:.95rem;font-family:Sora,sans-serif;color:var(--text-primary);outline:none"/><button class="btn-primary" id="btn-save-goal" style="padding:9px 18px;font-size:.85rem">Salvar</button></div></div>
+          <p class="hint">Aparece como barra de progresso no Cronômetro.</p>
+        </div>
+        <div class="settings-card danger-zone">
+          <h3>Zona de risco</h3>
+          <p class="hint" style="margin-bottom:14px">Atenção: ações irreversíveis.</p>
+          <button class="btn-danger" id="btn-clear-sessions"><i class="fa-solid fa-trash"></i> Apagar todas as sessões</button>
+          <button class="btn-danger" id="btn-reset-app"><i class="fa-solid fa-rotate-left"></i> Resetar tudo</button>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
-        <div class="maintenance-section reveal">
-            <h3 class="section-title">Evolução Contínua</h3>
-            <div class="maintenance-grid">
-                <div class="m-card">
-                    <h4>Suporte Essencial</h4>
-                    <div class="m-price">R$ 190<span>/mês</span></div>
-                    <p>Segurança, estabilidade e backups garantidos.</p>
-                    <a href="https://wa.me/5565993085010" class="btn-m">Assinar Agora</a>
-                </div>
-                <div class="m-card vip">
-                    <div class="m-badge">GESTÃO VIP</div>
-                    <h4>Suporte Pro</h4>
-                    <div class="m-price">R$ 450<span>/mês</span></div>
-                    <p>Evolução constante com horas de desenvolvimento inclusas.</p>
-                    <a href="https://wa.me/5565993085010" class="btn-m">Assinar Agora</a>
-                </div>
-            </div>
-        </div>
+<!-- ADD BLOCK MODAL -->
+<div id="modal-block" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-title">Adicionar bloco de estudo</div>
+    <div style="margin-top:16px">
+      <div class="block-modal-field"><label>Matéria</label><select id="block-subject"><option value="">— Selecione —</option></select><div class="color-preview-bar" id="block-color-bar"></div></div>
+      <div class="block-time-row">
+        <div class="block-modal-field"><label>Horas</label><input type="number" id="block-hours" value="1" min="0" max="12"/></div>
+        <div class="block-modal-field"><label>Minutos</label><input type="number" id="block-mins" value="0" min="0" max="59" step="15"/></div>
+      </div>
+      <div class="block-modal-field"><label>Observação (opcional)</label><input type="text" id="block-note" placeholder="Ex: Capítulo 3..." maxlength="40"/></div>
     </div>
-</section>
-
-
-    <section class="testimonials" id="depoimentos">
-        <div class="container">
-            <h2 class="section-title reveal">Quem confia na Solis</h2>
-            
-            <div class="testimonial-grid">
-                <div class="testimonial-card reveal">
-                    <div class="stars">★★★★★</div>
-                    <p>"O design é impecável e a velocidade impressiona. Transformou nosso negócio!"</p>
-                    <div class="client-info">
-                        <h4>Ricardo Souza</h4>
-                        <span>CEO RS Consultoria</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal delay-1">
-                    <div class="stars">★★★★★</div>
-                    <p>"Suporte e atenção aos detalhes nota 10. Superaram todas as expectativas."</p>
-                    <div class="client-info">
-                        <h4>Amanda Oliveira</h4>
-                        <span>Marketing Digital</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal delay-2">
-                    <div class="stars">★★★★★</div>
-                    <p>"Minha conversão aumentou 40% com a nova Landing Page. Trabalho estratégico."</p>
-                    <div class="client-info">
-                        <h4>Dr. Marcos Vinícius</h4>
-                        <span>Clínica Integrada</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal">
-                    <div class="stars">★★★★★</div>
-                    <p>"O sistema de agendamento facilitou muito a vida dos pacientes. Incrível!"</p>
-                    <div class="client-info">
-                        <h4>Dra. Julia Costa</h4>
-                        <span>Psicóloga</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal delay-1">
-                    <div class="stars">★★★★★</div>
-                    <p>"Processo ágil e transparente. Entenderam a essência da minha marca."</p>
-                    <div class="client-info">
-                        <h4>Lucas Mantovani</h4>
-                        <span>Arquiteto</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card reveal delay-2">
-                    <div class="stars">★★★★★</div>
-                    <p>"Site leve, rápido e já estamos na primeira página do Google. Recomendo!"</p>
-                    <div class="client-info">
-                        <h4>Fernanda Lima</h4>
-                        <span>E-commerce</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="final-cta">
-    <div class="container">
-        <div class="cta-box reveal">
-            <i class="fab fa-whatsapp"></i>
-            <h2>Pronto para elevar o nível?</h2>
-            <p>Receba um orçamento personalizado hoje mesmo e <strong>domine o seu mercado</strong> com um site de alta performance.</p>
-            
-            <a href="https://wa.me/5565993085010" class="btn-card" target="_blank">
-                SOLICITAR MEU ORÇAMENTO
-            </a>
-        </div>
+    <div class="modal-actions" style="margin-top:20px">
+      <button class="btn-ghost" id="btn-block-cancel">Cancelar</button>
+      <button class="btn-primary" id="btn-block-confirm"><i class="fa-solid fa-plus"></i> Adicionar</button>
     </div>
-</section>
+  </div>
+</div>
 
-    <footer class="modern-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-brand">
-                <div class="logo">SOLIS<span>WEB</span></div>
-                <p>Transformamos sua presença digital com interfaces de alto padrão e estratégias focadas em conversão.</p>
-                <div class="social-icons">
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-
-            <div class="footer-nav">
-                <h4>Navegação</h4>
-                <ul>
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#servicos">Serviços</a></li>
-                    <li><a href="#portfolio">Portfólio</a></li>
-                    <li><a href="#depoimentos">Depoimentos</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-nav">
-                <h4>Soluções</h4>
-                <ul>
-                    <li><a href="#">Landing Pages</a></li>
-                    <li><a href="#">E-commerce</a></li>
-                    <li><a href="#">SEO</a></li>
-                    <li><a href="#">Institucional</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-contact">
-                <h4>Contato</h4>
-                <ul>
-                    <li><i class="fas fa-envelope"></i> contato@solisweb.com</li>
-                    <li><i class="fas fa-map-marker-alt"></i> Cuiabá, MT</li>
-                    <li><i class="fab fa-whatsapp"></i> (65) 99308-5010</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2026  By Herakles | Solis Web Design. Todos os direitos reservados.</p>
-        </div>
+<!-- CONFIRM MODAL -->
+<div id="modal-confirm-overlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-confirm-title">Confirmar</div>
+    <div class="modal-body" id="modal-confirm-body"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="btn-modal-cancel">Cancelar</button>
+      <button class="btn-danger" id="btn-modal-confirm" style="width:auto;margin:0">Confirmar</button>
     </div>
-</footer>
+  </div>
+</div>
 
-    <script src="script.js"></script>
+<!-- SIDEBAR OVERLAY -->
+<div id="sidebar-overlay" class="sidebar-overlay"></div>
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+<button id="fab-timer" style="display:none;position:fixed;bottom:24px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 4px 20px var(--accent-glow);border:none;font-size:1.2rem;align-items:center;justify-content:center;z-index:80;transition:transform .2s;cursor:pointer" title="Abrir Cronômetro"><i class="fa-solid fa-stopwatch"></i></button></body>
+<script src="app.js"></script>
 </body>
 </html>
