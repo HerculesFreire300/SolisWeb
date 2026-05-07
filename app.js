@@ -1,5 +1,6 @@
 var fabBtn=document.getElementById('fab-timer');
 if(window.innerWidth<=860&&fabBtn){fabBtn.style.display='flex';fabBtn.addEventListener('click',function(){navigate('timer');});}
+
 // ===== STORAGE =====
 var DB = {
   data: { subjects:[], sessions:[], theme:'theme-dark', streakDays:[], weekBlocks:{}, planPts:{}, planConfig:null, ltConfig:null, ltSubWeights:{} },
@@ -280,6 +281,8 @@ function refreshDashboard(){
   document.getElementById('streak-count').textContent=sc;
   document.getElementById('streak-top').textContent=sc;
   renderRanking(); renderCharts(); renderHeatmap();
+  updateXPBar();
+  checkAchievements();
 }
 
 function renderRanking(){
@@ -807,7 +810,7 @@ function applyTheme(t){
 }
 
 // ===== NAVIGATION =====
-var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',history:'Histórico',weekly:'Plano Semanal',longterm:'Plano Total',planner:'Calculadora',settings:'Configurações'};
+var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',history:'Histórico',weekly:'Plano Semanal',longterm:'Plano Total',planner:'Calculadora',achievements:'Conquistas & XP',settings:'Configurações'};
 
 function navigate(page){
   document.querySelectorAll('.page-content').forEach(function(p){ p.classList.remove('active'); });
@@ -821,6 +824,7 @@ function navigate(page){
   if(page==='timer'){ syncSelects(); renderTodaySessions(); }
   if(page==='subjects') renderSubjects();
   if(page==='history'){ syncFilterSub(); renderHistory(); }
+  if(page==='achievements') renderAchievements();
   if(page==='weekly') renderWeekPage();
   if(page==='longterm') initLtPage();
   if(page==='planner') renderPlanInputs();
@@ -972,7 +976,7 @@ function initKeyboard(){
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded',function(){
+function initApp(){
   DB.load();
   applyTheme(DB.data.theme||'theme-dark');
   renderColorOptions();
@@ -1063,4 +1067,481 @@ document.addEventListener('DOMContentLoaded',function(){
   initKeyboard();
   // Heatmap on dashboard load
   renderHeatmap();
+  updateXPBar();
+  checkAchievements();
+
+  // Scroll to top button
+  var mainEl = document.querySelector('.main-content') || document.querySelector('.main');
+  var scrollBtn = document.getElementById('scroll-top-btn');
+  if(mainEl && scrollBtn){
+    mainEl.addEventListener('scroll', function(){
+      scrollBtn.classList.toggle('visible', mainEl.scrollTop > 300);
+      document.querySelector('.topbar') && document.querySelector('.topbar').classList.toggle('scrolled', mainEl.scrollTop > 10);
+    });
+    scrollBtn.addEventListener('click', function(){
+      mainEl.scrollTo({top:0,behavior:'smooth'});
+    });
+  }
+}
+// initApp() is called by the auth system (showApp)
+
+// ===== FIREBASE AUTH & LOGIN =====
+var firebaseConfig = {
+  // Substitua com suas credenciais: console.firebase.google.com
+  apiKey: "SUA_API_KEY_AQUI",
+  authDomain: "seu-projeto.firebaseapp.com",
+  projectId: "seu-projeto",
+  storageBucket: "seu-projeto.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:000000000000000000"
+};
+
+var fbApp = null, fbAuth = null, currentUser = null, isGuest = false;
+
+function initFirebase(){
+  try {
+    fbApp = firebase.initializeApp(firebaseConfig);
+    fbAuth = firebase.auth();
+    fbAuth.onAuthStateChanged(function(user){
+      if(user){ currentUser=user; isGuest=false; loadUserData(user.uid); showApp(user); }
+      else if(!isGuest){ showLoginScreen(); }
+    });
+  } catch(e){
+    console.warn('[Auth] Firebase not configured, running local mode');
+    showApp(null);
+  }
+}
+
+function showLoginScreen(){
+  var ls=document.getElementById('login-screen');
+  var app=document.getElementById('app');
+  if(ls) ls.style.display='flex';
+  if(app) app.style.display='none';
+}
+
+function showApp(user){
+  var ls=document.getElementById('login-screen');
+  var app=document.getElementById('app');
+  if(ls) ls.style.display='none';
+  if(app) app.style.display='';
+  updateUserUI(user);
+  initApp();
+}
+
+function updateUserUI(user){
+  var btn=document.getElementById('user-avatar-btn'); if(!btn) return;
+  var umAvatar=document.getElementById('um-avatar');
+  var umName=document.getElementById('um-name');
+  var umEmail=document.getElementById('um-email');
+  if(user && user.photoURL){
+    btn.innerHTML='<img src="'+user.photoURL+'" style="width:30px;height:30px;border-radius:50%;border:2px solid var(--border-focus);object-fit:cover"/>';
+    if(umAvatar) umAvatar.innerHTML='<img src="'+user.photoURL+'" style="width:38px;height:38px;border-radius:50%;object-fit:cover"/>';
+  } else {
+    var init=user?(user.displayName||user.email||'U')[0].toUpperCase():'G';
+    btn.innerHTML='<span style="font-weight:700;font-size:.8rem">'+init+'</span>';
+    if(umAvatar) umAvatar.innerHTML='<span style="font-weight:700">'+init+'</span>';
+  }
+  if(umName) umName.textContent=DB.data.displayName||(user?user.displayName:'Modo Local')||'Usuário';
+  if(umEmail) umEmail.textContent=user?user.email:'dados salvos localmente';
+}
+
+function loadUserData(uid){
+  var key='sf4_'+uid;
+  try {
+    var saved=localStorage.getItem(key);
+    if(saved){ DB.data=JSON.parse(saved); }
+    else {
+      var generic=localStorage.getItem('sf4');
+      if(generic){ DB.data=JSON.parse(generic); }
+    }
+  } catch(e){}
+  DB._uid=uid;
+  DB.save=function(){ try{ localStorage.setItem('sf4_'+this._uid,JSON.stringify(this.data)); }catch(e){} };
+}
+
+function loginWithGoogle(){
+  if(!fbAuth){ toast('Firebase não configurado. Configure primeiro.','error'); return; }
+  document.getElementById('login-content').classList.add('hidden');
+  document.getElementById('login-loading').classList.remove('hidden');
+  var provider=new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({prompt:'select_account'});
+  fbAuth.signInWithPopup(provider).catch(function(err){
+    document.getElementById('login-content').classList.remove('hidden');
+    document.getElementById('login-loading').classList.add('hidden');
+    toast('Erro ao entrar com Google.','error');
+    console.error('[Auth]',err);
+  });
+}
+
+function guestLogin(){
+  isGuest=true; currentUser=null; DB.load(); showApp(null);
+}
+
+function logout(){
+  closeUserMenu();
+  var reset=function(){
+    currentUser=null; isGuest=false;
+    DB._uid=null;
+    DB.load=function(){ try{ var s=localStorage.getItem('sf4'); if(s) this.data=JSON.parse(s); }catch(e){} };
+    DB.save=function(){ try{ localStorage.setItem('sf4',JSON.stringify(this.data)); }catch(e){} };
+    showLoginScreen();
+    toast('Saiu da conta.','info');
+  };
+  if(fbAuth && currentUser){ fbAuth.signOut().then(reset); } else { reset(); }
+}
+
+function editDisplayName(){
+  closeUserMenu();
+  var cur=DB.data.displayName||(currentUser?currentUser.displayName:'')||'';
+  var n=prompt('Seu nome de exibição:',cur);
+  if(n&&n.trim()){ DB.data.displayName=n.trim(); DB.save(); updateUserUI(currentUser); toast('Nome salvo!','success'); }
+}
+
+function openUserMenu(){ var m=document.getElementById('user-menu'); if(m) m.classList.toggle('hidden'); }
+function closeUserMenu(){ var m=document.getElementById('user-menu'); if(m) m.classList.add('hidden'); }
+
+// Init on page load
+document.addEventListener('DOMContentLoaded',function(){
+  var btnGoogle=document.getElementById('btn-google-login');
+  var btnGuest=document.getElementById('btn-guest-login');
+  var btnAvatar=document.getElementById('user-avatar-btn');
+  var btnProfile=document.getElementById('um-profile');
+  var btnLogout=document.getElementById('um-logout');
+  if(btnGoogle) btnGoogle.addEventListener('click',loginWithGoogle);
+  if(btnGuest)  btnGuest.addEventListener('click',guestLogin);
+  if(btnAvatar) btnAvatar.addEventListener('click',function(e){ e.stopPropagation(); openUserMenu(); });
+  if(btnProfile) btnProfile.addEventListener('click',editDisplayName);
+  if(btnLogout)  btnLogout.addEventListener('click',logout);
+  document.addEventListener('click',function(e){
+    var menu=document.getElementById('user-menu');
+    var btn=document.getElementById('user-avatar-btn');
+    if(menu&&!menu.classList.contains('hidden')&&!menu.contains(e.target)&&!btn.contains(e.target)){closeUserMenu();}
+  });
+  initFirebase();
 });
+
+// ══════════════════════════════════════════════════════════════
+//  GAMIFICAÇÃO — XP, Níveis, Conquistas
+// ══════════════════════════════════════════════════════════════
+
+// ── LEVELS ────────────────────────────────────────────────────
+var LEVELS = [
+  { min:0,     max:500,   num:1,  name:'Iniciante',      icon:'🌱' },
+  { min:500,   max:1200,  num:2,  name:'Estudante',      icon:'📖' },
+  { min:1200,  max:2500,  num:3,  name:'Dedicado',       icon:'🎯' },
+  { min:2500,  max:4500,  num:4,  name:'Focado',         icon:'🔥' },
+  { min:4500,  max:7000,  num:5,  name:'Persistente',    icon:'⚡' },
+  { min:7000,  max:10000, num:6,  name:'Disciplinado',   icon:'🏆' },
+  { min:10000, max:14000, num:7,  name:'Estrategista',   icon:'🧠' },
+  { min:14000, max:19000, num:8,  name:'Expert',         icon:'💎' },
+  { min:19000, max:25000, num:9,  name:'Mestre',         icon:'🌟' },
+  { min:25000, max:Infinity, num:10, name:'Lendário',    icon:'👑' }
+];
+
+function getLevelInfo(xp){
+  for(var i=LEVELS.length-1;i>=0;i--){
+    if(xp>=LEVELS[i].min) return LEVELS[i];
+  }
+  return LEVELS[0];
+}
+
+// ── XP CALCULATION ─────────────────────────────────────────────
+function calcTotalXP(){
+  var xp = 0;
+  var mps = minsPerSub();
+  // 1 XP per minute studied
+  xp += DB.data.sessions.reduce(function(a,s){ return a+s.mins; }, 0);
+  // Streak bonus: 50 XP per streak day
+  xp += calcStreak() * 50;
+  // Session count bonus: 10 XP per session
+  xp += DB.data.sessions.length * 10;
+  // Subject diversity: 100 XP per subject with >60min
+  DB.data.subjects.forEach(function(s){
+    if((mps[s.id]||0) >= 60) xp += 100;
+  });
+  // Achievement bonuses counted separately
+  var achBonus = 0;
+  ACHIEVEMENTS.forEach(function(a){
+    if(isUnlocked(a.id)) achBonus += a.xp;
+  });
+  xp += achBonus;
+  return xp;
+}
+
+// ── ACHIEVEMENTS DEFINITION ────────────────────────────────────
+var ACHIEVEMENTS = [
+  // Sessões
+  { id:'first_session',   icon:'🎉', name:'Primeira Sessão',    desc:'Registre sua primeira sessão de estudo',          xp:100, check:function(){ return DB.data.sessions.length >= 1; } },
+  { id:'sessions_10',     icon:'📚', name:'10 Sessões',         desc:'Complete 10 sessões de estudo',                   xp:200, check:function(){ return DB.data.sessions.length >= 10; } },
+  { id:'sessions_50',     icon:'🏅', name:'50 Sessões',         desc:'Complete 50 sessões de estudo',                   xp:500, check:function(){ return DB.data.sessions.length >= 50; } },
+  { id:'sessions_100',    icon:'💯', name:'Centenário',         desc:'Complete 100 sessões de estudo',                  xp:1000, check:function(){ return DB.data.sessions.length >= 100; } },
+  // Horas
+  { id:'hours_10',        icon:'⏰', name:'10 Horas',           desc:'Acumule 10 horas de estudo',                      xp:150, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 600; } },
+  { id:'hours_50',        icon:'🕐', name:'50 Horas',           desc:'Acumule 50 horas de estudo',                      xp:400, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 3000; } },
+  { id:'hours_100',       icon:'⌚', name:'100 Horas',          desc:'Acumule 100 horas de estudo',                     xp:800, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 6000; } },
+  { id:'hours_500',       icon:'🌌', name:'500 Horas',          desc:'Acumule 500 horas — você é lendário!',            xp:3000, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 30000; } },
+  // Streak
+  { id:'streak_3',        icon:'🔥', name:'Chama Acesa',        desc:'Mantenha 3 dias seguidos de estudo',              xp:150, check:function(){ return calcStreak() >= 3; } },
+  { id:'streak_7',        icon:'🌶️', name:'Semana Perfeita',    desc:'7 dias seguidos estudando',                       xp:350, check:function(){ return calcStreak() >= 7; } },
+  { id:'streak_30',       icon:'🏆', name:'Mês Invicto',        desc:'30 dias seguidos sem falhar',                     xp:1500, check:function(){ return calcStreak() >= 30; } },
+  { id:'streak_100',      icon:'💥', name:'Imparável',          desc:'100 dias seguidos — fenomenal!',                  xp:5000, check:function(){ return calcStreak() >= 100; } },
+  // Matérias
+  { id:'sub_3',           icon:'📂', name:'Multi-disciplinar',  desc:'Adicione 3 matérias diferentes',                  xp:100, check:function(){ return DB.data.subjects.length >= 3; } },
+  { id:'sub_all',         icon:'🗂️', name:'Currículo Completo', desc:'Adicione 8 ou mais matérias',                     xp:300, check:function(){ return DB.data.subjects.length >= 8; } },
+  { id:'sub_balanced',    icon:'⚖️', name:'Equilibrado',        desc:'Estude 5 matérias diferentes na mesma semana',    xp:400, check:function(){
+    var ago=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
+    var sids=new Set(DB.data.sessions.filter(function(s){return s.date>=ago;}).map(function(s){return s.sid;}));
+    return sids.size >= 5;
+  }},
+  // Sessão longa
+  { id:'long_2h',         icon:'🎓', name:'Maratona 2h',        desc:'Complete uma sessão de 2 horas ou mais',          xp:200, check:function(){ return DB.data.sessions.some(function(s){return s.mins>=120;}); } },
+  { id:'long_4h',         icon:'🦁', name:'Maratona 4h',        desc:'Complete uma sessão de 4 horas ou mais',          xp:500, check:function(){ return DB.data.sessions.some(function(s){return s.mins>=240;}); } },
+  // Planejamento
+  { id:'plan_weekly',     icon:'📅', name:'Planejador',         desc:'Adicione blocos em todos os 7 dias da semana',     xp:250, check:function(){
+    var days = Object.keys(DB.data.weekBlocks||{});
+    return days.filter(function(d){return (DB.data.weekBlocks[d]||[]).length>0;}).length >= 7;
+  }},
+  { id:'plan_longterm',   icon:'🗺️', name:'Visionário',         desc:'Gere seu Plano Total pela primeira vez',           xp:200, check:function(){ return !!DB.data.ltConfig; } },
+  { id:'plan_calculator', icon:'🧮', name:'Estrategista',       desc:'Use a Calculadora de Horas',                      xp:150, check:function(){ return !!DB.data.planConfig; } },
+  // Especiais
+  { id:'night_owl',       icon:'🦉', name:'Coruja',             desc:'Registre uma sessão após as 22h',                  xp:200, check:function(){
+    return DB.data.sessions.some(function(s){ return s.hour !== undefined && s.hour >= 22; });
+  }},
+  { id:'early_bird',      icon:'🌅', name:'Madrugador',         desc:'Registre uma sessão antes das 6h',                 xp:200, check:function(){
+    return DB.data.sessions.some(function(s){ return s.hour !== undefined && s.hour < 6; });
+  }},
+  { id:'weekend',         icon:'🏖️', name:'Sem Descanso',       desc:'Estude em um sábado E em um domingo',             xp:300, check:function(){
+    var hasSat=false, hasSun=false;
+    DB.data.sessions.forEach(function(s){
+      var d=new Date(s.date+'T12:00:00'); var dow=d.getDay();
+      if(dow===6) hasSat=true; if(dow===0) hasSun=true;
+    });
+    return hasSat && hasSun;
+  }},
+  { id:'comeback',        icon:'💪', name:'Retorno Épico',      desc:'Retome os estudos após 7+ dias parado',            xp:300, check:function(){ return DB.data.gameFlags && DB.data.gameFlags.comeback; } },
+];
+
+// ── UNLOCK LOGIC ───────────────────────────────────────────────
+function isUnlocked(id){
+  return !!(DB.data.unlockedAchs && DB.data.unlockedAchs[id]);
+}
+
+function checkAchievements(){
+  if(!DB.data.unlockedAchs) DB.data.unlockedAchs = {};
+  var newlyUnlocked = [];
+  ACHIEVEMENTS.forEach(function(a){
+    if(!isUnlocked(a.id) && a.check()){
+      DB.data.unlockedAchs[a.id] = todayStr();
+      newlyUnlocked.push(a);
+    }
+  });
+  if(newlyUnlocked.length){
+    DB.save();
+    newlyUnlocked.forEach(function(a, i){
+      setTimeout(function(){
+        showXPPopup(a.icon+' '+a.name+' desbloqueada! +'+a.xp+' XP');
+      }, i * 1800);
+    });
+  }
+  updateXPBar();
+}
+
+// ── XP BAR UPDATE ──────────────────────────────────────────────
+function updateXPBar(){
+  var totalXP = calcTotalXP();
+  var lv = getLevelInfo(totalXP);
+  var next = LEVELS.find(function(l){ return l.num === lv.num + 1; });
+  var pct = next ? Math.round((totalXP - lv.min) / (next.min - lv.min) * 100) : 100;
+
+  // Topbar bar
+  var fill = document.getElementById('xp-bar-fill');
+  var lvTop = document.getElementById('xp-level-top');
+  var lbTop = document.getElementById('xp-label-top');
+  if(fill) fill.style.width = Math.min(pct,100) + '%';
+  if(lvTop) lvTop.textContent = 'Nv ' + lv.num;
+  if(lbTop) lbTop.textContent = totalXP + ' XP';
+
+  // Streak count in sidebar
+  var sc = calcStreak();
+  var scEl = document.getElementById('streak-count');
+  var stEl = document.getElementById('streak-top');
+  if(scEl) scEl.textContent = sc;
+  if(stEl) stEl.textContent = sc;
+}
+
+// ── RENDER ACHIEVEMENTS PAGE ───────────────────────────────────
+function renderAchievements(){
+  var totalXP = calcTotalXP();
+  var lv = getLevelInfo(totalXP);
+  var next = LEVELS.find(function(l){ return l.num === lv.num+1; });
+  var pct = next ? Math.round((totalXP - lv.min) / (next.min - lv.min) * 100) : 100;
+  var unlocked = ACHIEVEMENTS.filter(function(a){ return isUnlocked(a.id); }).length;
+  var totalMins = DB.data.sessions.reduce(function(a,s){ return a+s.mins; }, 0);
+
+  // ── Banner ──
+  var $= function(id){ return document.getElementById(id); };
+  if($('ach-banner-icon'))  $('ach-banner-icon').textContent  = lv.icon;
+  if($('ach-banner-level')) $('ach-banner-level').textContent = 'Nível ' + lv.num;
+  if($('ach-banner-name'))  $('ach-banner-name').textContent  = lv.name;
+  if($('ach-banner-sub'))   $('ach-banner-sub').textContent   = totalXP + ' XP · ' + unlocked + '/' + ACHIEVEMENTS.length + ' conquistas';
+  if($('ach-banner-xp-cur'))  $('ach-banner-xp-cur').textContent  = totalXP;
+  if($('ach-banner-xp-next')) $('ach-banner-xp-next').textContent = next ? next.min : '∞';
+  if($('ach-banner-bar'))     $('ach-banner-bar').style.width = Math.min(pct,100) + '%';
+  if($('ach-banner-next-lv')) $('ach-banner-next-lv').textContent = next ? 'Próximo: Nv' + next.num + ' ' + next.name : '🏆 Nível máximo!';
+
+  // ── Stats ──
+  if($('ach-s-xp'))       $('ach-s-xp').textContent       = totalXP;
+  if($('ach-s-streak'))   $('ach-s-streak').textContent   = calcStreak();
+  if($('ach-s-badges'))   $('ach-s-badges').textContent   = unlocked + '/' + ACHIEVEMENTS.length;
+  if($('ach-s-hours'))    $('ach-s-hours').textContent    = Math.floor(totalMins/60) + 'h';
+  if($('ach-s-sessions')) $('ach-s-sessions').textContent = DB.data.sessions.length;
+
+  // ── Filter state ──
+  var activeFilter = 'all';
+  var tabs = document.querySelectorAll('.ach-filter-tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      activeFilter = t.dataset.filter;
+      renderAchGrid(activeFilter);
+    });
+  });
+  renderAchGrid(activeFilter);
+
+  // ── Roadmap ──
+  var roadmap = document.getElementById('ach-roadmap');
+  if(roadmap){
+    roadmap.innerHTML = LEVELS.map(function(l){
+      var state = lv.num > l.num ? 'done' : lv.num === l.num ? 'current' : '';
+      return '<div class="ach-roadmap-step ' + state + '">' +
+        '<div class="ach-roadmap-node">' + l.icon + '</div>' +
+        '<div class="ach-roadmap-lv">Nv ' + l.num + '</div>' +
+        '<div class="ach-roadmap-name">' + l.name + '</div>' +
+        '</div>';
+    }).join('');
+  }
+}
+
+function renderAchGrid(filter){
+  var grid = document.getElementById('achievements-grid');
+  if(!grid) return;
+
+  // Rarity map
+  var rarities = {
+    first_session:'common', sessions_10:'common', sessions_50:'rare', sessions_100:'epic',
+    hours_10:'common', hours_50:'rare', hours_100:'epic', hours_500:'legendary',
+    streak_3:'common', streak_7:'rare', streak_30:'epic', streak_100:'legendary',
+    sub_3:'common', sub_all:'rare', sub_balanced:'rare',
+    long_2h:'common', long_4h:'rare',
+    plan_weekly:'common', plan_longterm:'common', plan_calculator:'common',
+    night_owl:'rare', early_bird:'rare', weekend:'common', comeback:'rare'
+  };
+
+  // Progress hints for locked achievements
+  function getProgress(a){
+    var sessions = DB.data.sessions;
+    var totalMins = sessions.reduce(function(x,s){ return x+s.mins; }, 0);
+    var streak = calcStreak();
+    if(a.id==='sessions_10')  return { cur: Math.min(sessions.length,10), max:10 };
+    if(a.id==='sessions_50')  return { cur: Math.min(sessions.length,50), max:50 };
+    if(a.id==='sessions_100') return { cur: Math.min(sessions.length,100), max:100 };
+    if(a.id==='hours_10')  return { cur: Math.min(Math.floor(totalMins/60),10), max:10 };
+    if(a.id==='hours_50')  return { cur: Math.min(Math.floor(totalMins/60),50), max:50 };
+    if(a.id==='hours_100') return { cur: Math.min(Math.floor(totalMins/60),100), max:100 };
+    if(a.id==='hours_500') return { cur: Math.min(Math.floor(totalMins/60),500), max:500 };
+    if(a.id==='streak_3')  return { cur: Math.min(streak,3), max:3 };
+    if(a.id==='streak_7')  return { cur: Math.min(streak,7), max:7 };
+    if(a.id==='streak_30') return { cur: Math.min(streak,30), max:30 };
+    if(a.id==='streak_100')return { cur: Math.min(streak,100), max:100 };
+    if(a.id==='sub_3')     return { cur: Math.min(DB.data.subjects.length,3), max:3 };
+    if(a.id==='sub_all')   return { cur: Math.min(DB.data.subjects.length,8), max:8 };
+    return null;
+  }
+
+  var sorted = ACHIEVEMENTS.slice().sort(function(a,b){
+    var ra = rarityOrder(rarities[a.id]||'common');
+    var rb = rarityOrder(rarities[b.id]||'common');
+    var ua = isUnlocked(a.id) ? 1 : 0;
+    var ub = isUnlocked(b.id) ? 1 : 0;
+    if(ua !== ub) return ub - ua;
+    return rb - ra;
+  });
+
+  function rarityOrder(r){ return {legendary:4,epic:3,rare:2,common:1}[r]||1; }
+
+  var filtered = sorted.filter(function(a){
+    if(filter === 'unlocked') return isUnlocked(a.id);
+    if(filter === 'locked')   return !isUnlocked(a.id);
+    return true;
+  });
+
+  var rarityLabel = { common:'Comum', rare:'Raro', epic:'Épico', legendary:'Lendário' };
+
+  grid.innerHTML = filtered.map(function(a){
+    var unlk = isUnlocked(a.id);
+    var rarity = rarities[a.id] || 'common';
+    var dateStr = unlk && DB.data.unlockedAchs && DB.data.unlockedAchs[a.id] ? fmtDate(DB.data.unlockedAchs[a.id]) : '';
+    var prog = !unlk ? getProgress(a) : null;
+    var progHtml = '';
+    if(prog){
+      var pp = Math.round(prog.cur/prog.max*100);
+      progHtml = '<div class="ach-item-progress">' +
+        '<div class="ach-item-prog-track"><div class="ach-item-prog-fill" style="width:'+pp+'%"></div></div>' +
+        '<div class="ach-item-prog-label">'+prog.cur+'/'+prog.max+'</div>' +
+        '</div>';
+    }
+    return '<div class="ach-item '+(unlk?'unlocked':'locked')+' '+rarity+'">' +
+      '<span class="ach-item-rarity rarity-'+rarity+'">'+rarityLabel[rarity]+'</span>' +
+      '<div class="ach-item-check"><i class="fa-solid fa-check"></i></div>' +
+      '<div class="ach-item-emoji">'+a.icon+'</div>' +
+      '<div class="ach-item-name">'+a.name+'</div>' +
+      '<div class="ach-item-desc">'+a.desc+'</div>' +
+      '<div class="ach-item-xp">+'+a.xp+' XP</div>' +
+      (dateStr ? '<div class="ach-item-date">'+dateStr+'</div>' : '') +
+      progHtml +
+      '</div>';
+  }).join('');
+
+  if(!filtered.length){
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)"><i class="fa-solid fa-trophy" style="font-size:2rem;opacity:.2;display:block;margin-bottom:10px"></i><p style="font-size:.88rem">Nenhuma conquista nesta categoria ainda.</p></div>';
+  }
+}
+
+function showXPPopup(msg){
+  var existing = document.getElementById('xp-popup-el');
+  if(existing) existing.remove();
+  var el = document.createElement('div');
+  el.id = 'xp-popup-el';
+  el.className = 'xp-popup';
+  el.innerHTML = '<i class="fa-solid fa-bolt"></i><span>'+msg+'</span>';
+  document.body.appendChild(el);
+  clearTimeout(xpPopupTimeout);
+  xpPopupTimeout = setTimeout(function(){
+    if(el.parentNode) el.remove();
+  }, 3500);
+}
+
+// ── HOOK INTO EXISTING FUNCTIONS ───────────────────────────────
+// Wrap addSession to tag hour and trigger gamification
+var _origAddSession = addSession;
+addSession = function(sid, mins, date, mode){
+  _origAddSession(sid, mins, date, mode);
+  // Tag hour on last session
+  var last = DB.data.sessions[DB.data.sessions.length-1];
+  if(last) last.hour = new Date().getHours();
+  // Comeback detection
+  if(DB.data.sessions.length >= 2){
+    var sorted = DB.data.sessions.slice().sort(function(a,b){ return b.date.localeCompare(a.date); });
+    if(sorted.length >= 2){
+      var gap = (new Date(sorted[0].date) - new Date(sorted[1].date)) / 86400000;
+      if(gap >= 7){
+        if(!DB.data.gameFlags) DB.data.gameFlags = {};
+        DB.data.gameFlags.comeback = true;
+      }
+    }
+  }
+  DB.save();
+  checkAchievements();
+  updateXPBar();
+};
