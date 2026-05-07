@@ -810,7 +810,7 @@ function applyTheme(t){
 }
 
 // ===== NAVIGATION =====
-var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',history:'Histórico',weekly:'Plano Semanal',longterm:'Plano Total',planner:'Calculadora',achievements:'Conquistas & XP',settings:'Configurações'};
+var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',history:'Histórico',weekly:'Plano Semanal',longterm:'Plano Total',planner:'Calculadora',achievements:'Conquistas & XP',ranking:'Ranking de Amigos',friends:'Amigos & Ranking',settings:'Configurações'};
 
 function navigate(page){
   document.querySelectorAll('.page-content').forEach(function(p){ p.classList.remove('active'); });
@@ -825,6 +825,9 @@ function navigate(page){
   if(page==='subjects') renderSubjects();
   if(page==='history'){ syncFilterSub(); renderHistory(); }
   if(page==='achievements') renderAchievements();
+  if(page==='friends') initFriendsPage();
+  if(page==='ranking') initRankingPage();
+  if(page==='settings') initNotifSettings();
   if(page==='weekly') renderWeekPage();
   if(page==='longterm') initLtPage();
   if(page==='planner') renderPlanInputs();
@@ -1069,6 +1072,10 @@ function initApp(){
   renderHeatmap();
   updateXPBar();
   checkAchievements();
+  // Pre-generate user code
+  generateUserCode();
+  // Init notifications if already permitted
+  if(typeof initNotifSettings === 'function') initNotifSettings();
 
   // Scroll to top button
   var mainEl = document.querySelector('.main-content') || document.querySelector('.main');
@@ -1545,3 +1552,660 @@ addSession = function(sid, mins, date, mode){
   checkAchievements();
   updateXPBar();
 };
+
+// ══════════════════════════════════════════════════════════════
+//  RANKING DE AMIGOS + NOTIFICAÇÕES PUSH
+// ══════════════════════════════════════════════════════════════
+
+// ── CÓDIGO ÚNICO ──────────────────────────────────────────────
+function generateUserCode(){
+  if(DB.data.userCode) return DB.data.userCode;
+  var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var code='';
+  for(var i=0;i<6;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+  DB.data.userCode=code; DB.save();
+  return code;
+}
+
+// ── FRIENDS DATA ──────────────────────────────────────────────
+// DB.data.friends = [{code,name,photo,weekMins,totalXP,streak,addedAt}]
+function getFriends(){ return DB.data.friends||[]; }
+
+function buildMeEntry(){
+  var totalMins=DB.data.sessions.reduce(function(a,s){return a+s.mins;},0);
+  var ago=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
+  var weekMins=DB.data.sessions.filter(function(s){return s.date>=ago;}).reduce(function(a,s){return a+s.mins;},0);
+  return {
+    code: generateUserCode(),
+    name: DB.data.displayName || (currentUser&&currentUser.displayName) || 'Você',
+    photo: currentUser&&currentUser.photoURL ? currentUser.photoURL : null,
+    weekMins: weekMins,
+    totalXP: calcTotalXP(),
+    streak: calcStreak(),
+    isMe: true
+  };
+}
+
+function addFriend(code){
+  code=code.trim().toUpperCase();
+  if(!code||code.length!==6){ return {ok:false,msg:'Código inválido. Use 6 caracteres.'}; }
+  if(code===generateUserCode()){ return {ok:false,msg:'Esse é o seu próprio código!'}; }
+  var friends=getFriends();
+  if(friends.find(function(f){return f.code===code;})){ return {ok:false,msg:'Amigo já adicionado.'}; }
+  if(friends.length>=20){ return {ok:false,msg:'Limite de 20 amigos atingido.'}; }
+  // For demo: create a simulated friend entry
+  // In production with backend, would fetch from server
+  var names=['Ana Júlia','Carlos Eduardo','Fernanda Lima','Rafael Souza','Beatriz Costa','Thiago Mendes','Larissa Oliveira','Pedro Alves'];
+  var n=names[Math.floor(Math.random()*names.length)];
+  var newFriend={
+    code:code,
+    name:n,
+    photo:null,
+    weekMins:Math.floor(Math.random()*600+60),
+    totalXP:Math.floor(Math.random()*8000+500),
+    streak:Math.floor(Math.random()*30),
+    addedAt:todayStr(),
+    isDemo:true
+  };
+  if(!DB.data.friends) DB.data.friends=[];
+  DB.data.friends.push(newFriend);
+  DB.save();
+  return {ok:true,friend:newFriend};
+}
+
+function removeFriend(code){
+  DB.data.friends=(DB.data.friends||[]).filter(function(f){return f.code!==code;});
+  DB.save();
+}
+
+// ── RENDER RANKING PAGE ───────────────────────────────────────
+var rankTab='week';
+function renderRankingPage(){
+  // Show user code
+  var codeEl=document.getElementById('my-rank-code');
+  if(codeEl) codeEl.textContent=generateUserCode();
+
+  renderFriendList();
+
+  // Tab handlers
+  document.querySelectorAll('.rank-tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.rank-tab').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      rankTab=t.dataset.rtab;
+      renderFriendList();
+    });
+  });
+}
+
+function renderFriendList(){
+  var list=document.getElementById('friend-rank-list'); if(!list) return;
+  var me=buildMeEntry();
+  var friends=getFriends();
+  var all=[me].concat(friends);
+
+  // Sort by selected tab
+  all.sort(function(a,b){
+    return rankTab==='week'?(b.weekMins-a.weekMins):(b.totalXP-a.totalXP);
+  });
+
+  if(all.length<=1&&!friends.length){
+    list.innerHTML='<div class="fr-empty"><i class="fa-solid fa-users"></i><p>Nenhum amigo adicionado ainda</p><span>Use o código acima para convidar seus amigos!</span></div>';
+    return;
+  }
+
+  list.innerHTML=all.map(function(f,i){
+    var pos=i+1;
+    var pc=pos===1?'gold':pos===2?'silver':pos===3?'bronze':'';
+    var posStr=pos===1?'🥇':pos===2?'🥈':pos===3?'🥉':'#'+pos;
+    var score=rankTab==='week'?+(f.weekMins/60).toFixed(1)+'h':f.totalXP+' XP';
+    var scoreLbl=rankTab==='week'?'esta semana':'XP total';
+    var avatarHtml=f.photo?
+      '<img src="'+f.photo+'" alt=""/>':
+      '<span>'+((f.name||'?')[0]).toUpperCase()+'</span>';
+    var removeBtn=f.isMe?'':'<button class="fr-remove" data-code="'+f.code+'" title="Remover"><i class="fa-solid fa-user-minus"></i></button>';
+    return '<div class="friend-rank-item'+(f.isMe?' me':'')+'">'+
+      '<div class="fr-pos '+pc+'">'+posStr+'</div>'+
+      '<div class="fr-avatar">'+avatarHtml+'</div>'+
+      '<div class="fr-info">'+
+        '<div class="fr-name">'+(f.isMe?'Você ('+f.name+')':f.name)+(f.isDemo?' <span style="font-size:.65rem;opacity:.5">(demo)</span>':'')+'</div>'+
+        '<div class="fr-detail">'+
+          '<span class="fr-streak"><i class="fa-solid fa-fire"></i>'+f.streak+'</span>'+
+          '<span>Cód: '+f.code+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<div><div class="fr-score">'+score+'</div><div class="fr-score-lbl">'+scoreLbl+'</div></div>'+
+      removeBtn+
+      '</div>';
+  }).join('');
+
+  // Remove friend buttons
+  list.querySelectorAll('.fr-remove').forEach(function(b){
+    b.addEventListener('click',function(){
+      confirm2('Remover amigo','Remover este amigo do ranking?',function(){
+        removeFriend(b.dataset.code);
+        renderFriendList();
+        toast('Amigo removido.','info');
+      });
+    });
+  });
+}
+
+// ── NOTIFICATIONS ──────────────────────────────────────────────
+var notifCheckInterval=null;
+
+function getNotifConfig(){
+  return DB.data.notifConfig||{daily:false,goal:true,streak:true,time:'20:00'};
+}
+function saveNotifConfig(cfg){
+  DB.data.notifConfig=cfg; DB.save();
+}
+
+function updateNotifStatusBadge(){
+  var badge=document.getElementById('notif-status-badge'); if(!badge) return;
+  var perm=Notification.permission;
+  if(perm==='granted'){
+    badge.className='notif-status granted';
+    badge.innerHTML='<i class="fa-solid fa-circle-check"></i> Notificações ativadas';
+  } else if(perm==='denied'){
+    badge.className='notif-status denied';
+    badge.innerHTML='<i class="fa-solid fa-circle-xmark"></i> Bloqueadas pelo navegador';
+  } else {
+    badge.className='notif-status default';
+    badge.innerHTML='<i class="fa-solid fa-circle-info"></i> Clique em "Ativar Notificações"';
+  }
+}
+
+function requestNotifPermission(){
+  if(!('Notification' in window)){
+    toast('Seu navegador não suporta notificações.','error'); return;
+  }
+  Notification.requestPermission().then(function(perm){
+    updateNotifStatusBadge();
+    if(perm==='granted'){
+      toast('Notificações ativadas!','success');
+      // Send test notification
+      setTimeout(function(){
+        sendNotif('SolisWeb ✓','Notificações configuradas com sucesso! Bons estudos 📚',null);
+      },500);
+      startNotifScheduler();
+    } else if(perm==='denied'){
+      toast('Notificações bloqueadas. Ative nas configurações do navegador.','error');
+    }
+  });
+}
+
+function sendNotif(title,body,icon){
+  if(Notification.permission!=='granted') return;
+  try {
+    var n=new Notification(title,{
+      body:body,
+      icon:icon||'icons/icon-192.png',
+      badge:'icons/icon-96.png',
+      tag:'solisweb-notif',
+      renotify:true
+    });
+    n.onclick=function(){ window.focus(); navigate('timer'); n.close(); };
+  } catch(e){ console.warn('[Notif]',e); }
+}
+
+function checkAndNotify(){
+  var cfg=getNotifConfig(); if(!cfg.daily&&!cfg.streak&&!cfg.goal) return;
+  var now=new Date();
+  var todayMins=todaySessions().reduce(function(a,s){return a+s.mins;},0);
+  var goalMins=getDailyGoalMins();
+
+  // Goal achieved notification
+  if(cfg.goal && todayMins>=goalMins && goalMins>0){
+    var lastGoalNotif=localStorage.getItem('sw_goal_notif_'+todayStr());
+    if(!lastGoalNotif){
+      localStorage.setItem('sw_goal_notif_'+todayStr(),'1');
+      sendNotif('🎯 Meta diária atingida!','Você estudou '+fmtTime(todayMins)+' hoje. Parabéns, continue assim!',null);
+    }
+  }
+
+  // Daily reminder
+  if(cfg.daily && cfg.time){
+    var parts=cfg.time.split(':');
+    var notifH=parseInt(parts[0]), notifM=parseInt(parts[1]);
+    var nowH=now.getHours(), nowMin=now.getMinutes();
+    var isTime=(nowH===notifH && nowMin>=notifM && nowMin<notifM+10);
+    if(isTime && todayMins===0){
+      var lastDailyNotif=localStorage.getItem('sw_daily_notif_'+todayStr());
+      if(!lastDailyNotif){
+        localStorage.setItem('sw_daily_notif_'+todayStr(),'1');
+        sendNotif('📚 Hora de estudar!','Você ainda não estudou hoje. Que tal uma sessão agora?',null);
+      }
+    }
+  }
+
+  // Streak at risk (22:00 and hasn't studied yet)
+  if(cfg.streak && now.getHours()===22 && todayMins===0 && calcStreak()>0){
+    var lastStreakNotif=localStorage.getItem('sw_streak_notif_'+todayStr());
+    if(!lastStreakNotif){
+      localStorage.setItem('sw_streak_notif_'+todayStr(),'1');
+      sendNotif('🔥 Streak em risco!','Seu streak de '+calcStreak()+' dias vai quebrar à meia-noite! Estude agora para manter.',null);
+    }
+  }
+}
+
+function startNotifScheduler(){
+  if(notifCheckInterval) clearInterval(notifCheckInterval);
+  notifCheckInterval=setInterval(checkAndNotify, 60000); // check every minute
+  checkAndNotify(); // check immediately
+}
+
+function initNotifSettings(){
+  var cfg=getNotifConfig();
+  var dailyTog=document.getElementById('notif-daily-toggle');
+  var goalTog=document.getElementById('notif-goal-toggle');
+  var streakTog=document.getElementById('notif-streak-toggle');
+  var timeInp=document.getElementById('notif-time');
+  var reqBtn=document.getElementById('btn-req-notif');
+  var saveBtn=document.getElementById('btn-save-notif');
+
+  if(dailyTog) dailyTog.checked=cfg.daily;
+  if(goalTog)  goalTog.checked=cfg.goal;
+  if(streakTog) streakTog.checked=cfg.streak;
+  if(timeInp)  timeInp.value=cfg.time||'20:00';
+
+  updateNotifStatusBadge();
+
+  if(reqBtn) reqBtn.addEventListener('click',requestNotifPermission);
+  if(saveBtn) saveBtn.addEventListener('click',function(){
+    var newCfg={
+      daily:dailyTog?dailyTog.checked:false,
+      goal:goalTog?goalTog.checked:true,
+      streak:streakTog?streakTog.checked:true,
+      time:timeInp?timeInp.value:'20:00'
+    };
+    saveNotifConfig(newCfg);
+    toast('Configurações salvas!','success');
+    if(Notification.permission==='granted') startNotifScheduler();
+  });
+
+  // Auto-start scheduler if already permitted
+  if(Notification.permission==='granted') startNotifScheduler();
+}
+
+function initRankingPage(){
+  renderRankingPage();
+
+  // Copy code button
+  var copyBtn=document.getElementById('btn-copy-code');
+  if(copyBtn) copyBtn.addEventListener('click',function(){
+    var code=generateUserCode();
+    navigator.clipboard.writeText(code).then(function(){
+      copyBtn.innerHTML='<i class="fa-solid fa-check"></i> Copiado!';
+      setTimeout(function(){ copyBtn.innerHTML='<i class="fa-solid fa-copy"></i> Copiar'; },2000);
+    }).catch(function(){
+      toast('Código: '+code,'info');
+    });
+  });
+
+  // Add friend button
+  var addBtn=document.getElementById('btn-add-friend');
+  var addInp=document.getElementById('friend-code-input');
+  var addHint=document.getElementById('add-friend-hint');
+  if(addBtn) addBtn.addEventListener('click',function(){
+    var result=addFriend(addInp.value);
+    if(result.ok){
+      addInp.value='';
+      if(addHint){ addHint.textContent=''; addHint.style.color=''; }
+      renderFriendList();
+      toast('Amigo '+result.friend.name+' adicionado!','success');
+    } else {
+      if(addHint){ addHint.textContent=result.msg; addHint.style.color='var(--danger)'; }
+      toast(result.msg,'error');
+    }
+  });
+  if(addInp) addInp.addEventListener('keydown',function(e){
+    if(e.key==='Enter') addBtn.click();
+    addInp.value=addInp.value.toUpperCase();
+  });
+}
+
+// Hook goal notification into session saving
+var _origAddSessionOld = addSession;
+addSession = function(sid,mins,date,mode){
+  _origAddSessionOld(sid,mins,date,mode);
+  // Check goal after saving
+  setTimeout(function(){
+    var cfg=getNotifConfig();
+    if(cfg.goal && Notification.permission==='granted'){
+      var todayMins=todaySessions().reduce(function(a,s){return a+s.mins;},0);
+      var goalMins=getDailyGoalMins();
+      if(todayMins>=goalMins && goalMins>0){
+        var key='sw_goal_notif_'+todayStr();
+        if(!localStorage.getItem(key)){
+          localStorage.setItem(key,'1');
+          sendNotif('🎯 Meta diária atingida!','Você estudou '+fmtTime(todayMins)+' hoje. Continue assim!',null);
+        }
+      }
+    }
+  },500);
+};
+
+// ══════════════════════════════════════════════════════════════
+//  AMIGOS, RANKING & NOTIFICAÇÕES PUSH
+// ══════════════════════════════════════════════════════════════
+
+// ── CÓDIGO DE AMIGO ────────────────────────────────────────────
+function genFriendCode(){
+  if(DB.data.friendCode) return DB.data.friendCode;
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var code = '';
+  for(var i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
+  DB.data.friendCode = code;
+  DB.save();
+  return code;
+}
+
+function getMyProfile(){
+  var totalMins = DB.data.sessions.reduce(function(a,s){return a+s.mins;},0);
+  var ago = new Date(Date.now()-7*86400000).toISOString().slice(0,10);
+  var weekMinsVal = DB.data.sessions.filter(function(s){return s.date>=ago;}).reduce(function(a,s){return a+s.mins;},0);
+  return {
+    code: genFriendCode(),
+    name: DB.data.displayName || (currentUser&&currentUser.displayName) || 'Você',
+    xp: calcTotalXP(),
+    weekMins: weekMinsVal,
+    totalMins: totalMins,
+    streak: calcStreak(),
+    level: getLevelInfo(calcTotalXP()).num
+  };
+}
+
+// ── FRIENDS DATA ───────────────────────────────────────────────
+function getFriends(){ return DB.data.friends || []; }
+
+function addFriend(code){
+  code = code.toUpperCase().trim();
+  if(!code || code.length !== 6){ toast('Código inválido. Use 6 caracteres.','error'); return; }
+  if(code === genFriendCode()){ toast('Esse é o seu próprio código!','error'); return; }
+  var friends = getFriends();
+  if(friends.find(function(f){return f.code===code;})){ toast('Amigo já adicionado.','error'); return; }
+
+  // In a real app this would query a server. For now we create a simulated friend profile
+  // stored locally with the code as identifier
+  friends.push({
+    code: code,
+    name: 'Amigo '+code,
+    xp: Math.floor(Math.random()*8000)+500,
+    weekMins: Math.floor(Math.random()*600)+60,
+    totalMins: Math.floor(Math.random()*18000)+1000,
+    streak: Math.floor(Math.random()*30),
+    level: Math.floor(Math.random()*6)+1,
+    addedAt: todayStr()
+  });
+  DB.data.friends = friends;
+  DB.save();
+  renderFriendsPage();
+  toast('Amigo adicionado! Código: '+code,'success');
+}
+
+function removeFriend(code){
+  confirm2('Remover amigo','Remover este amigo do seu ranking?',function(){
+    DB.data.friends = (DB.data.friends||[]).filter(function(f){return f.code!==code;});
+    DB.save(); renderFriendsPage();
+    toast('Amigo removido.','info');
+  });
+}
+
+// ── RENDER FRIENDS PAGE ────────────────────────────────────────
+var rankMode = 'week';
+
+function renderFriendsPage(){
+  var code = genFriendCode();
+  var codeEl = document.getElementById('my-friend-code');
+  if(codeEl) codeEl.textContent = code;
+
+  var friends = getFriends();
+  document.getElementById('friends-count').textContent = friends.length;
+
+  // Friends list
+  var listEl = document.getElementById('friends-list');
+  if(listEl){
+    if(!friends.length){
+      listEl.innerHTML = '<div class="rank-empty"><i class="fa-solid fa-user-group"></i><p>Nenhum amigo adicionado ainda.<br/>Compartilhe seu código!</p></div>';
+    } else {
+      listEl.innerHTML = friends.map(function(f){
+        var lv = getLevelInfo(f.xp||0);
+        return '<div class="friend-item">'+
+          '<div class="friend-avatar">'+f.name[0].toUpperCase()+'</div>'+
+          '<div style="flex:1"><div class="friend-name">'+f.name+'</div>'+
+          '<div class="friend-xp">'+lv.icon+' Nv'+lv.num+' · '+f.xp+' XP</div></div>'+
+          '<button class="friend-remove" data-code="'+f.code+'" title="Remover"><i class="fa-solid fa-user-xmark"></i></button>'+
+          '</div>';
+      }).join('');
+      listEl.querySelectorAll('.friend-remove').forEach(function(b){
+        b.addEventListener('click',function(){ removeFriend(b.dataset.code); });
+      });
+    }
+  }
+
+  renderFriendsRanking(rankMode);
+  renderNotifStatus();
+}
+
+function renderFriendsRanking(mode){
+  rankMode = mode;
+  var me = getMyProfile();
+  var friends = getFriends();
+
+  // Build combined list: me + friends
+  var all = friends.map(function(f){
+    return {name:f.name, xp:f.xp||0, weekMins:f.weekMins||0, totalMins:f.totalMins||0,
+            level:f.level||1, isMe:false, code:f.code};
+  });
+  all.push({name:me.name+' (você)', xp:me.xp, weekMins:me.weekMins,
+             totalMins:me.totalMins, level:me.level, isMe:true, code:me.code});
+
+  // Sort
+  all.sort(function(a,b){
+    return mode==='week' ? b.weekMins-a.weekMins : b.xp-a.xp;
+  });
+
+  var el = document.getElementById('friends-ranking');
+  if(!el) return;
+
+  if(all.length<=1){
+    el.innerHTML='<div class="rank-empty"><i class="fa-solid fa-trophy"></i><p>Adicione amigos para ver o ranking!</p></div>';
+    return;
+  }
+
+  var posClass=['','gold','silver','bronze'];
+  el.innerHTML = all.map(function(p,i){
+    var pos = i+1;
+    var pc = pos<=3 ? posClass[pos] : '';
+    var val = mode==='week'
+      ? fmtTime(p.weekMins)
+      : p.xp+' XP';
+    var lv = getLevelInfo(p.xp);
+    return '<div class="rank-friend-row'+(p.isMe?' is-me':'')+'">'+
+      '<div class="rank-friend-pos '+pc+'">#'+pos+'</div>'+
+      '<div class="rank-friend-avatar">'+p.name[0].toUpperCase()+'</div>'+
+      '<div><div class="rank-friend-name">'+p.name+'</div>'+
+      '<div style="font-size:.7rem;color:var(--text-muted)">'+lv.icon+' Nv'+lv.num+' '+lv.name+'</div></div>'+
+      (p.isMe?'<span class="rank-friend-me-badge">você</span>':'<span></span>')+
+      '<div class="rank-friend-val">'+val+'</div>'+
+      '</div>';
+  }).join('');
+}
+
+// ── NOTIFICAÇÕES PUSH ──────────────────────────────────────────
+var notifInterval = null;
+
+function renderNotifStatus(){
+  var toggle = document.getElementById('notif-toggle');
+  var statusEl = document.getElementById('notif-status');
+  var statusText = document.getElementById('notif-status-text');
+  if(!toggle||!statusEl||!statusText) return;
+
+  var saved = DB.data.notifSettings || {enabled:false, time:'20:00'};
+  toggle.checked = !!saved.enabled;
+
+  var timeInput = document.getElementById('notif-time');
+  if(timeInput) timeInput.value = saved.time||'20:00';
+
+  if(!('Notification' in window)){
+    statusEl.className='notif-status warn';
+    statusText.textContent='Notificações não suportadas neste navegador';
+    return;
+  }
+  if(Notification.permission==='denied'){
+    statusEl.className='notif-status warn';
+    statusText.textContent='Permissão de notificação bloqueada. Habilite nas configurações do navegador.';
+    return;
+  }
+  if(!saved.enabled){
+    statusEl.className='notif-status off';
+    statusText.textContent='Notificações desativadas';
+    return;
+  }
+  if(Notification.permission==='granted'){
+    statusEl.className='notif-status ok';
+    statusText.textContent='✓ Ativo — lembrete às '+( saved.time||'20:00')+' se não estudar hoje';
+  } else {
+    statusEl.className='notif-status warn';
+    statusText.textContent='Clique em Ativar para conceder permissão';
+  }
+}
+
+function enableNotifications(enabled){
+  if(!DB.data.notifSettings) DB.data.notifSettings={enabled:false,time:'20:00'};
+  if(enabled && Notification.permission !== 'granted'){
+    Notification.requestPermission().then(function(perm){
+      if(perm==='granted'){
+        DB.data.notifSettings.enabled=true; DB.save();
+        scheduleNotifCheck();
+        toast('Notificações ativadas!','success');
+      } else {
+        var toggle=document.getElementById('notif-toggle');
+        if(toggle) toggle.checked=false;
+        toast('Permissão negada. Habilite nas configurações do navegador.','error');
+      }
+      renderNotifStatus();
+    });
+  } else {
+    DB.data.notifSettings.enabled=enabled; DB.save();
+    if(enabled) scheduleNotifCheck(); else clearInterval(notifInterval);
+    renderNotifStatus();
+    toast(enabled?'Lembretes ativados!':'Lembretes desativados.', enabled?'success':'info');
+  }
+}
+
+function saveNotifTime(t){
+  if(!DB.data.notifSettings) DB.data.notifSettings={enabled:false,time:'20:00'};
+  DB.data.notifSettings.time=t; DB.save();
+  renderNotifStatus();
+  toast('Horário salvo: '+t,'success');
+}
+
+function sendStudyReminder(){
+  if(Notification.permission!=='granted') return;
+  var todayMins=todaySessions().reduce(function(a,s){return a+s.mins;},0);
+  if(todayMins>0) return; // Already studied today — no notification needed
+  var streak=calcStreak();
+  var msgs=[
+    'Você ainda não estudou hoje! 📚 Não quebre sua sequência de '+streak+' dias.',
+    'Hora de estudar! 🎯 Sua meta diária está esperando.',
+    'Não esqueça de estudar hoje! 🔥 Mantenha o ritmo no SolisWeb.',
+  ];
+  var msg=msgs[Math.floor(Math.random()*msgs.length)];
+  try {
+    new Notification('SolisWeb — Lembrete de Estudo',{
+      body:msg,
+      icon:'icons/icon-192.png',
+      badge:'icons/icon-72.png',
+      tag:'study-reminder',
+      renotify:false
+    });
+  } catch(e){ console.warn('[Notif] Error:', e); }
+}
+
+function testNotification(){
+  if(Notification.permission!=='granted'){
+    Notification.requestPermission().then(function(p){
+      if(p==='granted'){
+        new Notification('SolisWeb — Teste',{body:'Notificações funcionando! ✓',icon:'icons/icon-192.png',tag:'test'});
+        toast('Notificação de teste enviada!','success');
+      } else { toast('Permissão negada.','error'); }
+      renderNotifStatus();
+    });
+  } else {
+    new Notification('SolisWeb — Teste',{body:'Notificações funcionando! ✓',icon:'icons/icon-192.png',tag:'test'});
+    toast('Notificação de teste enviada!','success');
+  }
+}
+
+function scheduleNotifCheck(){
+  clearInterval(notifInterval);
+  notifInterval=setInterval(function(){
+    var s=DB.data.notifSettings;
+    if(!s||!s.enabled||Notification.permission!=='granted') return;
+    var now=new Date();
+    var parts=(s.time||'20:00').split(':');
+    var h=parseInt(parts[0]),m=parseInt(parts[1]);
+    if(now.getHours()===h&&now.getMinutes()===m){
+      sendStudyReminder();
+    }
+  },60000); // Check every minute
+}
+
+// ── INIT FRIENDS & NOTIF ───────────────────────────────────────
+function initFriendsPage(){
+  genFriendCode();
+  renderFriendsPage();
+
+  // Wire rank tabs
+  document.querySelectorAll('.rank-tab').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      document.querySelectorAll('.rank-tab').forEach(function(t){t.classList.remove('active');});
+      tab.classList.add('active');
+      renderFriendsRanking(tab.dataset.rank);
+    });
+  });
+
+  // Copy code button
+  var btnCopy=document.getElementById('btn-copy-code');
+  if(btnCopy) btnCopy.addEventListener('click',function(){
+    var code=genFriendCode();
+    navigator.clipboard.writeText(code).then(function(){
+      toast('Código copiado: '+code,'success');
+    }).catch(function(){
+      toast('Código: '+code,'info');
+    });
+  });
+
+  // Add friend
+  var btnAdd=document.getElementById('btn-add-friend');
+  var inp=document.getElementById('friend-code-input');
+  if(btnAdd) btnAdd.addEventListener('click',function(){
+    addFriend(inp.value); inp.value='';
+  });
+  if(inp) inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){ addFriend(inp.value); inp.value=''; }
+    inp.value=inp.value.toUpperCase();
+  });
+
+  // Notification toggle
+  var toggle=document.getElementById('notif-toggle');
+  if(toggle) toggle.addEventListener('change',function(){ enableNotifications(this.checked); });
+
+  // Notification time
+  var timeInp=document.getElementById('notif-time');
+  if(timeInp) timeInp.addEventListener('change',function(){ saveNotifTime(this.value); });
+
+  // Test button
+  var btnTest=document.getElementById('btn-test-notif');
+  if(btnTest) btnTest.addEventListener('click',testNotification);
+}
+
+// Start notification scheduler on load
+(function(){
+  var s=DB.data.notifSettings;
+  if(s&&s.enabled&&typeof Notification!=='undefined'&&Notification.permission==='granted'){
+    scheduleNotifCheck();
+  }
+})();

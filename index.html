@@ -64,10 +64,12 @@
       <a href="#" class="nav-link" data-page="subjects"><i class="fa-solid fa-book-open"></i><span>Matérias</span></a>
       <a href="#" class="nav-link" data-page="history"><i class="fa-solid fa-clock-rotate-left"></i><span>Histórico</span></a>
       <a href="#" class="nav-link" data-page="achievements"><i class="fa-solid fa-trophy"></i><span>Conquistas</span></a>
+      <a href="#" class="nav-link" data-page="friends"><i class="fa-solid fa-users"></i><span>Amigos</span></a>
       <a href="#" class="nav-link" data-page="weekly"><i class="fa-solid fa-calendar-days"></i><span>Plano Semanal</span></a>
       <a href="#" class="nav-link" data-page="longterm"><i class="fa-solid fa-map"></i><span>Plano Total</span></a>
       <a href="#" class="nav-link" data-page="planner"><i class="fa-solid fa-calculator"></i><span>Calculadora</span></a>
-      <a href="#" class="nav-link" data-page="settings"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
+      <a href="#" class="nav-link" data-page="ranking"><i class="fa-solid fa-users"></i><span>Ranking</span></a>
+    <a href="#" class="nav-link" data-page="settings"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
     </nav>
     <div class="sidebar-streak">
       <i class="fa-solid fa-fire"></i><span id="streak-count">0</span><span>dias seguidos</span>
@@ -332,11 +334,118 @@
       </div>
     </section>
 
-    <!-- SETTINGS -->
+  
+  <!-- AMIGOS & RANKING -->
+  <section class="page-content" id="page-friends">
+    <div class="page-hero">
+      <div><h2>Amigos & Ranking</h2><p class="page-sub">Compare seu progresso e compita com amigos.</p></div>
+    </div>
+
+    <!-- NOTIFICAÇÕES -->
+    <div class="notif-card">
+      <h3><i class="fa-solid fa-bell"></i> Notificações de Lembrete</h3>
+      <div class="notif-row">
+        <div><div class="notif-label">Lembrete diário de estudos</div><div class="notif-sub">Avisa se você não estudou nada ainda hoje</div></div>
+        <label class="toggle-wrap"><input type="checkbox" id="notif-toggle"/><span class="toggle-slider"></span></label>
+      </div>
+      <div class="notif-row">
+        <div><div class="notif-label">Horário do lembrete</div><div class="notif-sub">Receber a notificação neste horário (se meta não cumprida)</div></div>
+        <input type="time" id="notif-time" value="20:00"/>
+      </div>
+      <div id="notif-status" class="notif-status off"><i class="fa-solid fa-circle-info"></i><span id="notif-status-text">Notificações desativadas</span></div>
+      <button class="btn btn-secondary" id="btn-test-notif" style="margin-top:12px;font-size:.82rem"><i class="fa-solid fa-paper-plane"></i> Testar notificação agora</button>
+    </div>
+
+    <div class="friends-layout">
+      <!-- LEFT: Adicionar amigos -->
+      <div>
+        <div class="friends-card" style="margin-bottom:16px">
+          <h3><i class="fa-solid fa-id-badge"></i> Seu Código de Amigo</h3>
+          <div class="my-code-label">Compartilhe este código com seus amigos</div>
+          <div class="my-code-box">
+            <div>
+              <div class="my-code-label">Seu código</div>
+              <div class="my-code-val" id="my-friend-code">——————</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-code"><i class="fa-solid fa-copy"></i> Copiar</button>
+          </div>
+          <div class="f-group" style="margin-bottom:10px"><div class="f-label">Adicionar amigo pelo código</div>
+            <div class="add-friend-row">
+              <input class="f-input" type="text" id="friend-code-input" placeholder="ABC123" maxlength="6" style="text-transform:uppercase;letter-spacing:.1em"/>
+              <button class="btn btn-primary" id="btn-add-friend"><i class="fa-solid fa-user-plus"></i> Adicionar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="friends-card">
+          <h3><i class="fa-solid fa-user-group"></i> Meus Amigos (<span id="friends-count">0</span>)</h3>
+          <div id="friends-list" class="friends-list">
+            <div class="rank-empty"><i class="fa-solid fa-user-group"></i><p>Nenhum amigo adicionado ainda.<br/>Compartilhe seu código!</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Ranking -->
+      <div class="friends-card">
+        <h3><i class="fa-solid fa-ranking-star"></i> Ranking</h3>
+        <div class="rank-tabs">
+          <button class="rank-tab active" data-rank="week">🗓 Esta semana</button>
+          <button class="rank-tab" data-rank="total">⚡ XP Total</button>
+        </div>
+        <div id="friends-ranking" class="ranking-friends"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
     <section class="page-content" id="page-settings">
       <div class="page-hero"><h2>Configurações</h2><p class="page-sub">Personalize sua experiência.</p></div>
       <div class="settings-grid">
-        <div class="settings-card">
+        <!-- NOTIFICAÇÕES -->
+      <div class="notif-card">
+        <h3><i class="fa-solid fa-bell"></i> Notificações de Estudo</h3>
+        <div id="notif-status-badge" class="notif-status default"><i class="fa-solid fa-circle-info"></i> Permissão não solicitada</div>
+        <div class="notif-toggle-row" style="margin-top:14px">
+          <div class="notif-toggle-info">
+            <div class="notif-toggle-title">Lembrete diário</div>
+            <div class="notif-toggle-sub">Notifica se você não estudou ainda hoje após o horário definido</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="notif-daily-toggle"/>
+            <div class="toggle-sw-track"></div>
+            <div class="toggle-sw-thumb"></div>
+          </label>
+        </div>
+        <div class="notif-time-row">
+          <label>Lembrar às</label>
+          <input class="f-input" type="time" id="notif-time-2"" value="20:00" style="max-width:130px"/>
+          <button class="btn btn-primary btn-sm" id="btn-save-notif"><i class="fa-solid fa-check"></i> Salvar</button>
+        </div>
+        <div class="notif-toggle-row">
+          <div class="notif-toggle-info">
+            <div class="notif-toggle-title">Notificar ao bater meta diária</div>
+            <div class="notif-toggle-sub">Parabéns quando você atingir sua meta de horas do dia</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="notif-goal-toggle" checked/>
+            <div class="toggle-sw-track"></div>
+            <div class="toggle-sw-thumb"></div>
+          </label>
+        </div>
+        <div class="notif-toggle-row">
+          <div class="notif-toggle-info">
+            <div class="notif-toggle-title">Alerta de streak em risco</div>
+            <div class="notif-toggle-sub">Avisa quando falta 2h para meia-noite e você ainda não estudou</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="notif-streak-toggle" checked/>
+            <div class="toggle-sw-track"></div>
+            <div class="toggle-sw-thumb"></div>
+          </label>
+        </div>
+        <button class="btn btn-secondary" id="btn-req-notif" style="margin-top:16px;width:100%"><i class="fa-solid fa-bell"></i> Ativar Notificações</button>
+      </div>
+      <div class="settings-card">
           <h3>Tema</h3>
           <div class="theme-grid">
             <button class="theme-preview active" data-theme="theme-dark"><div class="theme-swatch dark"></div><span>Dark Premium</span></button>
