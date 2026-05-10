@@ -2210,8 +2210,10 @@ function initFriendsPage(){
     scheduleNotifCheck();
   }
 })();
+
 // ===== PROGRESS PAGE =====
 var _progressRadarChart = null;
+var _progressPageInited = false;
 
 function loadProgressData() {
   return DB.data.progressData || {};
@@ -2225,15 +2227,15 @@ function saveProgressData(data) {
 function renderProgressSliders() {
   var container = document.getElementById('progress-sliders');
   if (!container) return;
-  var subs = DB.data.subjects;
-  if (!subs || !subs.length) {
+  var subs = DB.data.subjects || [];
+  if (!subs.length) {
     container.innerHTML = '<p class="empty-hint">Adicione matérias na aba <strong>Matérias</strong> primeiro.</p>';
     return;
   }
   var saved = loadProgressData();
   container.innerHTML = subs.map(function(s) {
-    var val = saved[s.id] !== undefined ? saved[s.id] : 0;
-    return '<div class="progress-slider-item" data-id="' + s.id + '">' +
+    var val = saved[s.id] !== undefined ? parseInt(saved[s.id], 10) : 0;
+    return '<div class="progress-slider-item">' +
       '<div class="progress-slider-header">' +
         '<div class="progress-slider-name">' +
           '<div class="progress-slider-dot" style="background:' + s.color + '"></div>' +
@@ -2242,16 +2244,15 @@ function renderProgressSliders() {
         '<span class="progress-slider-pct" id="pct-' + s.id + '">' + val + '%</span>' +
       '</div>' +
       '<input type="range" class="progress-range" min="0" max="100" value="' + val + '" ' +
-        'style="accent-color:' + s.color + '" ' +
+        'style="accent-color:' + s.color + ';width:100%" ' +
         'data-id="' + s.id + '" id="range-' + s.id + '">' +
     '</div>';
   }).join('');
 
-  // Bind slider events
+  // Bind live update on slider move
   container.querySelectorAll('.progress-range').forEach(function(inp) {
     inp.addEventListener('input', function() {
-      var id = inp.dataset.id;
-      var pctEl = document.getElementById('pct-' + id);
+      var pctEl = document.getElementById('pct-' + inp.dataset.id);
       if (pctEl) pctEl.textContent = inp.value + '%';
     });
   });
@@ -2259,8 +2260,7 @@ function renderProgressSliders() {
 
 function getProgressValues() {
   var values = {};
-  var sliders = document.querySelectorAll('.progress-range');
-  sliders.forEach(function(inp) {
+  document.querySelectorAll('#progress-sliders .progress-range').forEach(function(inp) {
     values[inp.dataset.id] = parseInt(inp.value, 10);
   });
   return values;
@@ -2271,8 +2271,8 @@ function renderProgressRadar() {
   var emptyEl = document.getElementById('progress-radar-empty');
   if (!canvas) return;
 
-  var subs = DB.data.subjects;
-  if (!subs || !subs.length) {
+  var subs = DB.data.subjects || [];
+  if (!subs.length) {
     if (emptyEl) emptyEl.style.display = 'flex';
     canvas.style.display = 'none';
     return;
@@ -2280,23 +2280,29 @@ function renderProgressRadar() {
 
   var values = getProgressValues();
   var labels = subs.map(function(s) { return s.name; });
-  var data = subs.map(function(s) { return values[s.id] || 0; });
-  var colors = subs.map(function(s) { return s.color; });
+  var data = subs.map(function(s) { return values[s.id] !== undefined ? values[s.id] : 0; });
 
   if (emptyEl) emptyEl.style.display = 'none';
   canvas.style.display = 'block';
 
-  var accentRgb = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#5b8ef5';
+  var style = getComputedStyle(document.body);
+  var accent = style.getPropertyValue('--accent').trim() || '#5b8ef5';
+  var textMuted = style.getPropertyValue('--text-muted').trim() || '#4d5570';
+  var textSec = style.getPropertyValue('--text-secondary').trim() || '#8b93a8';
+  var border = style.getPropertyValue('--border').trim() || 'rgba(255,255,255,0.07)';
 
   var chartData = {
     labels: labels,
     datasets: [{
       label: 'Progresso (%)',
       data: data,
-      backgroundColor: 'rgba(91,142,245,0.18)',
-      borderColor: accentRgb,
+      backgroundColor: accent.replace(')', ', 0.18)').replace('rgb', 'rgba').replace('#', 'rgba(').replace('rgba(', 'rgba(').replace(/(rgba\()([0-9a-fA-F]{6})/, function(m, p, hex) {
+        var r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+        return 'rgba(' + r + ',' + g + ',' + b;
+      }) || 'rgba(91,142,245,0.18)',
+      borderColor: accent,
       borderWidth: 2.5,
-      pointBackgroundColor: colors,
+      pointBackgroundColor: subs.map(function(s) { return s.color; }),
       pointBorderColor: '#fff',
       pointBorderWidth: 2,
       pointRadius: 5,
@@ -2305,8 +2311,15 @@ function renderProgressRadar() {
     }]
   };
 
+  // Fix background color properly
+  chartData.datasets[0].backgroundColor = hexToRgba(accent, 0.18);
+
   if (_progressRadarChart) {
     _progressRadarChart.data = chartData;
+    _progressRadarChart.options.scales.r.ticks.color = textMuted;
+    _progressRadarChart.options.scales.r.grid.color = border;
+    _progressRadarChart.options.scales.r.angleLines.color = border;
+    _progressRadarChart.options.scales.r.pointLabels.color = textSec;
     _progressRadarChart.update();
   } else {
     var ctx = canvas.getContext('2d');
@@ -2319,58 +2332,66 @@ function renderProgressRadar() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            callbacks: {
-              label: function(ctx) { return ' ' + ctx.raw + '%'; }
-            }
+            callbacks: { label: function(c) { return ' ' + c.raw + '%'; } }
           }
         },
         scales: {
           r: {
-            min: 0,
-            max: 100,
+            min: 0, max: 100,
             ticks: {
-              stepSize: 20,
-              color: getComputedStyle(document.body).getPropertyValue('--text-muted').trim() || '#4d5570',
+              stepSize: 25,
+              color: textMuted,
               font: { size: 10 },
-              callback: function(v) { return v + '%'; }
+              callback: function(v) { return v + '%'; },
+              backdropColor: 'transparent'
             },
-            grid: { color: getComputedStyle(document.body).getPropertyValue('--border').trim() || 'rgba(255,255,255,0.07)' },
-            angleLines: { color: getComputedStyle(document.body).getPropertyValue('--border').trim() || 'rgba(255,255,255,0.07)' },
-            pointLabels: {
-              color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#8b93a8',
-              font: { size: 11, weight: '600' }
-            }
+            grid: { color: border },
+            angleLines: { color: border },
+            pointLabels: { color: textSec, font: { size: 11, weight: '600' } }
           }
         }
       }
     });
   }
 
-  // Update summary cards
+  // Summary cards
   var summaryEl = document.getElementById('progress-summary');
   if (summaryEl) {
-    summaryEl.innerHTML = subs.map(function(s) {
-      var v = values[s.id] || 0;
-      var color = v >= 80 ? 'var(--success)' : v >= 50 ? 'var(--warn)' : 'var(--danger)';
-      return '<div class="progress-summary-item">' +
-        '<div class="progress-summary-name" title="' + s.name + '">' + s.name + '</div>' +
-        '<div class="progress-summary-val" style="color:' + color + '">' + v + '%</div>' +
-      '</div>';
-    }).join('');
+    if (subs.length <= 6) {
+      summaryEl.style.display = 'grid';
+      summaryEl.innerHTML = subs.map(function(s) {
+        var v = values[s.id] !== undefined ? values[s.id] : 0;
+        var color = v >= 80 ? 'var(--success)' : v >= 40 ? 'var(--warn)' : 'var(--danger)';
+        return '<div class="progress-summary-item">' +
+          '<div class="progress-summary-name" title="' + s.name + '">' + s.name + '</div>' +
+          '<div class="progress-summary-val" style="color:' + color + '">' + v + '%</div>' +
+        '</div>';
+      }).join('');
+    } else {
+      summaryEl.style.display = 'none';
+    }
   }
 }
 
+function hexToRgba(color, alpha) {
+  // Handle #hex colors
+  var hex = color.replace('#', '');
+  if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  if (hex.length === 6) {
+    var r = parseInt(hex.slice(0,2),16), g = parseInt(hex.slice(2,4),16), b = parseInt(hex.slice(4,6),16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+  return 'rgba(91,142,245,' + alpha + ')';
+}
+
 function initProgressPage() {
+  // Always re-render sliders (subjects may have changed)
   renderProgressSliders();
-  // Load saved values into sliders
-  var saved = loadProgressData();
-  Object.keys(saved).forEach(function(id) {
-    var inp = document.getElementById('range-' + id);
-    var pct = document.getElementById('pct-' + id);
-    if (inp) { inp.value = saved[id]; }
-    if (pct) { pct.textContent = saved[id] + '%'; }
-  });
   renderProgressRadar();
+
+  // Use one-time flag to avoid duplicating event listeners
+  if (_progressPageInited) return;
+  _progressPageInited = true;
 
   var btnUpdate = document.getElementById('btn-update-radar');
   if (btnUpdate) {
