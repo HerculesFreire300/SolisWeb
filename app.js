@@ -815,6 +815,10 @@ var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',
 function navigate(page){
   document.querySelectorAll('.page-content').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-link').forEach(function(a){ a.classList.remove('active'); });
+  // Sync mobile bottom nav
+  document.querySelectorAll('.mobile-bottom-nav a').forEach(function(a){ a.classList.remove('active'); });
+  var mbnLink = document.querySelector('.mobile-bottom-nav a[data-page="'+page+'"]');
+  if(mbnLink) mbnLink.classList.add('active');
   var el=document.getElementById('page-'+page);
   if(el) el.classList.add('active');
   var lnk=document.querySelector('.nav-link[data-page="'+page+'"]');
@@ -989,6 +993,10 @@ function initApp(){
   refreshDashboard(); renderTodaySessions();
 
   document.querySelectorAll('.nav-link').forEach(function(a){
+    a.addEventListener('click',function(e){ e.preventDefault(); navigate(a.dataset.page); });
+  });
+  // Mobile bottom nav
+  document.querySelectorAll('.mobile-bottom-nav a').forEach(function(a){
     a.addEventListener('click',function(e){ e.preventDefault(); navigate(a.dataset.page); });
   });
   document.getElementById('btn-menu-toggle').addEventListener('click',openSidebar);
@@ -1279,46 +1287,46 @@ function calcTotalXP(){
 // ── ACHIEVEMENTS DEFINITION ────────────────────────────────────
 var ACHIEVEMENTS = [
   // Sessões
-  { id:'first_session',   icon:'🎉', name:'Primeira Sessão',    desc:'Registre sua primeira sessão de estudo',          xp:100, check:function(){ return DB.data.sessions.length >= 1; } },
-  { id:'sessions_10',     icon:'📚', name:'10 Sessões',         desc:'Complete 10 sessões de estudo',                   xp:200, check:function(){ return DB.data.sessions.length >= 10; } },
-  { id:'sessions_50',     icon:'🏅', name:'50 Sessões',         desc:'Complete 50 sessões de estudo',                   xp:500, check:function(){ return DB.data.sessions.length >= 50; } },
-  { id:'sessions_100',    icon:'💯', name:'Centenário',         desc:'Complete 100 sessões de estudo',                  xp:1000, check:function(){ return DB.data.sessions.length >= 100; } },
+  { id:'first_session',   icon:'🎉', name:'Primeira Sessão',    desc:'Registre sua primeira sessão de estudo',          xp:100,  rarity:'common',    check:function(){ return DB.data.sessions.length >= 1; } },
+  { id:'sessions_10',     icon:'📚', name:'10 Sessões',         desc:'Complete 10 sessões de estudo',                   xp:200,  rarity:'common',    check:function(){ return DB.data.sessions.length >= 10; } },
+  { id:'sessions_50',     icon:'🏅', name:'50 Sessões',         desc:'Complete 50 sessões de estudo',                   xp:500,  rarity:'rare',      check:function(){ return DB.data.sessions.length >= 50; } },
+  { id:'sessions_100',    icon:'💯', name:'Centenário',         desc:'Complete 100 sessões de estudo',                  xp:1000, rarity:'epic',      check:function(){ return DB.data.sessions.length >= 100; } },
   // Horas
-  { id:'hours_10',        icon:'⏰', name:'10 Horas',           desc:'Acumule 10 horas de estudo',                      xp:150, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 600; } },
-  { id:'hours_50',        icon:'🕐', name:'50 Horas',           desc:'Acumule 50 horas de estudo',                      xp:400, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 3000; } },
-  { id:'hours_100',       icon:'⌚', name:'100 Horas',          desc:'Acumule 100 horas de estudo',                     xp:800, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 6000; } },
-  { id:'hours_500',       icon:'🌌', name:'500 Horas',          desc:'Acumule 500 horas — você é lendário!',            xp:3000, check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 30000; } },
+  { id:'hours_10',        icon:'⏰', name:'10 Horas',           desc:'Acumule 10 horas de estudo',                      xp:150,  rarity:'common',    check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 600; } },
+  { id:'hours_50',        icon:'🕐', name:'50 Horas',           desc:'Acumule 50 horas de estudo',                      xp:400,  rarity:'rare',      check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 3000; } },
+  { id:'hours_100',       icon:'⌚', name:'100 Horas',          desc:'Acumule 100 horas de estudo',                     xp:800,  rarity:'epic',      check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 6000; } },
+  { id:'hours_500',       icon:'🌌', name:'500 Horas',          desc:'Acumule 500 horas — você é lendário!',            xp:3000, rarity:'legendary', check:function(){ return DB.data.sessions.reduce(function(a,s){return a+s.mins;},0) >= 30000; } },
   // Streak
-  { id:'streak_3',        icon:'🔥', name:'Chama Acesa',        desc:'Mantenha 3 dias seguidos de estudo',              xp:150, check:function(){ return calcStreak() >= 3; } },
-  { id:'streak_7',        icon:'🌶️', name:'Semana Perfeita',    desc:'7 dias seguidos estudando',                       xp:350, check:function(){ return calcStreak() >= 7; } },
-  { id:'streak_30',       icon:'🏆', name:'Mês Invicto',        desc:'30 dias seguidos sem falhar',                     xp:1500, check:function(){ return calcStreak() >= 30; } },
-  { id:'streak_100',      icon:'💥', name:'Imparável',          desc:'100 dias seguidos — fenomenal!',                  xp:5000, check:function(){ return calcStreak() >= 100; } },
+  { id:'streak_3',        icon:'🔥', name:'Chama Acesa',        desc:'Mantenha 3 dias seguidos de estudo',              xp:150,  rarity:'common',    check:function(){ return calcStreak() >= 3; } },
+  { id:'streak_7',        icon:'🌶️', name:'Semana Perfeita',    desc:'7 dias seguidos estudando',                       xp:350,  rarity:'rare',      check:function(){ return calcStreak() >= 7; } },
+  { id:'streak_30',       icon:'🏆', name:'Mês Invicto',        desc:'30 dias seguidos sem falhar',                     xp:1500, rarity:'epic',      check:function(){ return calcStreak() >= 30; } },
+  { id:'streak_100',      icon:'💥', name:'Imparável',          desc:'100 dias seguidos — fenomenal!',                  xp:5000, rarity:'legendary', check:function(){ return calcStreak() >= 100; } },
   // Matérias
-  { id:'sub_3',           icon:'📂', name:'Multi-disciplinar',  desc:'Adicione 3 matérias diferentes',                  xp:100, check:function(){ return DB.data.subjects.length >= 3; } },
-  { id:'sub_all',         icon:'🗂️', name:'Currículo Completo', desc:'Adicione 8 ou mais matérias',                     xp:300, check:function(){ return DB.data.subjects.length >= 8; } },
-  { id:'sub_balanced',    icon:'⚖️', name:'Equilibrado',        desc:'Estude 5 matérias diferentes na mesma semana',    xp:400, check:function(){
+  { id:'sub_3',           icon:'📂', name:'Multi-disciplinar',  desc:'Adicione 3 matérias diferentes',                  xp:100,  rarity:'common',    check:function(){ return DB.data.subjects.length >= 3; } },
+  { id:'sub_all',         icon:'🗂️', name:'Currículo Completo', desc:'Adicione 8 ou mais matérias',                     xp:300,  rarity:'rare',      check:function(){ return DB.data.subjects.length >= 8; } },
+  { id:'sub_balanced',    icon:'⚖️', name:'Equilibrado',        desc:'Estude 5 matérias diferentes na mesma semana',    xp:400,  rarity:'rare',      check:function(){
     var ago=new Date(Date.now()-7*86400000).toISOString().slice(0,10);
     var sids=new Set(DB.data.sessions.filter(function(s){return s.date>=ago;}).map(function(s){return s.sid;}));
     return sids.size >= 5;
   }},
   // Sessão longa
-  { id:'long_2h',         icon:'🎓', name:'Maratona 2h',        desc:'Complete uma sessão de 2 horas ou mais',          xp:200, check:function(){ return DB.data.sessions.some(function(s){return s.mins>=120;}); } },
-  { id:'long_4h',         icon:'🦁', name:'Maratona 4h',        desc:'Complete uma sessão de 4 horas ou mais',          xp:500, check:function(){ return DB.data.sessions.some(function(s){return s.mins>=240;}); } },
+  { id:'long_2h',         icon:'🎓', name:'Maratona 2h',        desc:'Complete uma sessão de 2 horas ou mais',          xp:200,  rarity:'rare',      check:function(){ return DB.data.sessions.some(function(s){return s.mins>=120;}); } },
+  { id:'long_4h',         icon:'🦁', name:'Maratona 4h',        desc:'Complete uma sessão de 4 horas ou mais',          xp:500,  rarity:'epic',      check:function(){ return DB.data.sessions.some(function(s){return s.mins>=240;}); } },
   // Planejamento
-  { id:'plan_weekly',     icon:'📅', name:'Planejador',         desc:'Adicione blocos em todos os 7 dias da semana',     xp:250, check:function(){
+  { id:'plan_weekly',     icon:'📅', name:'Planejador',         desc:'Adicione blocos em todos os 7 dias da semana',     xp:250,  rarity:'rare',      check:function(){
     var days = Object.keys(DB.data.weekBlocks||{});
     return days.filter(function(d){return (DB.data.weekBlocks[d]||[]).length>0;}).length >= 7;
   }},
-  { id:'plan_longterm',   icon:'🗺️', name:'Visionário',         desc:'Gere seu Plano Total pela primeira vez',           xp:200, check:function(){ return !!DB.data.ltConfig; } },
-  { id:'plan_calculator', icon:'🧮', name:'Estrategista',       desc:'Use a Calculadora de Horas',                      xp:150, check:function(){ return !!DB.data.planConfig; } },
+  { id:'plan_longterm',   icon:'🗺️', name:'Visionário',         desc:'Gere seu Plano Total pela primeira vez',           xp:200,  rarity:'common',    check:function(){ return !!DB.data.ltConfig; } },
+  { id:'plan_calculator', icon:'🧮', name:'Estrategista',       desc:'Use a Calculadora de Horas',                      xp:150,  rarity:'common',    check:function(){ return !!DB.data.planConfig; } },
   // Especiais
-  { id:'night_owl',       icon:'🦉', name:'Coruja',             desc:'Registre uma sessão após as 22h',                  xp:200, check:function(){
+  { id:'night_owl',       icon:'🦉', name:'Coruja',             desc:'Registre uma sessão após as 22h',                  xp:200,  rarity:'rare',      check:function(){
     return DB.data.sessions.some(function(s){ return s.hour !== undefined && s.hour >= 22; });
   }},
-  { id:'early_bird',      icon:'🌅', name:'Madrugador',         desc:'Registre uma sessão antes das 6h',                 xp:200, check:function(){
+  { id:'early_bird',      icon:'🌅', name:'Madrugador',         desc:'Registre uma sessão antes das 6h',                 xp:200,  rarity:'rare',      check:function(){
     return DB.data.sessions.some(function(s){ return s.hour !== undefined && s.hour < 6; });
   }},
-  { id:'weekend',         icon:'🏖️', name:'Sem Descanso',       desc:'Estude em um sábado E em um domingo',             xp:300, check:function(){
+  { id:'weekend',         icon:'🏖️', name:'Sem Descanso',       desc:'Estude em um sábado E em um domingo',             xp:300,  rarity:'rare',      check:function(){
     var hasSat=false, hasSun=false;
     DB.data.sessions.forEach(function(s){
       var d=new Date(s.date+'T12:00:00'); var dow=d.getDay();
@@ -1326,7 +1334,7 @@ var ACHIEVEMENTS = [
     });
     return hasSat && hasSun;
   }},
-  { id:'comeback',        icon:'💪', name:'Retorno Épico',      desc:'Retome os estudos após 7+ dias parado',            xp:300, check:function(){ return DB.data.gameFlags && DB.data.gameFlags.comeback; } },
+  { id:'comeback',        icon:'💪', name:'Retorno Épico',      desc:'Retome os estudos após 7+ dias parado',            xp:300,  rarity:'epic',      check:function(){ return DB.data.gameFlags && DB.data.gameFlags.comeback; } },
 ];
 
 // ── UNLOCK LOGIC ───────────────────────────────────────────────
@@ -1347,8 +1355,8 @@ function checkAchievements(){
     DB.save();
     newlyUnlocked.forEach(function(a, i){
       setTimeout(function(){
-        showXPPopup(a.icon+' '+a.name+' desbloqueada! +'+a.xp+' XP');
-      }, i * 1800);
+        showAchievementToast(a);
+      }, i * 2200);
     });
   }
   updateXPBar();
@@ -1517,17 +1525,82 @@ function renderAchGrid(filter){
 }
 
 function showXPPopup(msg){
-  var existing = document.getElementById('xp-popup-el');
-  if(existing) existing.remove();
+  // Legacy: kept for any direct calls, redirects to achievement toast
+  showAchievementToast({ icon:'⚡', name: msg, xp: '', rarity:'common' });
+}
+
+function showAchievementToast(ach){
+  var existing = document.getElementById('ach-toast-el');
+  if(existing){ existing.classList.add('ach-toast-out'); setTimeout(function(){ if(existing.parentNode) existing.remove(); }, 400); }
+
+  var rm = {
+    legendary: { color:'#f5a623', bg:'rgba(245,166,35,0.15)', border:'rgba(245,166,35,0.35)', label:'✨ Lendária' },
+    epic:      { color:'#c863f5', bg:'rgba(200,99,245,0.15)',  border:'rgba(200,99,245,0.35)',  label:'💎 Épica' },
+    rare:      { color:'#5b8ef5', bg:'rgba(91,142,245,0.15)',  border:'rgba(91,142,245,0.35)',  label:'⭐ Rara' },
+    common:    { color:'#34c985', bg:'rgba(52,201,133,0.15)',  border:'rgba(52,201,133,0.35)',  label:'🔓 Desbloqueada' }
+  };
+  var r = rm[ach.rarity||'common'] || rm.common;
+
   var el = document.createElement('div');
-  el.id = 'xp-popup-el';
-  el.className = 'xp-popup';
-  el.innerHTML = '<i class="fa-solid fa-bolt"></i><span>'+msg+'</span>';
+  el.id = 'ach-toast-el';
+  el.className = 'ach-toast';
+  el.innerHTML =
+    '<div class="ach-toast-glow" style="background:linear-gradient(90deg,transparent,' + r.color + ',transparent)"></div>' +
+    '<div class="ach-toast-inner">' +
+      '<div class="ach-toast-icon-wrap">' +
+        '<span class="ach-toast-icon">' + (ach.icon||'🏆') + '</span>' +
+        '<div class="ach-toast-ring" style="border-color:' + r.color + ';background:' + r.bg + '"></div>' +
+      '</div>' +
+      '<div class="ach-toast-body">' +
+        '<div class="ach-toast-rarity" style="color:' + r.color + '">' + r.label + '</div>' +
+        '<div class="ach-toast-name">' + ach.name + '</div>' +
+        (ach.xp ? '<div class="ach-toast-xp" style="color:' + r.color + ';background:' + r.bg + ';border:1px solid ' + r.border + '"><i class="fa-solid fa-bolt"></i> +' + ach.xp + ' XP</div>' : '') +
+      '</div>' +
+      '<button class="ach-toast-close" id="ach-toast-close-btn"><i class="fa-solid fa-xmark"></i></button>' +
+    '</div>' +
+    '<div class="ach-toast-progress" style="background:' + r.color + '"></div>';
+
   document.body.appendChild(el);
+
+  el.querySelector('#ach-toast-close-btn').addEventListener('click', function(){
+    el.classList.add('ach-toast-out');
+    setTimeout(function(){ if(el.parentNode) el.remove(); }, 400);
+  });
+
+  // Confetti burst
+  spawnConfetti(el, rarityColor);
+
+  // Auto dismiss
   clearTimeout(xpPopupTimeout);
   xpPopupTimeout = setTimeout(function(){
-    if(el.parentNode) el.remove();
-  }, 3500);
+    if(el.parentNode){ el.classList.add('ach-toast-out'); setTimeout(function(){ if(el.parentNode) el.remove(); }, 400); }
+  }, 5000);
+}
+
+function spawnConfetti(anchor, color){
+  var count = 18;
+  var colors = [color, '#fff', '#f5a623', '#5b8ef5', '#34c985'];
+  var rect = { right: window.innerWidth - 24, bottom: window.innerHeight - 120 };
+  for(var i = 0; i < count; i++){
+    (function(i){
+      var c = document.createElement('div');
+      c.className = 'ach-confetti';
+      c.style.cssText = [
+        'left:' + (rect.right - 60 + (Math.random()*120 - 60)) + 'px',
+        'top:' + (rect.bottom - 20) + 'px',
+        'background:' + colors[Math.floor(Math.random()*colors.length)],
+        'width:' + (4 + Math.random()*6) + 'px',
+        'height:' + (4 + Math.random()*6) + 'px',
+        'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px'),
+        'animation-delay:' + (i * 40) + 'ms',
+        '--dx:' + (Math.random()*160 - 80) + 'px',
+        '--dy:' + (-(60 + Math.random()*120)) + 'px',
+        '--rot:' + (Math.random()*720) + 'deg'
+      ].join(';');
+      document.body.appendChild(c);
+      setTimeout(function(){ if(c.parentNode) c.remove(); }, 1400 + i * 40);
+    })(i);
+  }
 }
 
 // ── HOOK INTO EXISTING FUNCTIONS ───────────────────────────────
