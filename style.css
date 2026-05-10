@@ -791,3 +791,23 @@ select option{background:var(--bg-card)}
 .notif-status.off{background:var(--bg-elevated);color:var(--text-muted);border:1px solid var(--border)}
 @media(max-width:960px){.friends-layout{grid-template-columns:1fr}}
 @media(max-width:540px){.rank-friend-row{grid-template-columns:28px 32px 1fr auto}}
+/* === PROGRESS PAGE === */
+.progress-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start}
+.progress-inputs-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-card)}
+.progress-inputs-card h3{font-size:.95rem;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.progress-chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-card)}
+.progress-chart-card h3{font-size:.95rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.progress-sliders-list{display:flex;flex-direction:column;gap:14px}
+.progress-slider-item{display:flex;flex-direction:column;gap:6px}
+.progress-slider-header{display:flex;align-items:center;justify-content:space-between}
+.progress-slider-name{display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:600}
+.progress-slider-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.progress-slider-pct{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:var(--accent)}
+.progress-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:var(--bg-elevated);outline:none;cursor:pointer}
+.progress-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-card);box-shadow:0 2px 8px var(--accent-glow);transition:transform .15s}
+.progress-range::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.progress-range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg-card)}
+.progress-summary-item{background:var(--bg-elevated);border-radius:var(--radius-sm);padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.progress-summary-name{font-size:.7rem;color:var(--text-secondary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-summary-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700}
+@media(max-width:860px){.progress-layout{grid-template-columns:1fr}}

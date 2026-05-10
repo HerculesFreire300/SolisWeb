@@ -810,7 +810,7 @@ function applyTheme(t){
 }
 
 // ===== NAVIGATION =====
-var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',history:'Histórico',weekly:'Plano Semanal',longterm:'Plano Total',planner:'Calculadora',achievements:'Conquistas & XP',ranking:'Ranking de Amigos',friends:'Amigos & Ranking',settings:'Configurações'};
+var PAGE_TITLES={dashboard:'Dashboard',timer:'Cronômetro',subjects:'Matérias',history:'Histórico',weekly:'Plano Semanal',longterm:'Plano Total',planner:'Calculadora',achievements:'Conquistas & XP',ranking:'Ranking de Amigos',friends:'Amigos & Ranking',settings:'Configurações',progress:'Progresso por Matéria'};
 
 function navigate(page){
   document.querySelectorAll('.page-content').forEach(function(p){ p.classList.remove('active'); });
@@ -831,6 +831,7 @@ function navigate(page){
   if(page==='weekly') renderWeekPage();
   if(page==='longterm') initLtPage();
   if(page==='planner') renderPlanInputs();
+  if(page==='progress') initProgressPage();
   closeSidebar();
 }
 
@@ -2209,3 +2210,183 @@ function initFriendsPage(){
     scheduleNotifCheck();
   }
 })();
+// ===== PROGRESS PAGE =====
+var _progressRadarChart = null;
+
+function loadProgressData() {
+  return DB.data.progressData || {};
+}
+
+function saveProgressData(data) {
+  DB.data.progressData = data;
+  DB.save();
+}
+
+function renderProgressSliders() {
+  var container = document.getElementById('progress-sliders');
+  if (!container) return;
+  var subs = DB.data.subjects;
+  if (!subs || !subs.length) {
+    container.innerHTML = '<p class="empty-hint">Adicione matérias na aba <strong>Matérias</strong> primeiro.</p>';
+    return;
+  }
+  var saved = loadProgressData();
+  container.innerHTML = subs.map(function(s) {
+    var val = saved[s.id] !== undefined ? saved[s.id] : 0;
+    return '<div class="progress-slider-item" data-id="' + s.id + '">' +
+      '<div class="progress-slider-header">' +
+        '<div class="progress-slider-name">' +
+          '<div class="progress-slider-dot" style="background:' + s.color + '"></div>' +
+          s.name +
+        '</div>' +
+        '<span class="progress-slider-pct" id="pct-' + s.id + '">' + val + '%</span>' +
+      '</div>' +
+      '<input type="range" class="progress-range" min="0" max="100" value="' + val + '" ' +
+        'style="accent-color:' + s.color + '" ' +
+        'data-id="' + s.id + '" id="range-' + s.id + '">' +
+    '</div>';
+  }).join('');
+
+  // Bind slider events
+  container.querySelectorAll('.progress-range').forEach(function(inp) {
+    inp.addEventListener('input', function() {
+      var id = inp.dataset.id;
+      var pctEl = document.getElementById('pct-' + id);
+      if (pctEl) pctEl.textContent = inp.value + '%';
+    });
+  });
+}
+
+function getProgressValues() {
+  var values = {};
+  var sliders = document.querySelectorAll('.progress-range');
+  sliders.forEach(function(inp) {
+    values[inp.dataset.id] = parseInt(inp.value, 10);
+  });
+  return values;
+}
+
+function renderProgressRadar() {
+  var canvas = document.getElementById('progress-radar-chart');
+  var emptyEl = document.getElementById('progress-radar-empty');
+  if (!canvas) return;
+
+  var subs = DB.data.subjects;
+  if (!subs || !subs.length) {
+    if (emptyEl) emptyEl.style.display = 'flex';
+    canvas.style.display = 'none';
+    return;
+  }
+
+  var values = getProgressValues();
+  var labels = subs.map(function(s) { return s.name; });
+  var data = subs.map(function(s) { return values[s.id] || 0; });
+  var colors = subs.map(function(s) { return s.color; });
+
+  if (emptyEl) emptyEl.style.display = 'none';
+  canvas.style.display = 'block';
+
+  var accentRgb = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#5b8ef5';
+
+  var chartData = {
+    labels: labels,
+    datasets: [{
+      label: 'Progresso (%)',
+      data: data,
+      backgroundColor: 'rgba(91,142,245,0.18)',
+      borderColor: accentRgb,
+      borderWidth: 2.5,
+      pointBackgroundColor: colors,
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      fill: true
+    }]
+  };
+
+  if (_progressRadarChart) {
+    _progressRadarChart.data = chartData;
+    _progressRadarChart.update();
+  } else {
+    var ctx = canvas.getContext('2d');
+    _progressRadarChart = new Chart(ctx, {
+      type: 'radar',
+      data: chartData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) { return ' ' + ctx.raw + '%'; }
+            }
+          }
+        },
+        scales: {
+          r: {
+            min: 0,
+            max: 100,
+            ticks: {
+              stepSize: 20,
+              color: getComputedStyle(document.body).getPropertyValue('--text-muted').trim() || '#4d5570',
+              font: { size: 10 },
+              callback: function(v) { return v + '%'; }
+            },
+            grid: { color: getComputedStyle(document.body).getPropertyValue('--border').trim() || 'rgba(255,255,255,0.07)' },
+            angleLines: { color: getComputedStyle(document.body).getPropertyValue('--border').trim() || 'rgba(255,255,255,0.07)' },
+            pointLabels: {
+              color: getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#8b93a8',
+              font: { size: 11, weight: '600' }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Update summary cards
+  var summaryEl = document.getElementById('progress-summary');
+  if (summaryEl) {
+    summaryEl.innerHTML = subs.map(function(s) {
+      var v = values[s.id] || 0;
+      var color = v >= 80 ? 'var(--success)' : v >= 50 ? 'var(--warn)' : 'var(--danger)';
+      return '<div class="progress-summary-item">' +
+        '<div class="progress-summary-name" title="' + s.name + '">' + s.name + '</div>' +
+        '<div class="progress-summary-val" style="color:' + color + '">' + v + '%</div>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+function initProgressPage() {
+  renderProgressSliders();
+  // Load saved values into sliders
+  var saved = loadProgressData();
+  Object.keys(saved).forEach(function(id) {
+    var inp = document.getElementById('range-' + id);
+    var pct = document.getElementById('pct-' + id);
+    if (inp) { inp.value = saved[id]; }
+    if (pct) { pct.textContent = saved[id] + '%'; }
+  });
+  renderProgressRadar();
+
+  var btnUpdate = document.getElementById('btn-update-radar');
+  if (btnUpdate) {
+    btnUpdate.addEventListener('click', function() {
+      renderProgressRadar();
+      toast('Radar atualizado!', 'success');
+    });
+  }
+
+  var btnSave = document.getElementById('btn-save-progress');
+  if (btnSave) {
+    btnSave.addEventListener('click', function() {
+      var vals = getProgressValues();
+      saveProgressData(vals);
+      renderProgressRadar();
+      toast('Progresso salvo!', 'success');
+    });
+  }
+}

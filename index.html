@@ -69,6 +69,7 @@
       <a href="#" class="nav-link" data-page="longterm"><i class="fa-solid fa-map"></i><span>Plano Total</span></a>
       <a href="#" class="nav-link" data-page="planner"><i class="fa-solid fa-calculator"></i><span>Calculadora</span></a>
       <a href="#" class="nav-link" data-page="ranking"><i class="fa-solid fa-users"></i><span>Ranking</span></a>
+      <a href="#" class="nav-link" data-page="progress"><i class="fa-solid fa-radar"></i><span>Progresso</span></a>
     <a href="#" class="nav-link" data-page="settings"><i class="fa-solid fa-gear"></i><span>Configurações</span></a>
     </nav>
     <div class="sidebar-streak">
@@ -513,6 +514,38 @@
     <!-- LEVELS ROADMAP -->
     <div class="ach-roadmap-title"><i class="fa-solid fa-map"></i> Trilha de Níveis</div>
     <div class="ach-roadmap" id="ach-roadmap"></div>
+  </section>
+
+  <!-- PROGRESSO POR MATÉRIA -->
+  <section class="page-content" id="page-progress">
+    <div class="page-hero"><div><h2>Progresso por Matéria</h2><p class="page-sub">Defina o percentual estudado de cada matéria e visualize no gráfico de radar.</p></div></div>
+    <div class="progress-layout">
+      <div class="progress-inputs-card">
+        <h3><i class="fa-solid fa-sliders"></i> Percentual por Matéria</h3>
+        <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:16px">Arraste os controles para indicar quanto você já estudou de cada matéria (0–100%).</p>
+        <div id="progress-sliders" class="progress-sliders-list">
+          <p class="empty-hint">Adicione matérias na aba <strong>Matérias</strong> primeiro.</p>
+        </div>
+        <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn-primary" id="btn-update-radar"><i class="fa-solid fa-rotate"></i> Atualizar Radar</button>
+          <button class="btn-secondary" id="btn-save-progress"><i class="fa-solid fa-floppy-disk"></i> Salvar progresso</button>
+        </div>
+      </div>
+      <div class="progress-chart-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h3><i class="fa-solid fa-chart-line"></i> Radar de Progresso</h3>
+          <span class="chart-tag">Radar</span>
+        </div>
+        <div style="position:relative;height:340px;display:flex;align-items:center;justify-content:center">
+          <canvas id="progress-radar-chart"></canvas>
+          <div id="progress-radar-empty" class="chart-empty" style="position:absolute">
+            <i class="fa-solid fa-chart-radar"></i>
+            <p>Adicione matérias e defina os percentuais</p>
+          </div>
+        </div>
+        <div id="progress-summary" style="margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+      </div>
+    </div>
   </section>
 
     </main>
