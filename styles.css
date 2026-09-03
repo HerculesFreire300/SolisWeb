@@ -303,47 +303,19 @@ h1,h2,h3{
   z-index:1;
   padding-bottom: 72px;
 }
-.capa-hint{
-  text-align:center;
-  font-size: .85rem;
-  color: var(--ink-soft);
-  margin: 0 0 20px;
-}
 .capa-strip{
   overflow:hidden;
   background: var(--paper);
+  display:flex;
+  justify-content:center;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0%, black 16%, black 84%, transparent 100%);
 }
-.capa-track{
-  display:flex;
-  width: max-content;
-  animation: capa-scroll 34s linear infinite;
-  animation-play-state: paused;
-}
-.capa-strip:hover .capa-track,
-.capa-strip:focus-within .capa-track{
-  animation-play-state: running;
-}
-.capa-track img{
-  height: 150px;
-  width:auto;
+.capa-strip img{
+  width:100%;
+  max-width: 1400px;
+  height:auto;
   display:block;
-  flex-shrink:0;
-}
-@media (min-width: 640px){
-  .capa-track img{ height: 210px; }
-}
-@media (min-width: 1024px){
-  .capa-track img{ height: 280px; }
-}
-
-@keyframes capa-scroll{
-  from{ transform: translateX(0); }
-  to{ transform: translateX(-50%); }
-}
-@media (prefers-reduced-motion: reduce){
-  .capa-track{ animation: none; }
 }
 
 /* =========================================================
