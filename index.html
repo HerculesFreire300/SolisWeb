@@ -3,1197 +3,404 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Super Cérebro — Registro Pessoal</title>
-<style>
-  :root{
-    --bg: #0b0a12;
-    --bg-2: #14121f;
-    --surface: #1a1728;
-    --surface-2: #221e35;
-    --line: #332e4a;
-    --text: #f3f1fa;
-    --text-dim: #b3add0;
-    --indigo: #a78bfa;
-    --indigo-glow: #c4b5fd;
-    --cyan: #4ade80;
-    --gold: #fbbf24;
-    --danger: #fb7185;
-    --font-display: 'Sora', -apple-system, sans-serif;
-    --font-body: 'Inter', -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-  }
-  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+<title>SolisWeb — Sites para Psicólogos e Clínicas</title>
+<meta name="description" content="Criação de sites, gestão de Google Meu Negócio e tráfego pago para psicólogos que querem mais pacientes com presença digital profissional.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,650&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html, body{ height:100%; width:100%; overflow:hidden; }
-  body{
-    background: radial-gradient(ellipse at top, var(--bg-2) 0%, var(--bg) 55%);
-    color: var(--text);
-    font-family: var(--font-body);
-    line-height:1.7;
-    letter-spacing: .1px;
-  }
-  ::selection{ background: var(--indigo); color:#fff; }
-
-  a{ color:inherit; text-decoration:none; }
-  ul{ list-style:none; }
-
-  /* Layout */
-  .app{ display:flex; height:100vh; width:100vw; }
-
-  /* Sidebar */
-  .sidebar{
-    width: 240px;
-    flex-shrink:0;
-    border-right:1px solid var(--line);
-    padding: 28px 18px;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    gap: 28px;
-    overflow-y:auto;
-  }
-  .brand{
-    display:flex; align-items:center; gap:10px;
-    padding: 0 6px;
-  }
-  .brand-mark{
-    width:34px; height:34px; border-radius:10px;
-    background: linear-gradient(135deg, var(--indigo), var(--cyan));
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink:0;
-  }
-  .brand-mark svg{ width:18px; height:18px; }
-  .brand-name{ font-family: var(--font-display); font-weight:700; font-size:17px; letter-spacing:.2px; }
-  .brand-sub{ font-size:12px; color:var(--text-dim); font-family: var(--font-mono); text-transform:uppercase; letter-spacing:1px; }
-
-  nav ul{ display:flex; flex-direction:column; gap:2px; }
-  .nav-group-label{
-    font-family: var(--font-mono); font-size:11.5px; text-transform:uppercase;
-    letter-spacing:1.5px; color:var(--text-dim); padding: 14px 12px 6px;
-  }
-  .nav-item{
-    display:flex; align-items:center; gap:10px;
-    padding:9px 12px; border-radius:9px;
-    font-size:15.5px; font-weight:500; color:var(--text-dim);
-    cursor:pointer; transition: background .15s, color .15s;
-  }
-  .nav-item:hover{ background: var(--surface); color:var(--text); }
-  .nav-item.active{ background: var(--surface-2); color:#fff; box-shadow: inset 0 0 0 1px var(--line); }
-  .nav-dot{ width:6px; height:6px; border-radius:50%; background: var(--text-dim); flex-shrink:0; }
-  .nav-item.active .nav-dot{ background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-
-  .sidebar-foot{ margin-top:auto; font-size:12.5px; color:var(--text-dim); font-family: var(--font-mono); padding: 0 6px; }
-
-  /* Main */
-  main{
-    flex:1;
-    min-width:0;
-    height:100vh;
-    overflow-y:auto;
-    padding: 44px clamp(20px, 5vw, 56px) 90px;
-  }
-  main > .page{ max-width: 980px; margin: 0 auto; }
-  .page{ display:none; animation: fadeIn .35s ease; }
-  .page.active{ display:block; }
-  @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:none; } }
-
-  /* Hero (home) */
-  .hero{
-    position:relative;
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding: 46px 40px;
-    background: linear-gradient(160deg, var(--surface) 0%, var(--bg-2) 100%);
-    overflow:hidden;
-    margin-bottom: 34px;
-  }
-  .hero canvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
-  .hero-content{ position:relative; z-index:1; max-width:560px; }
-  .eyebrow{
-    font-family: var(--font-mono); font-size:12.5px; letter-spacing:1.5px; text-transform:uppercase;
-    color: var(--cyan); margin-bottom:14px; display:flex; align-items:center; gap:8px;
-  }
-  .eyebrow::before{ content:''; width:16px; height:1px; background: var(--cyan); }
-  h1{ font-family: var(--font-display); font-size: 40px; font-weight:800; line-height:1.15; margin-bottom:14px; letter-spacing:-.5px; }
-  .hero p{ color: var(--text-dim); font-size:17px; max-width:460px; }
-
-  /* Pillar cards */
-  .pillars{ display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; margin-bottom:36px; }
-  .pillars-outros{ grid-template-columns: repeat(3, 1fr); }
-  .pillar-card{
-    border:1px solid var(--line); background: var(--surface);
-    border-radius:14px; padding:18px 16px; cursor:pointer;
-    transition: transform .15s, border-color .15s;
-  }
-  .pillar-card:hover{ transform: translateY(-3px); border-color: var(--indigo); }
-  .pillar-tag{ font-family: var(--font-mono); font-size:11.5px; color: var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
-  .pillar-name{ font-family: var(--font-display); font-weight:700; font-size:18.5px; margin: 8px 0 6px; }
-  .pillar-desc{ font-size:14px; color: var(--text-dim); }
-  .pillar-icon{ width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
-
-  section.block{ margin-bottom:30px; }
-  .block-title{
-    font-family: var(--font-display); font-weight:700; font-size:14.5px;
-    text-transform:uppercase; letter-spacing:1px; color: var(--text-dim);
-    margin-bottom:12px; display:flex; align-items:center; gap:8px;
-  }
-  .block-title::before{ content:''; width:3px; height:14px; background: var(--indigo); border-radius:2px; }
-
-  /* Substance page */
-  .sub-header{ display:flex; align-items:center; gap:16px; margin-bottom: 30px; }
-  .sub-icon{
-    width:52px; height:52px; border-radius:14px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .sub-title{ font-family: var(--font-display); font-size:30px; font-weight:800; letter-spacing:-.4px; }
-  .sub-sub{ color: var(--text-dim); font-size:14.5px; font-family: var(--font-mono); }
-
-  .card{
-    border:1px solid var(--line); background: var(--surface);
-    border-radius:14px; padding:22px 24px; margin-bottom:14px;
-  }
-  .card h3{ font-family: var(--font-display); font-size:16px; font-weight:700; margin-bottom:10px; }
-  .card p, .card li{ font-size:15.5px; color: var(--text-dim); line-height:1.75; }
-  .card li{ margin-bottom:5px; padding-left:14px; position:relative; }
-  .card li::before{ content:'—'; position:absolute; left:0; color: var(--indigo-glow); }
-
-  .card.risk{ border-color: rgba(251,113,133,.35); background: linear-gradient(160deg, rgba(251,113,133,.06), var(--surface)); }
-  .card.risk h3{ color: var(--danger); }
-  .card.dose{ border-color: rgba(251,191,36,.3); }
-  .card.dose h3{ color: var(--gold); }
-
-  .badge{
-    display:inline-flex; align-items:center; gap:6px;
-    font-family: var(--font-mono); font-size:12px; padding:4px 10px;
-    border-radius:20px; border:1px solid var(--line); color:var(--text-dim);
-    margin-bottom:16px;
-  }
-  .badge.rx{ color: var(--gold); border-color: rgba(251,191,36,.35); }
-
-  /* Registro (diary) */
-  .reg-form{
-    display:grid; grid-template-columns: 1fr 1fr; gap:12px;
-    border:1px solid var(--line); background: var(--surface);
-    border-radius:14px; padding:20px; margin-bottom:26px;
-  }
-  .field{ display:flex; flex-direction:column; gap:6px; }
-  .field.full{ grid-column: 1 / -1; }
-  label{ font-size:12.5px; font-family: var(--font-mono); text-transform:uppercase; letter-spacing:.5px; color: var(--text-dim); }
-  input, select, textarea{
-    background: var(--bg-2); border:1px solid var(--line); border-radius:8px;
-    padding:9px 11px; color: var(--text); font-family: var(--font-body); font-size:15.5px;
-  }
-  input:focus, select:focus, textarea:focus{ outline:2px solid var(--indigo); outline-offset:1px; border-color: var(--indigo); }
-  textarea{ resize:vertical; min-height:60px; }
-  .range-row{ display:flex; align-items:center; gap:10px; }
-  input[type=range]{ flex:1; accent-color: var(--indigo); padding:0; background:none; border:none; }
-  .range-val{ font-family: var(--font-mono); font-size:14.5px; width:20px; text-align:center; }
-
-  .btn{
-    background: linear-gradient(135deg, var(--indigo), #4f46e5);
-    color:#fff; border:none; padding:10px 18px; border-radius:9px;
-    font-family: var(--font-body); font-weight:600; font-size:14.5px; cursor:pointer;
-    transition: filter .15s;
-  }
-  .btn:hover{ filter: brightness(1.12); }
-  .btn.ghost{ background:transparent; border:1px solid var(--line); color:var(--text-dim); }
-
-  .entries{ display:flex; flex-direction:column; gap:10px; }
-  .entry{
-    border:1px solid var(--line); background: var(--surface);
-    border-radius:12px; padding:14px 16px;
-    display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
-  }
-  .entry-main{ flex:1; min-width:0; }
-  .entry-top{ display:flex; gap:10px; align-items:center; margin-bottom:4px; flex-wrap:wrap; }
-  .entry-sub{ font-family: var(--font-display); font-weight:700; font-size:15.5px; }
-  .entry-date{ font-family: var(--font-mono); font-size:12.5px; color: var(--text-dim); }
-  .entry-dose{ font-family: var(--font-mono); font-size:12.5px; color: var(--cyan); }
-  .entry-note{ font-size:14px; color: var(--text-dim); }
-  .entry-scores{ display:flex; gap:14px; flex-shrink:0; }
-  .score{ text-align:center; }
-  .score-val{ font-family: var(--font-display); font-weight:800; font-size:21px; }
-  .score-label{ font-size:11px; font-family: var(--font-mono); color: var(--text-dim); text-transform:uppercase; }
-  .del-btn{ background:none; border:none; color: var(--text-dim); cursor:pointer; font-size:18.5px; line-height:1; padding:2px 6px; }
-  .del-btn:hover{ color: var(--danger); }
-  .empty-state{ color: var(--text-dim); font-size:14.5px; text-align:center; padding: 30px 0; border:1px dashed var(--line); border-radius:12px; }
-
-  /* Notas */
-  #notasArea{ width:100%; min-height: 420px; font-family: var(--font-mono); font-size:14.5px; line-height:1.7; }
-  .save-status{ font-family: var(--font-mono); font-size:12.5px; color: var(--text-dim); margin-top:8px; }
-
-  @media (max-width: 1080px){
-    .pillars{ grid-template-columns: repeat(3, 1fr); }
-    .pillars-outros{ grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 860px){
-    html, body{ overflow:auto; }
-    .app{ flex-direction:column; height:auto; min-height:100vh; }
-    .sidebar{
-      position: sticky; top:0; z-index:10;
-      width:100%; height:auto; max-height:none;
-      flex-direction:row; align-items:center;
-      overflow-x:auto; overflow-y:visible;
-      padding:14px 16px; gap:16px;
-      border-right:none; border-bottom:1px solid var(--line);
-      background: var(--bg);
-    }
-    .brand{ flex-shrink:0; }
-    .sidebar-foot{ display:none; }
-    nav{ display:flex; overflow-x:auto; }
-    nav ul{ flex-direction:row; flex-shrink:0; }
-    .nav-group-label{ display:none; }
-    main{ height:auto; overflow-y:visible; padding: 26px 20px 60px; }
-    .pillars{ grid-template-columns: 1fr 1fr; }
-    .pillars-outros{ grid-template-columns: 1fr 1fr; }
-    .reg-form{ grid-template-columns: 1fr; }
-    h1{ font-size:30px; }
-    .hero{ padding: 32px 24px; }
-  }
-
-  @media (max-width: 520px){
-    .pillars, .pillars-outros{ grid-template-columns: 1fr; }
-    .sub-header{ gap:12px; }
-    .sub-title{ font-size:24px; }
-    .entry{ flex-direction:column; align-items:stretch; }
-    .entry-scores{ align-self:flex-start; }
-    h1{ font-size:25px; }
-    .hero{ padding:26px 18px; border-radius:16px; }
-    main{ padding: 20px 14px 50px; }
-    .sidebar{ padding:12px; }
-  }
-</style>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.ico" sizes="any">
 </head>
 <body>
 
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 3a3 3 0 0 0-3 3v1a3 3 0 0 0-2 5 3 3 0 0 0 2 5v1a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M15 3a3 3 0 0 1 3 3v1a3 3 0 0 1 2 5 3 3 0 0 1-2 5v1a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Z"/></svg>
-      </div>
-      <div>
-        <div class="brand-name">Super Cérebro</div>
-        <div class="brand-sub">registro pessoal</div>
-      </div>
-    </div>
-    <nav>
-      <div class="nav-group-label">Visão geral</div>
-      <ul>
-        <li class="nav-item active" data-page="home"><span class="nav-dot"></span>Home</li>
-      </ul>
-      <div class="nav-group-label">Substâncias</div>
-      <ul>
-        <li class="nav-item" data-page="omega3"><span class="nav-dot"></span>Ômega 3</li>
-        <li class="nav-item" data-page="complexob"><span class="nav-dot"></span>Complexo B</li>
-        <li class="nav-item" data-page="ginkgo"><span class="nav-dot"></span>Ginkgo Biloba</li>
-        <li class="nav-item" data-page="piracetam"><span class="nav-dot"></span>Piracetam</li>
-      </ul>
-      <div class="nav-group-label">Outros compostos</div>
-      <ul>
-        <li class="nav-item" data-page="hydergine"><span class="nav-dot"></span>Hydergine</li>
-        <li class="nav-item" data-page="selegilina"><span class="nav-dot"></span>Selegilina</li>
-        <li class="nav-item" data-page="adrafinil"><span class="nav-dot"></span>Adrafinil</li>
-        <li class="nav-item" data-page="ala"><span class="nav-dot"></span>Ácido Alfa Lipoico</li>
-        <li class="nav-item" data-page="coq10"><span class="nav-dot"></span>CoQ10</li>
-        <li class="nav-item" data-page="fosfatidilcolina"><span class="nav-dot"></span>Fosfatidilcolina</li>
-        <li class="nav-item" data-page="fosfatidilserina"><span class="nav-dot"></span>Fosfatidilserina</li>
-        <li class="nav-item" data-page="dmae"><span class="nav-dot"></span>DMAE</li>
-        <li class="nav-item" data-page="carnitina"><span class="nav-dot"></span>L-Carnitina</li>
-        <li class="nav-item" data-page="venvanse"><span class="nav-dot"></span>Venvanse</li>
-        <li class="nav-item" data-page="ritalina"><span class="nav-dot"></span>Ritalina</li>
-      </ul>
-      <div class="nav-group-label">Acompanhamento</div>
-      <ul>
-        <li class="nav-item" data-page="registro"><span class="nav-dot"></span>Registro diário</li>
-        <li class="nav-item" data-page="notas"><span class="nav-dot"></span>Notas</li>
-      </ul>
-    </nav>
-    <div class="sidebar-foot">uso pessoal · não é conteúdo médico</div>
-  </aside>
-
-  <main>
-
-    <!-- HOME -->
-    <section class="page active" id="page-home">
-      <div class="hero">
-        <canvas id="synapseCanvas"></canvas>
-        <div class="hero-content">
-          <div class="eyebrow">Registro cognitivo pessoal</div>
-          <h1>O que você toma, e o que isso faz com sua cabeça.</h1>
-          <p>Um lugar só seu pra reunir o que você já sabe sobre ômega 3, complexo B, ginkgo biloba e piracetam — e acompanhar, na prática, o que muda.</p>
-        </div>
-      </div>
-
-      <div class="pillars">
-        <div class="pillar-card" data-goto="omega3">
-          <div class="pillar-icon" style="background:rgba(167,139,250,.15);">🐟</div>
-          <div class="pillar-tag">Suplemento</div>
-          <div class="pillar-name">Ômega 3</div>
-          <div class="pillar-desc">EPA/DHA — membrana neuronal e inflamação</div>
-        </div>
-        <div class="pillar-card" data-goto="complexob">
-          <div class="pillar-icon" style="background:rgba(74,222,128,.15);">💊</div>
-          <div class="pillar-tag">Suplemento · 500mg</div>
-          <div class="pillar-name">Complexo B</div>
-          <div class="pillar-desc">B6 · B9 · B12 — neurotransmissores</div>
-        </div>
-        <div class="pillar-card" data-goto="ginkgo">
-          <div class="pillar-icon" style="background:rgba(251,191,36,.15);">🍃</div>
-          <div class="pillar-tag">Fitoterápico · 80mg</div>
-          <div class="pillar-name">Ginkgo Biloba</div>
-          <div class="pillar-desc">Circulação cerebral, foco</div>
-        </div>
-        <div class="pillar-card" data-goto="piracetam">
-          <div class="pillar-icon" style="background:rgba(251,113,133,.15);">🧬</div>
-          <div class="pillar-tag">Medicamento · receita</div>
-          <div class="pillar-name">Piracetam</div>
-          <div class="pillar-desc">Nootropil — racetam original</div>
-        </div>
-      </div>
-
-      <section class="block">
-        <div class="block-title">Outros compostos</div>
-        <div class="pillars pillars-outros">
-          <div class="pillar-card" data-goto="hydergine">
-            <div class="pillar-tag">Medicamento · receita</div>
-            <div class="pillar-name">Hydergine SRO 6mg</div>
-            <div class="pillar-desc">Mesilatos de ergoloide — vasodilatador cerebral</div>
-          </div>
-          <div class="pillar-card" data-goto="selegilina">
-            <div class="pillar-tag">Medicamento · controlado</div>
-            <div class="pillar-name">Selegilina 5mg</div>
-            <div class="pillar-desc">Jumexil — inibidor da MAO-B</div>
-          </div>
-          <div class="pillar-card" data-goto="adrafinil">
-            <div class="pillar-tag">Não regulamentado no Brasil</div>
-            <div class="pillar-name">Adrafinil</div>
-            <div class="pillar-desc">Pró-fármaco do modafinil</div>
-          </div>
-          <div class="pillar-card" data-goto="ala">
-            <div class="pillar-tag">Suplemento · 500mg</div>
-            <div class="pillar-name">Ácido Alfa Lipoico</div>
-            <div class="pillar-desc">Antioxidante, cofator mitocondrial</div>
-          </div>
-          <div class="pillar-card" data-goto="coq10">
-            <div class="pillar-tag">Suplemento</div>
-            <div class="pillar-name">CoQ10 (Ubiquinona)</div>
-            <div class="pillar-desc">Antioxidante, energia mitocondrial</div>
-          </div>
-          <div class="pillar-card" data-goto="fosfatidilcolina">
-            <div class="pillar-tag">Suplemento · 420mg</div>
-            <div class="pillar-name">Fosfatidilcolina</div>
-            <div class="pillar-desc">Fosfolipídio, precursor de colina</div>
-          </div>
-          <div class="pillar-card" data-goto="fosfatidilserina">
-            <div class="pillar-tag">Suplemento · 200mg</div>
-            <div class="pillar-name">Fosfatidilserina</div>
-            <div class="pillar-desc">Fosfolipídio de membrana neuronal</div>
-          </div>
-          <div class="pillar-card" data-goto="dmae">
-            <div class="pillar-tag">Suplemento · 250mg</div>
-            <div class="pillar-name">DMAE Bitartarato</div>
-            <div class="pillar-desc">Possível precursor de colina (debatido)</div>
-          </div>
-          <div class="pillar-card" data-goto="carnitina">
-            <div class="pillar-tag">Suplemento</div>
-            <div class="pillar-name">L-Carnitina</div>
-            <div class="pillar-desc">Transporte mitocondrial de ácidos graxos</div>
-          </div>
-          <div class="pillar-card" data-goto="venvanse">
-            <div class="pillar-tag">Estimulante · controlado A3</div>
-            <div class="pillar-name">Venvanse 30mg</div>
-            <div class="pillar-desc">Lisdexanfetamina — pró-fármaco anfetamínico</div>
-          </div>
-          <div class="pillar-card" data-goto="ritalina">
-            <div class="pillar-tag">Estimulante · controlado A3</div>
-            <div class="pillar-name">Ritalina 10mg</div>
-            <div class="pillar-desc">Metilfenidato — inibidor de recaptação</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="block">
-        <div class="block-title">Como usar este site</div>
-        <div class="card">
-          <p>Navegue pelas páginas de cada substância na barra lateral pra revisar o que você já levantou sobre elas. Use <strong style="color:var(--text)">Registro diário</strong> pra anotar o que tomou e como se sentiu (foco, energia, humor) — os dados ficam salvos automaticamente. Use <strong style="color:var(--text)">Notas</strong> como bloco livre pra ideias soltas, achados de estudos ou trechos que você quiser guardar.</p>
-        </div>
-      </section>
-    </section>
-
-    <!-- OMEGA 3 -->
-    <section class="page" id="page-omega3">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(167,139,250,.15);">🐟</div>
-        <div>
-          <div class="sub-title">Ômega 3</div>
-          <div class="sub-sub">EPA + DHA · ácido graxo essencial</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Ácido graxo essencial (EPA e DHA) que o corpo não produz sozinho — precisa vir da dieta ou de suplementação. Presente em peixes de água fria (salmão, sardinha, atum) e em cápsulas de óleo de peixe ou de algas.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Compõe boa parte da membrana dos neurônios — estrutural, não só "combustível"</li>
-          <li>Apoia a comunicação entre células nervosas (fluidez da membrana sináptica)</li>
-          <li>Associado à redução de marcadores de inflamação cerebral</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>Suplementos costumam trazer entre 1.000–2.000mg/dia de EPA+DHA combinados. Varia por concentração do produto — checar o rótulo específico da marca usada.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Pode potencializar efeito de anticoagulantes/antiplaquetários em doses altas — vale cautela se estiver usando esse tipo de medicação.</p>
-      </div>
-    </section>
-
-    <!-- COMPLEXO B -->
-    <section class="page" id="page-complexob">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(74,222,128,.15);">💊</div>
-        <div>
-          <div class="sub-title">Complexo B</div>
-          <div class="sub-sub">B6 · B9 (ácido fólico) · B12 · 500mg</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Vitaminas hidrossolúveis envolvidas na produção de neurotransmissores e no metabolismo energético das células — incluindo as células nervosas.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li><strong style="color:var(--text)">B6</strong> — participa da síntese de serotonina e dopamina</li>
-          <li><strong style="color:var(--text)">B9 (folato)</strong> — formação de células e síntese de DNA</li>
-          <li><strong style="color:var(--text)">B12</strong> — manutenção da bainha de mielina e saúde do sistema nervoso</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>500mg é uma dose comum de complexo B combinado em cápsula única — checar a distribuição entre B6/B9/B12 no rótulo, já que varia por marca.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Grupos com maior risco de deficiência real: vegetarianos/veganos (B12), idosos, pessoas com má absorção intestinal. Doses muito altas de B6 mantidas por longos períodos já foram associadas a neuropatia periférica — moderação vale mesmo sendo "só vitamina".</p>
-      </div>
-    </section>
-
-    <!-- GINKGO -->
-    <section class="page" id="page-ginkgo">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,191,36,.15);">🍃</div>
-        <div>
-          <div class="sub-title">Ginkgo Biloba</div>
-          <div class="sub-sub">Extrato padronizado · 80mg</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Extrato das folhas de uma das espécies de árvore mais antigas do planeta, usado há séculos na medicina tradicional chinesa e hoje vendido como fitoterápico padronizado.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Tradicionalmente associado à melhora da circulação sanguínea cerebral</li>
-          <li>Efeito antioxidante atribuído aos flavonoides do extrato</li>
-          <li>Uso popular voltado a memória, foco e sensação de fadiga mental</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>80mg é uma dose padrão por cápsula em extratos comerciais padronizados (geralmente 24% flavonoides / 6% terpenos) — muitos protocolos usam 1–3x ao dia.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Pode interagir com anticoagulantes/antiplaquetários (mesmo cuidado do ômega 3) — os efeitos podem se somar se usados juntos.</p>
-      </div>
-    </section>
-
-    <!-- PIRACETAM -->
-    <section class="page" id="page-piracetam">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,113,133,.15);">🧬</div>
-        <div>
-          <div class="sub-title">Piracetam</div>
-          <div class="sub-sub">Nootropil · classe racetam</div>
-        </div>
-      </div>
-      <span class="badge rx">medicamento · venda sob prescrição</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>O primeiro nootrópico sintetizado, no início dos anos 1970 — deu origem ao próprio termo "nootrópico". Estruturalmente relacionado ao neurotransmissor GABA, embora seu mecanismo não passe diretamente pelos receptores GABA.</p>
-      </div>
-      <div class="card">
-        <h3>Histórico de uso</h3>
-        <ul>
-          <li>Uso clínico documentado para mioclonia (associado a distúrbios do movimento)</li>
-          <li>Estudado em contextos de declínio cognitivo em idosos</li>
-          <li>Uso off-label difundido na comunidade de "biohacking" buscando ganho cognitivo — evidência de eficácia nesse uso específico é bem menos robusta que no uso clínico</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Apresentação de bula (referência geral)</h3>
-        <p>Comprimidos comercializados tipicamente em 800mg ou 1200mg. Esta é informação pública de rótulo/bula — não é uma recomendação de protocolo de uso.</p>
-      </div>
-      <div class="card risk">
-        <h3>Por que fica de fora um "protocolo"</h3>
-        <p>É medicamento sob prescrição no Brasil. Frequência, horário e combinação com outras substâncias são decisões que dependem de acompanhamento médico — isso não muda por o site ser só seu. O espaço de <strong style="color:var(--text)">Registro diário</strong> serve pra você acompanhar o que decidir junto com orientação médica, não pra substituir ela.</p>
-      </div>
-    </section>
-
-    <!-- HYDERGINE -->
-    <section class="page" id="page-hydergine">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,113,133,.15);">💠</div>
-        <div>
-          <div class="sub-title">Hydergine SRO</div>
-          <div class="sub-sub">Mesilatos de ergoloide · 6mg</div>
-        </div>
-      </div>
-      <span class="badge rx">medicamento · venda sob prescrição</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Combinação de alcaloides derivados do ergot (mesilatos de ergoloide / di-hidroergotoxina), desenvolvida originalmente pela Novartis. Um dos nootrópicos mais antigos ainda em uso clínico.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Ação vasodilatadora — historicamente usado para "insuficiência cerebral" relacionada à idade</li>
-          <li>Efeito antagonista alfa-adrenérgico e ação sobre receptores de dopamina/serotonina</li>
-          <li>Estudado também por possível efeito antioxidante e neuroprotetor, com evidências mistas</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Apresentação de bula</h3>
-        <p>Comprimidos SRO (liberação lenta) de 6mg é a apresentação padrão vendida no Brasil.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Efeito vasodilatador pode interagir com outros medicamentos para pressão arterial. Uso off-label para performance cognitiva em pessoas saudáveis tem evidência bem mais fraca que o uso clínico original — protocolo de uso é conversa pra ter com médico.</p>
-      </div>
-    </section>
-
-    <!-- SELEGILINA -->
-    <section class="page" id="page-selegilina">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,113,133,.15);">⚕️</div>
-        <div>
-          <div class="sub-title">Selegilina</div>
-          <div class="sub-sub">Jumexil · 5mg</div>
-        </div>
-      </div>
-      <span class="badge rx">medicamento · venda sob prescrição controlada</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Inibidor seletivo e irreversível da enzima MAO-B (monoamina oxidase tipo B), que degrada dopamina no cérebro. Aprovado clinicamente para tratamento da Doença de Parkinson.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Reduz a degradação de dopamina, prolongando sua disponibilidade sináptica</li>
-          <li>Gera pequenas quantidades de anfetamina e metanfetamina como metabólitos</li>
-          <li>Interesse em longevidade/cognição vem principalmente de estudos pré-clínicos em animais — evidência em humanos saudáveis é limitada</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Apresentação de bula</h3>
-        <p>Comprimidos de 5mg é a apresentação padrão do Jumexil no Brasil.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Interação grave e potencialmente perigosa com antidepressivos (síndrome serotoninérgica) e com alimentos ricos em tiramina em doses altas. Por ser inibidor de MAO, é uma das classes de medicamento com mais interações a se monitorar — acompanhamento médico não é opcional aqui.</p>
-      </div>
-    </section>
-
-    <!-- ADRAFINIL -->
-    <section class="page" id="page-adrafinil">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,191,36,.15);">⚡</div>
-        <div>
-          <div class="sub-title">Adrafinil</div>
-          <div class="sub-sub">Pró-fármaco do modafinil</div>
-        </div>
-      </div>
-      <span class="badge rx">não regulamentado no Brasil</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Composto eugeroico (promotor de vigília) que o fígado converte em modafinil após ingestão. Foi comercializado na França (Olmifon) e depois descontinuado; hoje circula principalmente via importação pessoal, sem registro na ANVISA.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Promove vigília e estado de alerta por vias ainda não totalmente esclarecidas, envolvendo dopamina e histamina</li>
-          <li>Efeito subjetivo relatado é similar ao do modafinil, mas com início mais lento (precisa ser metabolizado no fígado)</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Status e forma de acesso</h3>
-        <p>Sem apresentação oficial no Brasil — não é vendido em farmácia local. Informação de dose costuma vir de rótulo de produto importado, sem padronização nacional.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>A conversão hepática gera um metabólito (ácido modafínico) que já foi associado a elevação de enzimas hepáticas em uso continuado — é o composto desta lista com o perfil de monitoramento mais delicado, justamente por não ter acompanhamento regulatório formal no país.</p>
-      </div>
-    </section>
-
-    <!-- ÁCIDO ALFA LIPOICO -->
-    <section class="page" id="page-ala">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(167,139,250,.15);">🔋</div>
-        <div>
-          <div class="sub-title">Ácido Alfa Lipoico</div>
-          <div class="sub-sub">ALA · 500mg</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Ácido graxo produzido naturalmente pelo corpo em pequenas quantidades, essencial como cofator de enzimas mitocondriais envolvidas na produção de energia.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Antioxidante que atua tanto em meio aquoso quanto lipídico (característica rara entre antioxidantes)</li>
-          <li>Estudado para neuropatia periférica e em contextos de estresse oxidativo relacionado à idade</li>
-          <li>Ajuda a regenerar outros antioxidantes, como vitamina C e glutationa</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>500mg por cápsula é uma apresentação comum em suplementos vendidos no Brasil.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Pode reduzir glicemia — atenção redobrada se usado junto com medicação para diabetes.</p>
-      </div>
-    </section>
-
-    <!-- COQ10 -->
-    <section class="page" id="page-coq10">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,191,36,.15);">🔆</div>
-        <div>
-          <div class="sub-title">CoQ10 (Ubiquinona)</div>
-          <div class="sub-sub">Coenzima Q10</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Composto produzido naturalmente pelo corpo, essencial na cadeia de transporte de elétrons das mitocôndrias — a etapa final da produção de energia celular (ATP). Níveis tendem a cair com a idade.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Suporte à produção de energia em tecidos de alto gasto metabólico, como o cérebro</li>
-          <li>Ação antioxidante, protegendo membranas celulares contra dano oxidativo</li>
-          <li>Uso mais consolidado é cardiovascular; efeito cognitivo direto tem evidência mais preliminar</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>Suplementos costumam variar entre 100–300mg/dia — checar concentração específica do produto usado.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Pode reduzir a eficácia de anticoagulantes como varfarina — vale checar se for o caso.</p>
-      </div>
-    </section>
-
-    <!-- FOSFATIDILCOLINA -->
-    <section class="page" id="page-fosfatidilcolina">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(74,222,128,.15);">🧪</div>
-        <div>
-          <div class="sub-title">Fosfatidilcolina</div>
-          <div class="sub-sub">420mg</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Fosfolipídio que é o principal componente estrutural das membranas celulares — inclusive das membranas neuronais. Também é a principal fonte dietética de colina.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Precursor de colina, usada na síntese do neurotransmissor acetilcolina (envolvido em memória e aprendizado)</li>
-          <li>Componente estrutural de membranas neuronais e da bainha de mielina</li>
-          <li>Também relevante para saúde hepática, já que compõe a bile</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>420mg por cápsula é uma apresentação comum vendida no Brasil.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Geralmente bem tolerada; doses altas ocasionalmente causam desconforto gastrointestinal leve.</p>
-      </div>
-    </section>
-
-    <!-- FOSFATIDILSERINA -->
-    <section class="page" id="page-fosfatidilserina">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(167,139,250,.15);">🧠</div>
-        <div>
-          <div class="sub-title">Fosfatidilserina</div>
-          <div class="sub-sub">200mg</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Fosfolipídio concentrado especialmente na face interna das membranas de neurônios, onde participa da sinalização celular.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Um dos nootrópicos com mais estudos clínicos em humanos voltados a memória em contexto de envelhecimento</li>
-          <li>Participa da fluidez de membrana e da comunicação entre neurônios</li>
-          <li>Também estudada por possível efeito de redução do cortisol pós-exercício</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>200mg/dia é uma dose comum usada nos estudos e nas apresentações comerciais no Brasil.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Perfil de segurança considerado bom; verificar origem (soja vs. derivado bovino) só por preferência pessoal/dietética.</p>
-      </div>
-    </section>
-
-    <!-- DMAE -->
-    <section class="page" id="page-dmae">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,191,36,.15);">💭</div>
-        <div>
-          <div class="sub-title">DMAE Bitartarato</div>
-          <div class="sub-sub">Dimetilaminoetanol · 250mg</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Composto encontrado naturalmente em pequenas quantidades em peixes como sardinha e anchova, também produzido em pequena escala pelo próprio corpo.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Proposto como precursor de colina e, por extensão, de acetilcolina — mecanismo debatido na literatura, com evidência de eficácia mista</li>
-          <li>Popular em suplementos de "humor e foco", mas com estudos em humanos mais escassos que fosfatidilserina, por exemplo</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>250mg por cápsula é uma apresentação comum vendida no Brasil.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Relatos ocasionais de dor de cabeça ou tensão muscular em doses altas — é o composto desta lista com evidência científica mais fraca, vale tratar como o mais experimental da lista.</p>
-      </div>
-    </section>
-
-    <!-- L-CARNITINA -->
-    <section class="page" id="page-carnitina">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(74,222,128,.15);">🔥</div>
-        <div>
-          <div class="sub-title">L-Carnitina</div>
-          <div class="sub-sub">aminoácido derivado</div>
-        </div>
-      </div>
-      <span class="badge">venda livre</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Composto derivado de aminoácidos, produzido pelo fígado e rins, essencial para transportar ácidos graxos de cadeia longa para dentro da mitocôndria, onde viram energia.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>A forma acetil-L-carnitina (ALCAR) é a variante mais estudada para efeito cognitivo, por atravessar melhor a barreira hematoencefálica</li>
-          <li>L-carnitina "comum" tem papel mais estabelecido em metabolismo energético geral do que em cognição especificamente</li>
-          <li>Estudada em contextos de fadiga e declínio cognitivo relacionado à idade</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Dose de referência</h3>
-        <p>Suplementos variam bastante, geralmente entre 500–2.000mg/dia — se o objetivo for cognitivo, vale considerar especificamente a versão acetil-L-carnitina.</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Geralmente bem tolerada; doses altas ocasionalmente causam odor corporal característico ou desconforto gastrointestinal.</p>
-      </div>
-    </section>
-
-    <!-- VENVANSE -->
-    <section class="page" id="page-venvanse">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,113,133,.15);">⚡</div>
-        <div>
-          <div class="sub-title">Venvanse</div>
-          <div class="sub-sub">Lisdexanfetamina · 30mg</div>
-        </div>
-      </div>
-      <span class="badge rx">estimulante · lista A3 · receita amarela (retida)</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Pró-fármaco: a molécula em si é inativa e só vira dextroanfetamina depois de ser processada no corpo (principalmente por enzimas nas hemácias). Foi desenhada assim justamente pra ter início de ação mais gradual e menor potencial de uso abusivo por via não-oral, comparado à anfetamina direta.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Aumenta a liberação e reduz a recaptação de dopamina e noradrenalina na fenda sináptica</li>
-          <li>Aprovado para TDAH (e, em alguns países, transtorno da compulsão alimentar)</li>
-          <li>Efeito subjetivo de foco/energia é justamente o que atrai uso off-label — mas em cérebro sem TDAH a resposta e o risco não são os mesmos que em quem tem o transtorno</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Apresentação de bula</h3>
-        <p>Cápsulas de 30mg é uma das apresentações comerciais padrão no Brasil (também existe 50mg e 70mg).</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>É estimulante classe anfetamínica — tem potencial real de dependência, tolerância e abstinência com uso continuado fora de indicação médica. Efeitos cardiovasculares (aumento de frequência cardíaca e pressão) e psiquiátricos (ansiedade, insônia, em casos raros sintomas psicóticos com uso prolongado/doses altas) são a razão pela qual é controlado nível A3. Diferente do resto da lista, aqui o acompanhamento médico não é só recomendável — é o que diferencia uso terapêutico de uso de risco.</p>
-      </div>
-    </section>
-
-    <!-- RITALINA -->
-    <section class="page" id="page-ritalina">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(251,113,133,.15);">⚡</div>
-        <div>
-          <div class="sub-title">Ritalina</div>
-          <div class="sub-sub">Metilfenidato · 10mg</div>
-        </div>
-      </div>
-      <span class="badge rx">estimulante · lista A3 · receita amarela (retida)</span>
-
-      <div class="card">
-        <h3>O que é</h3>
-        <p>Estimulante do sistema nervoso central, estruturalmente diferente da anfetamina — age principalmente bloqueando o transportador que recaptura dopamina e noradrenalina, ao invés de estimular a liberação delas.</p>
-      </div>
-      <div class="card">
-        <h3>Papel no cérebro</h3>
-        <ul>
-          <li>Mantém dopamina e noradrenalina disponíveis por mais tempo na fenda sináptica, melhorando foco e controle de impulso em quem tem TDAH</li>
-          <li>Aprovado para TDAH e narcolepsia</li>
-          <li>Versão de liberação imediata (a de 10mg) tem duração curta — cerca de 3 a 4 horas de efeito — o que historicamente é associado a maior risco de uso fora do padrão terapêutico, por incentivar redoses ao longo do dia</li>
-        </ul>
-      </div>
-      <div class="card dose">
-        <h3>Apresentação de bula</h3>
-        <p>Comprimidos de 10mg é a apresentação de liberação imediata padrão (existe também a versão de liberação prolongada, Ritalina LA).</p>
-      </div>
-      <div class="card risk">
-        <h3>Ponto de atenção</h3>
-        <p>Mesmo perfil de risco da classe estimulante: potencial de dependência, efeito cardiovascular, e escalonamento de dose quando usado sem indicação clínica. A curta duração da versão imediata é justamente o que mais favorece esse padrão de escalonamento — vale ter isso em mente se o uso não estiver sendo acompanhado por médico.</p>
-      </div>
-    </section>
-
-    <!-- REGISTRO -->
-    <section class="page" id="page-registro">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(167,139,250,.15);">📓</div>
-        <div>
-          <div class="sub-title">Registro diário</div>
-          <div class="sub-sub">o que tomou, e como se sentiu</div>
-        </div>
-      </div>
-
-      <form class="reg-form" id="regForm">
-        <div class="field">
-          <label>Data</label>
-          <input type="date" id="f-date" required>
-        </div>
-        <div class="field">
-          <label>Substância</label>
-          <select id="f-sub" required>
-            <option value="Ômega 3">Ômega 3</option>
-            <option value="Complexo B">Complexo B</option>
-            <option value="Ginkgo Biloba">Ginkgo Biloba</option>
-            <option value="Piracetam">Piracetam</option>
-            <option value="Hydergine">Hydergine</option>
-            <option value="Selegilina">Selegilina</option>
-            <option value="Adrafinil">Adrafinil</option>
-            <option value="Ácido Alfa Lipoico">Ácido Alfa Lipoico</option>
-            <option value="CoQ10">CoQ10</option>
-            <option value="Fosfatidilcolina">Fosfatidilcolina</option>
-            <option value="Fosfatidilserina">Fosfatidilserina</option>
-            <option value="DMAE">DMAE</option>
-            <option value="L-Carnitina">L-Carnitina</option>
-            <option value="Venvanse">Venvanse</option>
-            <option value="Ritalina">Ritalina</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Dose tomada</label>
-          <input type="text" id="f-dose" placeholder="ex: 800mg, 1x">
-        </div>
-        <div class="field">
-          <label>Horário</label>
-          <input type="time" id="f-time">
-        </div>
-        <div class="field">
-          <label>Foco (0–10)</label>
-          <div class="range-row">
-            <input type="range" id="f-foco" min="0" max="10" value="5">
-            <span class="range-val" id="v-foco">5</span>
-          </div>
-        </div>
-        <div class="field">
-          <label>Energia (0–10)</label>
-          <div class="range-row">
-            <input type="range" id="f-energia" min="0" max="10" value="5">
-            <span class="range-val" id="v-energia">5</span>
-          </div>
-        </div>
-        <div class="field full">
-          <label>Observações</label>
-          <textarea id="f-obs" placeholder="como se sentiu, efeitos notados, contexto do dia..."></textarea>
-        </div>
-        <div class="field full" style="flex-direction:row; justify-content:flex-end; gap:10px;">
-          <button type="submit" class="btn">Salvar registro</button>
-        </div>
-      </form>
-
-      <div class="block-title">Histórico</div>
-      <div class="entries" id="entriesList"></div>
-    </section>
-
-    <!-- NOTAS -->
-    <section class="page" id="page-notas">
-      <div class="sub-header">
-        <div class="sub-icon" style="background:rgba(74,222,128,.15);">📝</div>
-        <div>
-          <div class="sub-title">Notas</div>
-          <div class="sub-sub">bloco livre — ideias, achados, trechos</div>
-        </div>
-      </div>
-      <textarea id="notasArea" placeholder="Escreva livremente aqui — estudos que achar, trechos de vídeos, ideias de protocolo pra discutir com o médico, etc."></textarea>
-      <div class="save-status" id="notasStatus">salvo automaticamente</div>
-    </section>
-
-  </main>
+<div class="breath-field" aria-hidden="true">
+  <span class="ring ring-1"></span>
+  <span class="ring ring-2"></span>
+  <span class="ring ring-3"></span>
 </div>
 
-<script>
-  // ---------- Navigation ----------
-  const navItems = document.querySelectorAll('.nav-item');
-  const pages = document.querySelectorAll('.page');
+<header class="site-header">
+  <div class="wrap header-row">
+    <a href="#topo" class="logo">SolisWeb<span class="logo-dot">.</span></a>
 
-  function goToPage(id){
-    pages.forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    navItems.forEach(n => n.classList.toggle('active', n.dataset.page === id));
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
+    <nav class="main-nav" id="mainNav">
+      <a href="#servicos">Serviços</a>
+      <a href="#precos">Preços</a>
+      <a href="#manutencao">Manutenção</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#faq">Dúvidas</a>
+    </nav>
 
-  navItems.forEach(item => {
-    item.addEventListener('click', () => goToPage(item.dataset.page));
-  });
+    <a href="https://wa.me/5565993085010?text=Ol%C3%A1!%20Quero%20criar%20um%20site%20para%20meu%20consult%C3%B3rio%20de%20psicologia." class="btn btn-primary btn-header" target="_blank" rel="noopener">Falar no WhatsApp</a>
 
-  document.querySelectorAll('.pillar-card').forEach(card => {
-    card.addEventListener('click', () => goToPage(card.dataset.goto));
-  });
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
 
-  // ---------- Range sliders ----------
-  ['foco','energia'].forEach(key => {
-    const input = document.getElementById('f-' + key);
-    const val = document.getElementById('v-' + key);
-    input.addEventListener('input', () => val.textContent = input.value);
-  });
+<main id="topo">
 
-  // ---------- Storage helpers (persistent, personal / not shared) ----------
-  async function storageGet(key){
-    try{
-      const res = await window.storage.get(key, false);
-      return res ? JSON.parse(res.value) : null;
-    }catch(e){ return null; }
-  }
-  async function storageSet(key, value){
-    try{ await window.storage.set(key, JSON.stringify(value), false); }
-    catch(e){ console.error('storage error', e); }
-  }
-
-  // ---------- Registro (diary) ----------
-  let entries = [];
-
-  function renderEntries(){
-    const list = document.getElementById('entriesList');
-    if(entries.length === 0){
-      list.innerHTML = '<div class="empty-state">Nenhum registro ainda. Adicione o primeiro acima.</div>';
-      return;
-    }
-    const sorted = [...entries].sort((a,b) => (b.date+b.time).localeCompare(a.date+a.time));
-    list.innerHTML = sorted.map(e => `
-      <div class="entry" data-id="${e.id}">
-        <div class="entry-main">
-          <div class="entry-top">
-            <span class="entry-sub">${e.sub}</span>
-            <span class="entry-date">${formatDate(e.date)}${e.time ? ' · ' + e.time : ''}</span>
-            ${e.dose ? `<span class="entry-dose">${e.dose}</span>` : ''}
-          </div>
-          ${e.obs ? `<div class="entry-note">${escapeHtml(e.obs)}</div>` : ''}
-        </div>
-        <div class="entry-scores">
-          <div class="score"><div class="score-val">${e.foco}</div><div class="score-label">Foco</div></div>
-          <div class="score"><div class="score-val">${e.energia}</div><div class="score-label">Energia</div></div>
-        </div>
-        <button class="del-btn" onclick="deleteEntry('${e.id}')">✕</button>
+  <!-- HERO -->
+  <section class="hero" id="heroSection">
+    <div class="wrap hero-content">
+      <p class="eyebrow eyebrow--center">Sites para psicólogos e clínicas</p>
+      <h1 class="hero-title">Um consultório digital que passa a mesma confiança da sua sala de atendimento.</h1>
+      <p class="hero-lede">Criamos o site, cuidamos do seu Google Meu Negócio e gerenciamos os anúncios — para que o próximo passo do paciente seja marcar a consulta, não fechar a aba.</p>
+      <div class="hero-actions">
+        <a href="#precos" class="btn btn-primary">Ver planos e preços</a>
+        <a href="#servicos" class="btn btn-ghost">Como funciona</a>
       </div>
-    `).join('');
-  }
+      <div class="hero-trust">
+        <span>Dados protegidos conforme a LGPD</span>
+        <span class="divider" aria-hidden="true">·</span>
+        <span>Sites entregues em até 20 dias úteis</span>
+      </div>
+    </div>
+  </section>
 
-  function formatDate(d){
-    if(!d) return '';
-    const [y,m,day] = d.split('-');
-    return `${day}/${m}/${y}`;
-  }
-  function escapeHtml(str){
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  <!-- CAPA / VITRINE -->
+  <section class="capa-section">
+    <p class="capa-hint">Passe o mouse sobre a imagem para ver mais modelos</p>
+    <div class="capa-strip">
+      <div class="capa-track">
+        <img src="assets/capa.png" alt="Modelos de sites criados para psicólogos e clínicas de psicologia">
+        <img src="assets/capa.png" alt="" aria-hidden="true">
+      </div>
+    </div>
+  </section>
 
-  window.deleteEntry = async function(id){
-    entries = entries.filter(e => e.id !== id);
-    await storageSet('registro-entries', entries);
-    renderEntries();
-  };
+  <section id="servicos" class="section">
+    <div class="wrap">
+      <p class="eyebrow eyebrow--center">O que fazemos</p>
+      <h2 class="section-title">Três frentes, um só objetivo: sua agenda cheia</h2>
 
-  document.getElementById('regForm').addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    const entry = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-      date: document.getElementById('f-date').value,
-      sub: document.getElementById('f-sub').value,
-      dose: document.getElementById('f-dose').value,
-      time: document.getElementById('f-time').value,
-      foco: document.getElementById('f-foco').value,
-      energia: document.getElementById('f-energia').value,
-      obs: document.getElementById('f-obs').value,
-    };
-    entries.push(entry);
-    await storageSet('registro-entries', entries);
-    renderEntries();
-    ev.target.reset();
-    document.getElementById('v-foco').textContent = '5';
-    document.getElementById('v-energia').textContent = '5';
-    document.getElementById('f-foco').value = 5;
-    document.getElementById('f-energia').value = 5;
-  });
+      <div class="services-grid">
+        <article class="service-card service-card--main reveal">
+          <p class="service-tag">Serviço principal</p>
+          <h3>Criação de site</h3>
+          <p>Site institucional pensado para transmitir acolhimento e autoridade, com estrutura clara de especialidades, formas de contato e otimização para buscas locais.</p>
+        </article>
 
-  // ---------- Notas (free notes, autosave) ----------
-  const notasArea = document.getElementById('notasArea');
-  const notasStatus = document.getElementById('notasStatus');
-  let notasTimer = null;
+        <article class="service-card reveal">
+          <p class="service-tag">Presença local</p>
+          <h3>Google Meu Negócio</h3>
+          <p>Criação, verificação e gestão contínua do seu perfil — para aparecer bem posicionado quando alguém busca "psicólogo perto de mim".</p>
+        </article>
 
-  notasArea.addEventListener('input', () => {
-    notasStatus.textContent = 'salvando...';
-    clearTimeout(notasTimer);
-    notasTimer = setTimeout(async () => {
-      await storageSet('notas-livres', notasArea.value);
-      notasStatus.textContent = 'salvo automaticamente';
-    }, 600);
-  });
+        <article class="service-card reveal">
+          <p class="service-tag">Aquisição</p>
+          <h3>Gestão de tráfego</h3>
+          <p>Campanhas no Meta Ads e Google Ads direcionadas para agendamento, com otimização e relatórios periódicos de desempenho.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-  // ---------- Init ----------
-  async function init(){
-    const savedEntries = await storageGet('registro-entries');
-    entries = savedEntries || [];
-    renderEntries();
+  <!-- POR QUE -->
+  <section class="section section--alt">
+    <div class="wrap why-grid">
+      <div class="why-copy">
+        <p class="eyebrow">Por que investir nisso</p>
+        <h2 class="section-title">O site é o primeiro contato — antes mesmo da primeira sessão</h2>
+        <p>A maioria dos pacientes pesquisa o profissional antes de agendar. Um site claro reduz a insegurança de quem procura ajuda pela primeira vez e filtra os contatos que já chegam decididos.</p>
+      </div>
+      <ul class="why-list">
+        <li><span class="why-mark">＋</span> Mais credibilidade que redes sociais isoladas</li>
+        <li><span class="why-mark">＋</span> Agendamento facilitado, sem trocas intermináveis de mensagem</li>
+        <li><span class="why-mark">＋</span> Conformidade com a LGPD no tratamento de dados de pacientes</li>
+        <li><span class="why-mark">＋</span> Presença que continua trabalhando fora do horário de atendimento</li>
+      </ul>
+    </div>
+  </section>
 
-    const savedNotas = await storageGet('notas-livres');
-    if(savedNotas) notasArea.value = savedNotas;
+  <!-- PREÇOS -->
+  <section id="precos" class="section">
+    <div class="wrap">
+      <p class="eyebrow eyebrow--center">Investimento</p>
+      <h2 class="section-title">Planos para cada etapa do seu consultório</h2>
+      <p class="section-lede">Escolha o serviço para ver as opções — do essencial ao completo.</p>
 
-    document.getElementById('f-date').valueAsDate = new Date();
-  }
-  init();
+      <div class="tabs" role="tablist" aria-label="Categorias de preço">
+        <button class="tab is-active" role="tab" aria-selected="true" data-tab="site">Criação de site</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="gmn">Google Meu Negócio</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="trafego">Gestão de tráfego</button>
+      </div>
 
-  // ---------- Synapse animation (hero signature) ----------
-  const canvas = document.getElementById('synapseCanvas');
-  const ctx = canvas.getContext('2d');
-  let nodes = [];
-  function resizeCanvas(){
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-  }
-  function initNodes(){
-    nodes = [];
-    const count = Math.max(18, Math.floor(canvas.width / 60));
-    for(let i=0;i<count;i++){
-      nodes.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        vx: (Math.random()-0.5)*0.25,
-        vy: (Math.random()-0.5)*0.25,
-        r: Math.random()*1.6 + 1
-      });
-    }
-  }
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    nodes.forEach(n => {
-      n.x += n.vx; n.y += n.vy;
-      if(n.x < 0 || n.x > canvas.width) n.vx *= -1;
-      if(n.y < 0 || n.y > canvas.height) n.vy *= -1;
-    });
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const dx = nodes[i].x - nodes[j].x;
-        const dy = nodes[i].y - nodes[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if(dist < 140){
-          ctx.strokeStyle = `rgba(167,139,250,${(1 - dist/140) * 0.35})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-    nodes.forEach(n => {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(74,222,128,0.7)';
-      ctx.fill();
-    });
-    requestAnimationFrame(animate);
-  }
-  resizeCanvas();
-  initNodes();
-  animate();
-  window.addEventListener('resize', () => { resizeCanvas(); initNodes(); });
-</script>
+      <!-- TABELA 1 — SITE -->
+      <div class="plans-grid" data-panel="site">
+        <article class="plan-card reveal">
+          <p class="plan-name">Simples</p>
+          <p class="plan-for">Quem está começando</p>
+          <p class="plan-price">R$ 800</p>
+          <ul class="plan-features">
+            <li>1 página (landing page)</li>
+            <li>Template personalizado</li>
+            <li>Sobre, especialidades, contato</li>
+            <li>Botão de WhatsApp</li>
+            <li>SEO básico</li>
+            <li>Prazo: 5 dias úteis</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
+        </article>
 
+        <article class="plan-card plan-card--featured reveal">
+          <p class="plan-badge">Mais escolhido</p>
+          <p class="plan-name">Intermediário</p>
+          <p class="plan-for">Consultório estabelecido</p>
+          <p class="plan-price">R$ 1.500</p>
+          <ul class="plan-features">
+            <li>4–5 páginas, layout exclusivo</li>
+            <li>Blog e depoimentos</li>
+            <li>Formulário + Google Maps</li>
+            <li>SEO on-page completo</li>
+            <li>Prazo: 10 dias úteis</li>
+          </ul>
+          <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
+        </article>
+
+        <article class="plan-card reveal">
+          <p class="plan-name">Avançado</p>
+          <p class="plan-for">Clínica com múltiplos profissionais</p>
+          <p class="plan-price">R$ 2.800<span>+</span></p>
+          <ul class="plan-features">
+            <li>6+ páginas, layout sob medida</li>
+            <li>Área do paciente e agendamento online</li>
+            <li>E-mail profissional e chatbot</li>
+            <li>SEO avançado multi-localidade</li>
+            <li>Prazo: 15–20 dias úteis</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
+        </article>
+      </div>
+
+      <!-- TABELA 2 — GMN -->
+      <div class="plans-grid is-hidden" data-panel="gmn">
+        <article class="plan-card reveal">
+          <p class="plan-name">Básico</p>
+          <p class="plan-for">Quem ainda não tem perfil</p>
+          <p class="plan-price">R$ 300<span>/único</span></p>
+          <ul class="plan-features">
+            <li>Criação e verificação do perfil</li>
+            <li>Categoria e dados básicos</li>
+            <li>Configuração inicial completa</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
+        </article>
+
+        <article class="plan-card plan-card--featured reveal">
+          <p class="plan-badge">Mais escolhido</p>
+          <p class="plan-name">Intermediário</p>
+          <p class="plan-for">Manter o perfil ativo</p>
+          <p class="plan-price">R$ 500<span>/mês</span></p>
+          <ul class="plan-features">
+            <li>Tudo do plano Básico</li>
+            <li>4 postagens por mês</li>
+            <li>Resposta a avaliações</li>
+          </ul>
+          <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
+        </article>
+
+        <article class="plan-card reveal">
+          <p class="plan-name">Avançado</p>
+          <p class="plan-for">Liderar buscas locais</p>
+          <p class="plan-price">R$ 900<span>/mês</span></p>
+          <ul class="plan-features">
+            <li>Tudo do plano Intermediário</li>
+            <li>Fotos profissionais</li>
+            <li>SEO local avançado</li>
+            <li>Relatório mensal de desempenho</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
+        </article>
+      </div>
+
+      <!-- TABELA 3 — TRÁFEGO -->
+      <div class="plans-grid is-hidden" data-panel="trafego">
+        <article class="plan-card reveal">
+          <p class="plan-name">Básico</p>
+          <p class="plan-for">Testar tráfego pago</p>
+          <p class="plan-price">R$ 600<span>/mês</span></p>
+          <ul class="plan-features">
+            <li>1 campanha ativa</li>
+            <li>Otimização mensal</li>
+            <li>Relatório mensal simples</li>
+            <li>+ verba de anúncio à parte</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
+        </article>
+
+        <article class="plan-card plan-card--featured reveal">
+          <p class="plan-badge">Mais escolhido</p>
+          <p class="plan-name">Intermediário</p>
+          <p class="plan-for">Já tem resultado e quer escalar</p>
+          <p class="plan-price">R$ 1.000<span>/mês</span></p>
+          <ul class="plan-features">
+            <li>2–3 campanhas</li>
+            <li>Otimização semanal</li>
+            <li>Relatório mensal detalhado</li>
+            <li>+ verba de anúncio à parte</li>
+          </ul>
+          <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
+        </article>
+
+        <article class="plan-card reveal">
+          <p class="plan-name">Avançado</p>
+          <p class="plan-for">Alto volume de agendamento</p>
+          <p class="plan-price">R$ 1.800<span>/mês</span></p>
+          <ul class="plan-features">
+            <li>Múltiplas campanhas + funil completo</li>
+            <li>Testes A/B contínuos</li>
+            <li>Reunião semanal de acompanhamento</li>
+            <li>+ verba de anúncio à parte</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
+        </article>
+      </div>
+
+      <p class="table-note">Valores de gestão de tráfego não incluem a verba investida em anúncios, definida junto com você.</p>
+    </div>
+  </section>
+
+  <!-- MANUTENÇÃO -->
+  <section id="manutencao" class="section section--alt">
+    <div class="wrap">
+      <p class="eyebrow eyebrow--center">Depois da entrega</p>
+      <h2 class="section-title">Manutenção e suporte</h2>
+      <p class="section-lede">Seu site pronto continua precisando de cuidado — escolha o formato que faz sentido para você.</p>
+
+      <div class="maint-grid">
+        <div class="maint-card reveal">
+          <p class="maint-period">Mensal</p>
+          <p class="maint-price">R$ 150<span>/mês</span></p>
+          <p class="maint-desc">Pequenas atualizações de texto e imagem, backup e correções de bugs.</p>
+        </div>
+        <div class="maint-card reveal">
+          <p class="maint-period">Trimestral</p>
+          <p class="maint-price">R$ 400<span>/trimestre</span></p>
+          <p class="maint-desc">Mesma cobertura do plano mensal, com desconto (≈ R$ 133/mês).</p>
+        </div>
+        <div class="maint-card maint-card--featured reveal">
+          <p class="maint-period">Anual</p>
+          <p class="maint-price">R$ 1.400<span>/ano</span></p>
+          <p class="maint-desc">Mesma cobertura, maior desconto (≈ R$ 117/mês) + 1 atualização de design por ano.</p>
+        </div>
+        <div class="maint-card reveal">
+          <p class="maint-period">Avulso</p>
+          <p class="maint-price">R$ 90<span>/hora</span></p>
+          <p class="maint-desc">Para alterações pontuais fora de qualquer plano contratado.</p>
+        </div>
+        <div class="maint-card reveal">
+          <p class="maint-period">Urgente</p>
+          <p class="maint-price">R$ 150<span>+ hora</span></p>
+          <p class="maint-desc">Taxa de urgência para correções fora do horário comercial ou com prazo menor que 24h.</p>
+        </div>
+        <div class="maint-card reveal">
+          <p class="maint-period">Pacote de horas</p>
+          <p class="maint-price">R$ 380<span>/5h</span></p>
+          <p class="maint-desc">5 horas de suporte para usar quando precisar — economia de R$ 70.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section id="depoimentos" class="section">
+    <div class="wrap">
+      <p class="eyebrow eyebrow--center">Quem já confiou</p>
+      <h2 class="section-title">O que dizem os profissionais atendidos</h2>
+
+      <div class="testimonial-grid">
+        <blockquote class="testimonial reveal">
+          <p>"Meus pacientes comentam que o site passa a mesma calma do consultório. As mensagens pelo WhatsApp já chegam com a pessoa decidida a agendar."</p>
+          <footer>Psicóloga clínica, São Paulo/SP</footer>
+        </blockquote>
+        <blockquote class="testimonial reveal">
+          <p>"Depois que ajustaram meu perfil no Google, comecei a aparecer nas buscas por bairro. Isso sozinho já mudou minha agenda."</p>
+          <footer>Psicólogo, atendimento infantil</footer>
+        </blockquote>
+        <blockquote class="testimonial reveal">
+          <p>"O suporte mensal me tranquiliza — nunca precisei me preocupar em mexer no site sozinha."</p>
+          <footer>Clínica com 3 profissionais</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section section--alt">
+    <div class="wrap faq-wrap">
+      <p class="eyebrow eyebrow--center">Dúvidas frequentes</p>
+      <h2 class="section-title">Perguntas que recebemos com frequência</h2>
+
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false">
+            Qual o prazo de entrega do site?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Depende do plano: de 5 dias úteis (Simples) a até 20 dias úteis (Avançado), contados a partir do envio de todo o conteúdo necessário.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false">
+            Hospedagem e domínio estão incluídos?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Ajudamos na contratação de hospedagem e domínio junto a você, mas esses custos são cobrados à parte pelos provedores — não fazem parte do valor de criação do site.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false">
+            Posso pedir alterações depois que o site ficar pronto?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Sim. Pequenos ajustes durante a produção estão inclusos. Depois da entrega, alterações passam a ser cobertas pelos planos de manutenção ou por hora avulsa.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false">
+            Como funciona o cuidado com dados de pacientes (LGPD)?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <p>Os formulários de contato e agendamento são configurados para coletar apenas os dados necessários, com política de privacidade clara para o paciente.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato" class="section cta-section">
+    <div class="wrap cta-wrap">
+      <h2 class="section-title">Vamos colocar seu consultório no ar?</h2>
+      <p class="section-lede">Conte um pouco sobre sua clínica e te respondemos com uma recomendação de plano.</p>
+      <a href="https://wa.me/5565993085010?text=Ol%C3%A1!%20Quero%20criar%20um%20site%20para%20meu%20consult%C3%B3rio%20de%20psicologia." class="btn btn-primary btn-lg" target="_blank" rel="noopener">Falar no WhatsApp agora</a>
+      <p class="cta-phone">Ou chame direto: <strong>(65) 99308-5010</strong></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <a href="#topo" class="logo logo--footer">SolisWeb<span class="logo-dot">.</span></a>
+    <p>&copy; <span id="year"></span> SolisWeb — Sites para psicólogos e clínicas.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
