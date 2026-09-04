@@ -7,7 +7,7 @@
 <meta name="description" content="Criação de sites, gestão de Google Meu Negócio e tráfego pago para psicólogos que querem mais pacientes com presença digital profissional.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,650&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,650;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -50,7 +50,7 @@
   <section class="hero" id="heroSection">
     <div class="wrap hero-content">
       <p class="eyebrow eyebrow--center">Sites para psicólogos e clínicas</p>
-      <h1 class="hero-title">Um consultório digital que passa a mesma confiança da sua sala de atendimento.</h1>
+      <h1 class="hero-title">Leve a <em>confiança</em> da sua sala de atendimento para a tela do seu paciente.</h1>
       <p class="hero-lede">Criamos o site, cuidamos do seu Google Meu Negócio e gerenciamos os anúncios — para que o próximo passo do paciente seja marcar a consulta, não fechar a aba.</p>
       <div class="hero-actions">
         <a href="#precos" class="btn btn-primary">Ver planos e preços</a>
@@ -67,7 +67,7 @@
   <!-- CAPA / VITRINE -->
   <section class="capa-section">
     <div class="capa-strip">
-      <img src="capa.png" alt="Modelos de sites criados para psicólogos e clínicas de psicologia">
+      <img src="capa.png" alt="Modelos de sites criados para psicólogos e clínicas de psicologia" class="reveal-focus">
     </div>
   </section>
 
@@ -133,13 +133,16 @@
         <article class="plan-card reveal">
           <p class="plan-name">Simples</p>
           <p class="plan-for">Quem está começando</p>
-          <p class="plan-price">R$ 800</p>
+          <p class="plan-price-old">R$ 800</p>
+          <p class="plan-price">R$ 498</p>
+          <p class="plan-discount">R$302 de desconto</p>
           <ul class="plan-features">
             <li>1 página (landing page)</li>
             <li>Template personalizado</li>
             <li>Sobre, especialidades, contato</li>
             <li>Botão de WhatsApp</li>
             <li>SEO básico</li>
+            <li>Hospedagem e domínio inclusos</li>
             <li>Prazo: 5 dias úteis</li>
           </ul>
           <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
@@ -149,31 +152,22 @@
           <p class="plan-badge">Mais escolhido</p>
           <p class="plan-name">Intermediário</p>
           <p class="plan-for">Consultório estabelecido</p>
-          <p class="plan-price">R$ 1.500</p>
+          <p class="plan-price-old">R$ 1.500</p>
+          <p class="plan-price">R$ 1.198</p>
+          <p class="plan-discount">R$302 de desconto</p>
           <ul class="plan-features">
             <li>4–5 páginas, layout exclusivo</li>
-            <li>Blog e depoimentos</li>
+            <li>Depoimentos</li>
             <li>Formulário + Google Maps</li>
+            <li>Botão de WhatsApp</li>
             <li>SEO on-page completo</li>
+            <li>Hospedagem e domínio inclusos</li>
             <li>Prazo: 10 dias úteis</li>
           </ul>
           <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
         </article>
-
-        <article class="plan-card reveal">
-          <p class="plan-name">Avançado</p>
-          <p class="plan-for">Clínica com múltiplos profissionais</p>
-          <p class="plan-price">R$ 2.800<span>+</span></p>
-          <ul class="plan-features">
-            <li>6+ páginas, layout sob medida</li>
-            <li>Área do paciente e agendamento online</li>
-            <li>E-mail profissional e chatbot</li>
-            <li>SEO avançado multi-localidade</li>
-            <li>Prazo: 15–20 dias úteis</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
-        </article>
       </div>
+      <p class="table-note table-note--highlight" data-panel="site">Hospedagem e domínio já estão inclusos em todos os planos de criação de site.</p>
 
       <!-- TABELA 2 — GMN -->
       <div class="plans-grid is-hidden" data-panel="gmn">
@@ -259,7 +253,7 @@
         </article>
       </div>
 
-      <p class="table-note">Valores de gestão de tráfego não incluem a verba investida em anúncios, definida junto com você.</p>
+      <p class="table-note is-hidden" data-panel="trafego">Valores de gestão de tráfego não incluem a verba investida em anúncios, definida junto com você.</p>
     </div>
   </section>
 
@@ -341,7 +335,7 @@
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer">
-            <p>Depende do plano: de 5 dias úteis (Simples) a até 20 dias úteis (Avançado), contados a partir do envio de todo o conteúdo necessário.</p>
+            <p>Depende do plano: 5 dias úteis no Simples e até 10 dias úteis no Intermediário, contados a partir do envio de todo o conteúdo necessário.</p>
           </div>
         </div>
 
@@ -351,7 +345,7 @@
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer">
-            <p>Ajudamos na contratação de hospedagem e domínio junto a você, mas esses custos são cobrados à parte pelos provedores — não fazem parte do valor de criação do site.</p>
+            <p>Sim. Hospedagem e domínio já estão inclusos em todos os planos de criação de site — você não precisa contratar nem pagar isso separadamente.</p>
           </div>
         </div>
 
@@ -367,11 +361,11 @@
 
         <div class="faq-item reveal">
           <button class="faq-question" aria-expanded="false">
-            Como funciona o cuidado com dados de pacientes (LGPD)?
+            O site funciona bem no celular e no tablet?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-answer">
-            <p>Os formulários de contato e agendamento são configurados para coletar apenas os dados necessários, com política de privacidade clara para o paciente.</p>
+            <p>Sim. Todo site é desenvolvido com layout responsivo, ajustando automaticamente o conteúdo para celular, tablet e computador — mantendo boa leitura e navegação em qualquer tela.</p>
           </div>
         </div>
       </div>

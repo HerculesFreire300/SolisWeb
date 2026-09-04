@@ -19,7 +19,7 @@ mainNav.querySelectorAll('a').forEach(link => {
 
 // ---- Abas de preços ----
 const tabs = document.querySelectorAll('.tab');
-const panels = document.querySelectorAll('.plans-grid');
+const panels = document.querySelectorAll('.plans-grid, .table-note[data-panel]');
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
@@ -37,7 +37,7 @@ tabs.forEach(tab => {
 });
 
 // ---- Revelação suave ao rolar a página ----
-const revealEls = document.querySelectorAll('.reveal');
+const revealEls = document.querySelectorAll('.reveal, .reveal-focus');
 
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {

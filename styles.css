@@ -266,10 +266,18 @@ h1,h2,h3{
 
 .hero-title{
   color: var(--teal-dark);
-  font-size: clamp(2rem, 4.4vw, 3.1rem);
-  max-width: 16ch;
+  font-size: clamp(2.1rem, 4.6vw, 3.3rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  max-width: 17ch;
   margin-left:auto;
   margin-right:auto;
+}
+.hero-title em{
+  font-style: italic;
+  font-weight: 500;
+  color: var(--clay);
 }
 .hero-lede{
   font-size: 1.08rem;
@@ -444,10 +452,14 @@ h1,h2,h3{
 .plans-grid{
   display:grid;
   gap: 20px;
+  justify-content:center;
 }
-.plans-grid.is-hidden{ display:none; }
+.is-hidden{ display:none; }
 @media (min-width: 760px){
-  .plans-grid{ grid-template-columns: repeat(3, 1fr); align-items:stretch; }
+  .plans-grid{
+    grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
+    align-items:stretch;
+  }
 }
 
 .plan-card{
@@ -503,15 +515,40 @@ h1,h2,h3{
   color: var(--ink-soft);
   margin: 0 0 18px;
 }
+.plan-price-old{
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--clay);
+  margin: 0 0 2px;
+}
+.plan-card--featured .plan-price-old{ color: rgba(255,255,255,.65); }
+
 .plan-price{
   font-family: var(--mono);
   font-size: 2rem;
   font-weight: 500;
-  margin: 0 0 22px;
+  margin: 0 0 10px;
 }
 .plan-price span{
   font-size: .95rem;
   color: var(--ink-soft);
+}
+.plan-discount{
+  display:inline-block;
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--white);
+  background: var(--clay);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin: 0 0 22px;
+}
+.plan-card--featured .plan-discount{
+  background: rgba(255,255,255,.2);
+  color: var(--white);
 }
 .plan-features{
   list-style:none;
@@ -531,6 +568,24 @@ h1,h2,h3{
   font-size: .85rem;
   color: var(--ink-soft);
   margin-top: 28px;
+}
+.table-note--highlight{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  margin: 28px auto 0;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--sage-soft);
+  color: var(--teal-dark);
+  font-weight: 600;
+  font-size: .85rem;
+  width: fit-content;
+}
+.table-note--highlight::before{
+  content: "✓";
+  color: var(--teal);
+  font-weight: 700;
 }
 
 /* =========================================================
@@ -699,8 +754,24 @@ h1,h2,h3{
   opacity: 1;
   transform: none;
 }
+
+/* efeito "entrar em foco" — a imagem surge desfocada e amplia até focar,
+   remete à clareza mental (combina com o tema calmo/respiração do site) */
+.reveal-focus{
+  opacity: 0;
+  filter: blur(14px);
+  transform: scale(1.04);
+  transition: opacity 1s var(--ease), filter 1s var(--ease), transform 1s var(--ease);
+}
+.reveal-focus.is-visible{
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
 @media (prefers-reduced-motion: reduce){
   .reveal{ opacity:1; transform:none; transition:none; }
+  .reveal-focus{ opacity:1; filter:none; transform:none; transition:none; }
 }
 
 /* =========================================================
