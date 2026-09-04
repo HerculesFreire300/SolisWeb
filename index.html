@@ -123,19 +123,19 @@
       <p class="section-lede">Escolha o serviço para ver as opções — do essencial ao completo.</p>
 
       <div class="tabs" role="tablist" aria-label="Categorias de preço">
-        <button class="tab is-active" role="tab" aria-selected="true" data-tab="site">Criação de site</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="gmn">Google Meu Negócio</button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="trafego">Gestão de tráfego</button>
+        <button class="tab is-active" role="tab" aria-selected="true" aria-controls="painel-site" data-tab="site">Criação de site</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="painel-gmn" data-tab="gmn">Google Meu Negócio</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="painel-trafego" data-tab="trafego">Gestão de tráfego</button>
       </div>
 
       <!-- TABELA 1 — SITE -->
-      <div class="plans-grid" data-panel="site">
+      <div class="plans-grid" id="painel-site" data-panel="site" role="tabpanel">
         <article class="plan-card reveal">
           <p class="plan-name">Simples</p>
           <p class="plan-for">Quem está começando</p>
           <p class="plan-price-old">R$ 800</p>
           <p class="plan-price">R$ 498</p>
-          <p class="plan-discount">R$302 de desconto</p>
+          <p class="plan-discount">R$301 de desconto</p>
           <ul class="plan-features">
             <li>1 página (landing page)</li>
             <li>Template personalizado</li>
@@ -154,7 +154,7 @@
           <p class="plan-for">Consultório estabelecido</p>
           <p class="plan-price-old">R$ 1.500</p>
           <p class="plan-price">R$ 1.198</p>
-          <p class="plan-discount">R$302 de desconto</p>
+          <p class="plan-discount">R$301 de desconto</p>
           <ul class="plan-features">
             <li>4–5 páginas, layout exclusivo</li>
             <li>Depoimentos</li>
@@ -170,7 +170,7 @@
       <p class="table-note table-note--highlight" data-panel="site">Hospedagem e domínio já estão inclusos em todos os planos de criação de site.</p>
 
       <!-- TABELA 2 — GMN -->
-      <div class="plans-grid is-hidden" data-panel="gmn">
+      <div class="plans-grid is-hidden" id="painel-gmn" data-panel="gmn" role="tabpanel">
         <article class="plan-card reveal">
           <p class="plan-name">Básico</p>
           <p class="plan-for">Quem ainda não tem perfil</p>
@@ -211,7 +211,7 @@
       </div>
 
       <!-- TABELA 3 — TRÁFEGO -->
-      <div class="plans-grid is-hidden" data-panel="trafego">
+      <div class="plans-grid is-hidden" id="painel-trafego" data-panel="trafego" role="tabpanel">
         <article class="plan-card reveal">
           <p class="plan-name">Básico</p>
           <p class="plan-for">Testar tráfego pago</p>
@@ -330,41 +330,41 @@
 
       <div class="faq-list">
         <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-1">
             Qual o prazo de entrega do site?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-resposta-1">
             <p>Depende do plano: 5 dias úteis no Simples e até 10 dias úteis no Intermediário, contados a partir do envio de todo o conteúdo necessário.</p>
           </div>
         </div>
 
         <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-2">
             Hospedagem e domínio estão incluídos?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-resposta-2">
             <p>Sim. Hospedagem e domínio já estão inclusos em todos os planos de criação de site — você não precisa contratar nem pagar isso separadamente.</p>
           </div>
         </div>
 
         <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-3">
             Posso pedir alterações depois que o site ficar pronto?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-resposta-3">
             <p>Sim. Pequenos ajustes durante a produção estão inclusos. Depois da entrega, alterações passam a ser cobertas pelos planos de manutenção ou por hora avulsa.</p>
           </div>
         </div>
 
         <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-4">
             O site funciona bem no celular e no tablet?
             <span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-answer">
+          <div class="faq-answer" id="faq-resposta-4">
             <p>Sim. Todo site é desenvolvido com layout responsivo, ajustando automaticamente o conteúdo para celular, tablet e computador — mantendo boa leitura e navegação em qualquer tela.</p>
           </div>
         </div>

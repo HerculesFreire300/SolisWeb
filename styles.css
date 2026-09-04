@@ -450,20 +450,17 @@ h1,h2,h3{
 }
 
 .plans-grid{
-  display:grid;
-  gap: 20px;
+  display:flex;
+  flex-wrap:wrap;
   justify-content:center;
+  gap: 20px;
 }
 .is-hidden{ display:none; }
-@media (min-width: 760px){
-  .plans-grid{
-    grid-template-columns: repeat(auto-fit, minmax(300px, 360px));
-    align-items:stretch;
-  }
-}
 
 .plan-card{
   position:relative;
+  flex: 1 1 300px;
+  max-width: 360px;
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -521,6 +518,8 @@ h1,h2,h3{
   color: var(--ink-soft);
   text-decoration: line-through;
   text-decoration-color: var(--clay);
+  text-decoration-thickness: 2px;
+  opacity: .85;
   margin: 0 0 2px;
 }
 .plan-card--featured .plan-price-old{ color: rgba(255,255,255,.65); }
