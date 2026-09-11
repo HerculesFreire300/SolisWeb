@@ -1,396 +1,337 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SolisWeb — Sites para Psicólogos e Clínicas</title>
-<meta name="description" content="Criação de sites, gestão de Google Meu Negócio e tráfego pago para psicólogos que querem mais pacientes com presença digital profissional.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,650;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="E-book 7 Maneiras Simples e Práticas de Ganhar Dinheiro com IA. Um guia direto para começar a explorar oportunidades com inteligência artificial.">
+  
+  <!-- OPEN GRAPH / PRÉVIA PARA REDES SOCIAIS E WHATSAPP -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="7 Maneiras Simples e Práticas de Ganhar Dinheiro com IA">
+  <meta property="og:description" content="Descubra como transformar Inteligência Artificial em renda extra começando do zero. Oferta por tempo limitado!">
+  <meta property="og:image" content="capa.jpg">
 
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" href="favicon.ico" sizes="any">
+  <title>7 Maneiras Simples e Práticas de Ganhar Dinheiro com IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- WIDGET DE CHECKOUT HOTMART -->
+  <script type="text/javascript">
+    function importHotmart(){
+      var imported = document.createElement('script');
+      imported.src = 'https://static.hotmart.com/checkout/widget.min.js';
+      document.head.appendChild(imported);
+
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = 'https://static.hotmart.com/css/hotmart-fb.min.css';
+      document.head.appendChild(link);
+    }
+    importHotmart();
+  </script>
 </head>
 <body>
 
-<div class="breath-field" aria-hidden="true">
-  <span class="ring ring-1"></span>
-  <span class="ring ring-2"></span>
-  <span class="ring ring-3"></span>
-</div>
-
-<header class="site-header">
-  <div class="wrap header-row">
-    <a href="#topo" class="logo">SolisWeb<span class="logo-dot">.</span></a>
-
-    <nav class="main-nav" id="mainNav">
-      <a href="#servicos">Serviços</a>
-      <a href="#precos">Preços</a>
-      <a href="#manutencao">Manutenção</a>
-      <a href="#depoimentos">Depoimentos</a>
-      <a href="#faq">Dúvidas</a>
-    </nav>
-
-    <a href="https://wa.me/5565993085010?text=Ol%C3%A1!%20Quero%20criar%20um%20site%20para%20meu%20consult%C3%B3rio%20de%20psicologia." class="btn btn-primary btn-header" target="_blank" rel="noopener">Falar no WhatsApp</a>
-
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+  <!-- BARRA DE URGÊNCIA FIXA COM CRONÔMETRO -->
+  <div class="timer-bar">
+    <div class="container timer-container">
+      <span class="timer-badge">OFERTA LIMITADA</span>
+      <p class="timer-text">Desconto de 25% expira em: <span id="countdown">15:00</span></p>
+      <!-- COLE SEU LINK DA HOTMART AQUI -->
+      <a onclick="return false;" href="https://pay.hotmart.com/L107562612W?checkoutMode=2" class="hotmart-fb hotmart__button-checkout btn-timer-cta">Garantir Desconto</a>
+    </div>
   </div>
-</header>
 
-<main id="topo">
+  
 
-  <!-- HERO -->
-  <section class="hero" id="heroSection">
-    <div class="wrap hero-content">
-      <p class="eyebrow eyebrow--center">Sites para psicólogos e clínicas</p>
-      <h1 class="hero-title">Leve a <em>confiança</em> da sua sala de atendimento para a tela do seu paciente.</h1>
-      <p class="hero-lede">Criamos o site, cuidamos do seu Google Meu Negócio e gerenciamos os anúncios — para que o próximo passo do paciente seja marcar a consulta, não fechar a aba.</p>
-      <div class="hero-actions">
-        <a href="#precos" class="btn btn-primary">Ver planos e preços</a>
-        <a href="#servicos" class="btn btn-ghost">Como funciona</a>
-      </div>
-      <div class="hero-trust">
-        <span>Dados protegidos conforme a LGPD</span>
-        <span class="divider" aria-hidden="true">·</span>
-        <span>Sites entregues em até 20 dias úteis</span>
-      </div>
-    </div>
-  </section>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">E-BOOK DIGITAL • ACESSO IMEDIATO</span>
+          <h1>7 Maneiras Simples e Práticas de Ganhar Dinheiro com IA</h1>
+          <p class="hero-subtitle">
+            Descubra formas práticas de transformar a inteligência artificial
+            em uma ferramenta para criar novas oportunidades de renda,
+            mesmo começando do zero absolutíssimo.
+          </p>
 
-  <!-- CAPA / VITRINE -->
-  <section class="capa-section">
-    <div class="capa-strip">
-      <img src="capa.png" alt="Modelos de sites criados para psicólogos e clínicas de psicologia" class="reveal-focus">
-    </div>
-  </section>
+          <div class="hero-actions">
+            <!-- COLE SEU LINK DA HOTMART AQUI -->
+            <a onclick="return false;" href="https://pay.hotmart.com/L107562612W?checkoutMode=2" class="hotmart-fb hotmart__button-checkout btn btn-primary pulse-btn">Quero meu e-book por R$ 29,99</a>
+            <a href="#conteudo" class="btn btn-secondary">Ver o que vou aprender</a>
+          </div>
 
-  <section id="servicos" class="section">
-    <div class="wrap">
-      <p class="eyebrow eyebrow--center">O que fazemos</p>
-      <h2 class="section-title">Três frentes, um só objetivo: sua agenda cheia</h2>
-
-      <div class="services-grid">
-        <article class="service-card service-card--main reveal">
-          <p class="service-tag">Serviço principal</p>
-          <h3>Criação de site</h3>
-          <p>Site institucional pensado para transmitir acolhimento e autoridade, com estrutura clara de especialidades, formas de contato e otimização para buscas locais.</p>
-        </article>
-
-        <article class="service-card reveal">
-          <p class="service-tag">Presença local</p>
-          <h3>Google Meu Negócio</h3>
-          <p>Criação, verificação e gestão contínua do seu perfil — para aparecer bem posicionado quando alguém busca "psicólogo perto de mim".</p>
-        </article>
-
-        <article class="service-card reveal">
-          <p class="service-tag">Aquisição</p>
-          <h3>Gestão de tráfego</h3>
-          <p>Campanhas no Meta Ads e Google Ads direcionadas para agendamento, com otimização e relatórios periódicos de desempenho.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- POR QUE -->
-  <section class="section section--alt">
-    <div class="wrap why-grid">
-      <div class="why-copy">
-        <p class="eyebrow">Por que investir nisso</p>
-        <h2 class="section-title">O site é o primeiro contato — antes mesmo da primeira sessão</h2>
-        <p>A maioria dos pacientes pesquisa o profissional antes de agendar. Um site claro reduz a insegurança de quem procura ajuda pela primeira vez e filtra os contatos que já chegam decididos.</p>
-      </div>
-      <ul class="why-list">
-        <li><span class="why-mark">＋</span> Mais credibilidade que redes sociais isoladas</li>
-        <li><span class="why-mark">＋</span> Agendamento facilitado, sem trocas intermináveis de mensagem</li>
-        <li><span class="why-mark">＋</span> Conformidade com a LGPD no tratamento de dados de pacientes</li>
-        <li><span class="why-mark">＋</span> Presença que continua trabalhando fora do horário de atendimento</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- PREÇOS -->
-  <section id="precos" class="section">
-    <div class="wrap">
-      <p class="eyebrow eyebrow--center">Investimento</p>
-      <h2 class="section-title">Planos para cada etapa do seu consultório</h2>
-      <p class="section-lede">Escolha o serviço para ver as opções — do essencial ao completo.</p>
-
-      <div class="tabs" role="tablist" aria-label="Categorias de preço">
-        <button class="tab is-active" role="tab" aria-selected="true" aria-controls="painel-site" data-tab="site">Criação de site</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="painel-gmn" data-tab="gmn">Google Meu Negócio</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="painel-trafego" data-tab="trafego">Gestão de tráfego</button>
-      </div>
-
-      <!-- TABELA 1 — SITE -->
-      <div class="plans-grid" id="painel-site" data-panel="site" role="tabpanel">
-        <article class="plan-card reveal">
-          <p class="plan-name">Simples</p>
-          <p class="plan-for">Quem está começando</p>
-          <p class="plan-price-old">R$ 800</p>
-          <p class="plan-price">R$ 500</p>
-          <p class="plan-discount">R$300 de desconto</p>
-          <ul class="plan-features">
-            <li>1 página (landing page)</li>
-            <li>Template personalizado</li>
-            <li>Sobre, especialidades, contato</li>
-            <li>Botão de WhatsApp</li>
-            <li>SEO básico</li>
-            <li>Hospedagem e domínio inclusos</li>
-            <li>Prazo: 5 dias úteis</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
-        </article>
-
-        <article class="plan-card plan-card--featured reveal">
-          <p class="plan-badge">Mais escolhido</p>
-          <p class="plan-name">Intermediário</p>
-          <p class="plan-for">Consultório estabelecido</p>
-          <p class="plan-price-old">R$ 1.500</p>
-          <p class="plan-price">R$ 1.200</p>
-          <p class="plan-discount">R$300 de desconto</p>
-          <ul class="plan-features">
-            <li>4–5 páginas, layout exclusivo</li>
-            <li>Depoimentos</li>
-            <li>Formulário + Google Maps</li>
-            <li>Botão de WhatsApp</li>
-            <li>SEO on-page completo</li>
-            <li>Hospedagem e domínio inclusos</li>
-            <li>Prazo: 10 dias úteis</li>
-          </ul>
-          <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
-        </article>
-      </div>
-      <p class="table-note table-note--highlight" data-panel="site">Hospedagem e domínio já estão inclusos em todos os planos de criação de site.</p>
-
-      <!-- TABELA 2 — GMN -->
-      <div class="plans-grid is-hidden" id="painel-gmn" data-panel="gmn" role="tabpanel">
-        <article class="plan-card reveal">
-          <p class="plan-name">Básico</p>
-          <p class="plan-for">Quem ainda não tem perfil</p>
-          <p class="plan-price">R$ 300<span>/único</span></p>
-          <ul class="plan-features">
-            <li>Criação e verificação do perfil</li>
-            <li>Categoria e dados básicos</li>
-            <li>Configuração inicial completa</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
-        </article>
-
-        <article class="plan-card plan-card--featured reveal">
-          <p class="plan-badge">Mais escolhido</p>
-          <p class="plan-name">Intermediário</p>
-          <p class="plan-for">Manter o perfil ativo</p>
-          <p class="plan-price">R$ 500<span>/mês</span></p>
-          <ul class="plan-features">
-            <li>Tudo do plano Básico</li>
-            <li>4 postagens por mês</li>
-            <li>Resposta a avaliações</li>
-          </ul>
-          <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
-        </article>
-
-        <article class="plan-card reveal">
-          <p class="plan-name">Avançado</p>
-          <p class="plan-for">Liderar buscas locais</p>
-          <p class="plan-price">R$ 900<span>/mês</span></p>
-          <ul class="plan-features">
-            <li>Tudo do plano Intermediário</li>
-            <li>Fotos profissionais</li>
-            <li>SEO local avançado</li>
-            <li>Relatório mensal de desempenho</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
-        </article>
-      </div>
-
-      <!-- TABELA 3 — TRÁFEGO -->
-      <div class="plans-grid is-hidden" id="painel-trafego" data-panel="trafego" role="tabpanel">
-        <article class="plan-card reveal">
-          <p class="plan-name">Básico</p>
-          <p class="plan-for">Testar tráfego pago</p>
-          <p class="plan-price">R$ 600<span>/mês</span></p>
-          <ul class="plan-features">
-            <li>1 campanha ativa</li>
-            <li>Otimização mensal</li>
-            <li>Relatório mensal simples</li>
-            <li>+ verba de anúncio à parte</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
-        </article>
-
-        <article class="plan-card plan-card--featured reveal">
-          <p class="plan-badge">Mais escolhido</p>
-          <p class="plan-name">Intermediário</p>
-          <p class="plan-for">Já tem resultado e quer escalar</p>
-          <p class="plan-price">R$ 1.000<span>/mês</span></p>
-          <ul class="plan-features">
-            <li>2–3 campanhas</li>
-            <li>Otimização semanal</li>
-            <li>Relatório mensal detalhado</li>
-            <li>+ verba de anúncio à parte</li>
-          </ul>
-          <a href="#contato" class="btn btn-primary btn-block">Quero este plano</a>
-        </article>
-
-        <article class="plan-card reveal">
-          <p class="plan-name">Avançado</p>
-          <p class="plan-for">Alto volume de agendamento</p>
-          <p class="plan-price">R$ 1.800<span>/mês</span></p>
-          <ul class="plan-features">
-            <li>Múltiplas campanhas + funil completo</li>
-            <li>Testes A/B contínuos</li>
-            <li>Reunião semanal de acompanhamento</li>
-            <li>+ verba de anúncio à parte</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost btn-block">Quero este plano</a>
-        </article>
-      </div>
-
-      <p class="table-note is-hidden" data-panel="trafego">Valores de gestão de tráfego não incluem a verba investida em anúncios, definida junto com você.</p>
-    </div>
-  </section>
-
-  <!-- MANUTENÇÃO -->
-  <section id="manutencao" class="section section--alt">
-    <div class="wrap">
-      <p class="eyebrow eyebrow--center">Depois da entrega</p>
-      <h2 class="section-title">Manutenção e suporte</h2>
-      <p class="section-lede">Seu site pronto continua precisando de cuidado — escolha o formato que faz sentido para você.</p>
-
-      <div class="maint-grid">
-        <div class="maint-card reveal">
-          <p class="maint-period">Mensal</p>
-          <p class="maint-price">R$ 150<span>/mês</span></p>
-          <p class="maint-desc">Pequenas atualizações de texto e imagem, backup e correções de bugs.</p>
-        </div>
-        <div class="maint-card reveal">
-          <p class="maint-period">Trimestral</p>
-          <p class="maint-price">R$ 400<span>/trimestre</span></p>
-          <p class="maint-desc">Mesma cobertura do plano mensal, com desconto (≈ R$ 133/mês).</p>
-        </div>
-        <div class="maint-card maint-card--featured reveal">
-          <p class="maint-period">Anual</p>
-          <p class="maint-price">R$ 1.400<span>/ano</span></p>
-          <p class="maint-desc">Mesma cobertura, maior desconto (≈ R$ 117/mês) + 1 atualização de design por ano.</p>
-        </div>
-        <div class="maint-card reveal">
-          <p class="maint-period">Avulso</p>
-          <p class="maint-price">R$ 90<span>/hora</span></p>
-          <p class="maint-desc">Para alterações pontuais fora de qualquer plano contratado.</p>
-        </div>
-        <div class="maint-card reveal">
-          <p class="maint-period">Urgente</p>
-          <p class="maint-price">R$ 150<span>+ hora</span></p>
-          <p class="maint-desc">Taxa de urgência para correções fora do horário comercial ou com prazo menor que 24h.</p>
-        </div>
-        <div class="maint-card reveal">
-          <p class="maint-period">Pacote de horas</p>
-          <p class="maint-price">R$ 380<span>/5h</span></p>
-          <p class="maint-desc">5 horas de suporte para usar quando precisar — economia de R$ 70.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DEPOIMENTOS -->
-  <section id="depoimentos" class="section">
-    <div class="wrap">
-      <p class="eyebrow eyebrow--center">Quem já confiou</p>
-      <h2 class="section-title">O que dizem os profissionais atendidos</h2>
-
-      <div class="testimonial-grid">
-        <blockquote class="testimonial reveal">
-          <p>"Meus pacientes comentam que o site passa a mesma calma do consultório. As mensagens pelo WhatsApp já chegam com a pessoa decidida a agendar."</p>
-          <footer>Psicóloga clínica, São Paulo/SP</footer>
-        </blockquote>
-        <blockquote class="testimonial reveal">
-          <p>"Depois que ajustaram meu perfil no Google, comecei a aparecer nas buscas por bairro. Isso sozinho já mudou minha agenda."</p>
-          <footer>Psicólogo, atendimento infantil</footer>
-        </blockquote>
-        <blockquote class="testimonial reveal">
-          <p>"O suporte mensal me tranquiliza — nunca precisei me preocupar em mexer no site sozinha."</p>
-          <footer>Clínica com 3 profissionais</footer>
-        </blockquote>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="section section--alt">
-    <div class="wrap faq-wrap">
-      <p class="eyebrow eyebrow--center">Dúvidas frequentes</p>
-      <h2 class="section-title">Perguntas que recebemos com frequência</h2>
-
-      <div class="faq-list">
-        <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-1">
-            Qual o prazo de entrega do site?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" id="faq-resposta-1">
-            <p>Depende do plano: 5 dias úteis no Simples e até 10 dias úteis no Intermediário, contados a partir do envio de todo o conteúdo necessário.</p>
+          <div class="hero-trust-badges">
+            <span>⚡ Acesso Digital Imediato</span>
+            <span>📱 Leia no Celular, Tablet ou PC</span>
+            <span>🛡️ 7 Dias de Garantia</span>
           </div>
         </div>
 
-        <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-2">
-            Hospedagem e domínio estão incluídos?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" id="faq-resposta-2">
-            <p>Sim. Hospedagem e domínio já estão inclusos em todos os planos de criação de site — você não precisa contratar nem pagar isso separadamente.</p>
+        <div class="hero-cover">
+          <div class="cover-glow"></div>
+          <img src="capa.png" alt="Capa do e-book 7 Maneiras Simples e Práticas de Ganhar Dinheiro com IA">
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits section-light" id="conteudo">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="eyebrow">O QUE VOCÊ VAI APRENDER</span>
+          <h2>Um passo a passo descomplicado para faturar com IA</h2>
+          <p>Conteúdo direto ao ponto, pensado para você sair da curiosidade e gerar resultados rápidos.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-icon">🚀</div>
+            <div class="card-number">01</div>
+            <h3>Estratégias Prontas</h3>
+            <p>Conheça 7 modelos de negócios validados e fáceis de aplicar para quem é iniciante.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">🎯</div>
+            <div class="card-number">02</div>
+            <h3>Roteiro Sem Complicação</h3>
+            <p>Execute passo a passo sem precisar dominar programação ou ferramentas complexas.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">💰</div>
+            <div class="card-number">03</div>
+            <h3>Monetização Rápida</h3>
+            <p>Aprenda a transformar prompts e IA em serviços lucrativos altamente procurados no mercado.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DE DEPOIMENTOS / PROVA SOCIAL -->
+    <section class="testimonials">
+      <div class="container">
+        <div class="section-heading text-center">
+          <span class="eyebrow">DEPOIMENTOS DE LEITORES</span>
+          <h2>Quem já comprou, recomenda!</h2>
+          <p>Veja o resultado de quem adquiriu o e-book e começou a colocar em prática:</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <article class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Comprei o e-book sem levar muita fé e me surpreendi. As estratégias são simples e diretas. Agora estou trabalhando do conforto da minha casa e já consegui meus primeiros clientes!"
+            </p>
+            <div class="testimonial-author">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Foto de Juliana M.">
+              <div>
+                <strong>Juliana M.</strong>
+                <span class="verified-tag">✔ Compra Verificada</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Melhor investimento de R$ 29,99 que já fiz. Não entendia nada de inteligência artificial, mas o passo a passo é tão didático que consegui prestar meu primeiro serviço no mesmo dia."
+            </p>
+            <div class="testimonial-author">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Foto de Rodrigo S.">
+              <div>
+                <strong>Rodrigo S.</strong>
+                <span class="verified-tag">✔ Compra Verificada</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Poder fazer meu próprio horário e ter uma renda extra trabalhando do meu quarto não tem preço. O e-book entrega exatamente o que promete sem enrolação."
+            </p>
+            <div class="testimonial-author">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Foto de Amanda V.">
+              <div>
+                <strong>Amanda V.</strong>
+                <span class="verified-tag">✔ Compra Verificada</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="audience">
+      <div class="container two-columns">
+        <div>
+          <span class="eyebrow">PARA QUEM É ESTE GUIA</span>
+          <h2>Ideal para quem quer resultados reais sem complicação</h2>
+          <p>Este e-book foi desenvolvido especialmente para você que:</p>
+        </div>
+
+        <ul class="check-list">
+          <li>Quer gerar renda extra utilizando o poder da Inteligência Artificial.</li>
+          <li>Está começando do zero e busca um caminho prático e simplificado.</li>
+          <li>Deseja prestar serviços rápidos ou criar produtos digitais.</li>
+          <li>Prefere métodos diretos ao ponto, sem termos técnicos confusos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DE OFERTA COM ANCORAGEM DE PREÇO -->
+    <section class="offer" id="oferta">
+      <div class="container offer-box">
+        <div class="offer-copy">
+          <span class="badge-promo">🔥 OFERTA ESPECIAL POR TEMPO LIMITADO</span>
+          <h2>Comece hoje mesmo a transformar IA em Renda Extra</h2>
+          <p>Receba o e-book digital completo com acesso vitalício no seu e-mail.</p>
+
+          <div class="price-container">
+            <!-- BARRA DE ESCASSEZ DE ESTOQUE DIGITAL -->
+            <div class="scarcity-box">
+              <div class="scarcity-header">
+                <span>⚠️ Vagas promocionais quase esgotadas</span>
+                <strong id="stock-count">Apenas 7 restantes</strong>
+              </div>
+              <div class="scarcity-bar">
+                <div class="scarcity-fill"></div>
+              </div>
+            </div>
+
+            <span class="price-old">De R$ 39,99</span>
+            <div class="price-new">
+              <span class="price-prefix">Por apenas</span>
+              <strong class="price-value">R$ 29,99</strong>
+            </div>
+            <span class="price-saving">Você economiza R$ 10,00 hoje</span>
+          </div>
+
+          <!-- COLE SEU LINK DA HOTMART AQUI -->
+          <a onclick="return false;" class="hotmart-fb hotmart__button-checkout btn btn-buy pulse-btn" href="https://pay.hotmart.com/L107562612W?checkoutMode=2" target="_blank" aria-label="Comprar o e-book na Hotmart">
+            🛒 QUERO GARANTIR O MEU E-BOOK POR R$ 29,99
+          </a>
+
+          <!-- MICRO-COPY DE SEGURANÇA E GARANTIA -->
+          <p class="cta-microcopy">
+            🔒 <strong>7 Dias de Garantia Incondicional</strong> • Pagamento 100% Criptografado
+          </p>
+
+          <!-- BANNER DE COMPRA SEGURA HOTMART -->
+          <div class="hotmart-trust-block">
+            <img src="hotmart1.png" alt="Compra Segura Hotmart - Cartão, Pix, Boleto" class="hotmart-banner">
           </div>
         </div>
 
-        <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-3">
-            Posso pedir alterações depois que o site ficar pronto?
-            <span class="faq-icon" aria-hidden="true"></span>
-          </button>
-          <div class="faq-answer" id="faq-resposta-3">
-            <p>Sim. Pequenos ajustes durante a produção estão inclusos. Depois da entrega, alterações passam a ser cobertas pelos planos de manutenção ou por hora avulsa.</p>
-          </div>
+        <div class="offer-mini-cover">
+          <img src="capa.png" alt="Prévia da capa do e-book">
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DE GARANTIA EM DESTAQUE -->
+    <section class="guarantee-section">
+      <div class="container guarantee-box">
+        <div class="guarantee-img">
+          <img src="selo de garantia.png" alt="Selo Qualidade e Garantia Incondicional">
+        </div>
+        <div class="guarantee-content">
+          <span class="eyebrow">RISCO ZERO PARA VOCÊ</span>
+          <h2>Garantia Incondicional de Satisfação</h2>
+          <p>
+            Temos certeza do valor que este material vai agregar à sua jornada. Se por qualquer motivo você achar que o e-book não é para você, basta solicitar o reembolso dentro do prazo da Hotmart e devolveremos 100% do seu dinheiro, sem perguntas e sem complicações.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="transparency section-light">
+      <div class="container narrow text-center">
+        <span class="eyebrow">TRANSPARÊNCIA</span>
+        <h2>Compromisso com a Verdade</h2>
+        <p>
+          Este e-book apresenta métodos e estratégias reais utilizando inteligência artificial. Os resultados financeiros variam de acordo com a dedicação e execução de cada pessoa. Não prometemos dinheiro fácil sem esforço.
+        </p>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="container narrow">
+        <div class="section-heading text-center">
+          <span class="eyebrow">DÚVIDAS FREQUENTES</span>
+          <h2>Ficou com alguma dúvida?</h2>
         </div>
 
-        <div class="faq-item reveal">
-          <button class="faq-question" aria-expanded="false" aria-controls="faq-resposta-4">
-            O site funciona bem no celular e no tablet?
-            <span class="faq-icon" aria-hidden="true"></span>
+        <div class="faq-list">
+          <button class="faq-question" type="button">
+            <span>O e-book é digital?</span>
+            <span class="faq-icon">+</span>
           </button>
-          <div class="faq-answer" id="faq-resposta-4">
-            <p>Sim. Todo site é desenvolvido com layout responsivo, ajustando automaticamente o conteúdo para celular, tablet e computador — mantendo boa leitura e navegação em qualquer tela.</p>
+          <div class="faq-answer">
+            <p>Sim! O produto é 100% digital em formato PDF. Você receberá o link para download direto no seu e-mail assim que o pagamento for confirmado.</p>
+          </div>
+
+          <button class="faq-question" type="button">
+            <span>Preciso entender avançado de tecnologia?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Não! O guia foi feito justamente para iniciantes. Explicamos tudo passo a passo de forma simples e acessível.</p>
+          </div>
+
+          <button class="faq-question" type="button">
+            <span>Como faço para acessar o produto após a compra?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Após a confirmação do pagamento (que é imediata via PIX ou Cartão), a Hotmart enviará um e-mail com seus dados de acesso.</p>
+          </div>
+
+          <button class="faq-question" type="button">
+            <span>A compra é realmente segura?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Sim! A transação é processada pela Hotmart, a maior e mais segura plataforma de produtos digitais da América Latina.</p>
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="container text-center">
+        <h2>Pronto para aprender a gerar renda com Inteligência Artificial?</h2>
+        <p>Aproveite a condição especial por tempo limitado: de R$ 39,99 por apenas <strong>R$ 29,99</strong>.</p>
+        <!-- COLE SEU LINK DA HOTMART AQUI -->
+        <a onclick="return false;" href="https://pay.hotmart.com/L107562612W?checkoutMode=2" class="hotmart-fb hotmart__button-checkout btn btn-primary pulse-btn">Quero Garantir Minha Cópia Agora</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <p>© 2026 • IA na Prática — Todos os direitos reservados.</p>
+      <p>Pagamento seguro processado por Hotmart.</p>
     </div>
-  </section>
+  </footer>
 
-  <!-- CONTATO -->
-  <section id="contato" class="section cta-section">
-    <div class="wrap cta-wrap">
-      <h2 class="section-title">Vamos colocar seu consultório no ar?</h2>
-      <p class="section-lede">Conte um pouco sobre sua clínica e te respondemos com uma recomendação de plano.</p>
-      <a href="https://wa.me/5565993085010?text=Ol%C3%A1!%20Quero%20criar%20um%20site%20para%20meu%20consult%C3%B3rio%20de%20psicologia." class="btn btn-primary btn-lg" target="_blank" rel="noopener">Falar no WhatsApp agora</a>
-      <p class="cta-phone">Ou chame direto: <strong>(65) 99308-5010</strong></p>
+  <!-- NOTIFICAÇÃO DINÂMICA DE PROVA SOCIAL (POP-UP) -->
+  <div id="sales-popup" class="sales-popup hidden">
+    <div class="popup-avatar">
+      <span id="popup-initials">MS</span>
     </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="wrap footer-row">
-    <a href="#topo" class="logo logo--footer">SolisWeb<span class="logo-dot">.</span></a>
-    <p>&copy; <span id="year"></span> SolisWeb — Sites para psicólogos e clínicas.</p>
+    <div class="popup-info">
+      <p class="popup-title"><strong id="popup-name">Marcos S.</strong> acabou de adquirir!</p>
+      <p class="popup-subtitle">E-book 7 Maneiras de Ganhar Dinheiro com IA</p>
+      <span class="popup-time">há <span id="popup-time-ago">2 min</span> • <span class="popup-verified">✔ Compra Verificada</span></span>
+    </div>
+    <button id="popup-close" class="popup-close" aria-label="Fechar">&times;</button>
   </div>
-</footer>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

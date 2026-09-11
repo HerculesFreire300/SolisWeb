@@ -1,72 +1,125 @@
-// Ano no rodapé
-document.getElementById('year').textContent = new Date().getFullYear();
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. FAQ ACCORDION
+  const questions = document.querySelectorAll(".faq-question");
 
-// ---- Menu mobile ----
-const navToggle = document.getElementById('navToggle');
-const mainNav = document.getElementById('mainNav');
+  questions.forEach((question) => {
+    question.addEventListener("click", () => {
+      const answer = question.nextElementSibling;
+      const isOpen = answer.classList.contains("open");
 
-navToggle.addEventListener('click', () => {
-  const isOpen = mainNav.classList.toggle('is-open');
-  navToggle.setAttribute('aria-expanded', String(isOpen));
-});
+      document.querySelectorAll(".faq-answer.open").forEach((item) => {
+        item.classList.remove("open");
+      });
 
-mainNav.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    mainNav.classList.remove('is-open');
-    navToggle.setAttribute('aria-expanded', 'false');
-  });
-});
+      document.querySelectorAll(".faq-question.active").forEach((item) => {
+        item.classList.remove("active");
+      });
 
-// ---- Abas de preços ----
-const tabs = document.querySelectorAll('.tab');
-const panels = document.querySelectorAll('.plans-grid, .table-note[data-panel]');
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.dataset.tab;
-
-    tabs.forEach(t => {
-      t.classList.toggle('is-active', t === tab);
-      t.setAttribute('aria-selected', String(t === tab));
-    });
-
-    panels.forEach(panel => {
-      panel.classList.toggle('is-hidden', panel.dataset.panel !== target);
-    });
-  });
-});
-
-// ---- Revelação suave ao rolar a página ----
-const revealEls = document.querySelectorAll('.reveal, .reveal-focus');
-
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      // pequeno atraso em cascata para os itens do mesmo grupo
-      const delay = (i % 3) * 90;
-      setTimeout(() => entry.target.classList.add('is-visible'), delay);
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-revealEls.forEach(el => revealObserver.observe(el));
-
-// ---- FAQ accordion ----
-document.querySelectorAll('.faq-question').forEach(button => {
-  button.addEventListener('click', () => {
-    const answer = button.nextElementSibling;
-    const isOpen = button.getAttribute('aria-expanded') === 'true';
-
-    // fecha os outros itens
-    document.querySelectorAll('.faq-question').forEach(other => {
-      if (other !== button) {
-        other.setAttribute('aria-expanded', 'false');
-        other.nextElementSibling.style.maxHeight = null;
+      if (!isOpen) {
+        answer.classList.add("open");
+        question.classList.add("active");
       }
     });
-
-    button.setAttribute('aria-expanded', String(!isOpen));
-    answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
   });
+
+  // 2. CRONÔMETRO REGRESSIVO (15 MINUTOS)
+  const countdownElement = document.getElementById("countdown");
+  let totalSeconds = 15 * 60;
+
+  function updateTimer() {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(seconds).padStart(2, "0");
+
+    if (countdownElement) {
+      countdownElement.textContent = `${formattedMinutes}:${formattedSeconds}`;
+    }
+
+    if (totalSeconds > 0) {
+      totalSeconds--;
+    } else {
+      totalSeconds = 15 * 60;
+    }
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+
+  // 3. ATUALIZAÇÃO DINÂMICA DE ESCASSEZ DE ESTOQUE
+  const stockCount = document.getElementById("stock-count");
+  let currentStock = 7;
+
+  // Reduz levemente o estoque a cada 45 segundos para aumentar urgência
+  setInterval(() => {
+    if (currentStock > 2) {
+      currentStock--;
+      if (stockCount) {
+        stockCount.textContent = `Apenas ${currentStock} restantes`;
+      }
+    }
+  }, 45000);
+
+  // 4. POP-UP DINÂMICO DE COMPRA RECENTE (PROVA SOCIAL)
+  const salesPopup = document.getElementById("sales-popup");
+  const popupName = document.getElementById("popup-name");
+  const popupInitials = document.getElementById("popup-initials");
+  const popupTimeAgo = document.getElementById("popup-time-ago");
+  const popupClose = document.getElementById("popup-close");
+
+  const buyers = [
+    { name: "Lucas M.", initials: "LM" },
+    { name: "Mariana K.", initials: "MK" },
+    { name: "Gabriel S.", initials: "GS" },
+    { name: "Beatriz A.", initials: "BA" },
+    { name: "Felipe T.", initials: "FT" },
+    { name: "Camila R.", initials: "CR" },
+    { name: "Thiago P.", initials: "TP" },
+    { name: "Larissa V.", initials: "LV" },
+    { name: "Rafael C.", initials: "RC" },
+    { name: "Fernanda O.", initials: "FO" },
+    { name: "Eduardo B.", initials: "EB" },
+    { name: "Patricia L.", initials: "PL" }
+  ];
+
+  const timesAgo = ["1 min", "2 min", "3 min", "agora mesmo", "4 min"];
+  let popupTimeout;
+
+  function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function showRandomNotification() {
+    const randomBuyer = buyers[Math.floor(Math.random() * buyers.length)];
+    const randomTime = timesAgo[Math.floor(Math.random() * timesAgo.length)];
+
+    if (popupName && popupInitials && popupTimeAgo) {
+      popupName.textContent = randomBuyer.name;
+      popupInitials.textContent = randomBuyer.initials;
+      popupTimeAgo.textContent = randomTime;
+    }
+
+    salesPopup.classList.remove("hidden");
+
+    setTimeout(() => {
+      salesPopup.classList.add("hidden");
+      scheduleNextNotification();
+    }, 5000);
+  }
+
+  function scheduleNextNotification() {
+    const randomDelay = getRandomNumber(12, 22) * 1000;
+    popupTimeout = setTimeout(showRandomNotification, randomDelay);
+  }
+
+  if (popupClose) {
+    popupClose.addEventListener("click", () => {
+      salesPopup.classList.add("hidden");
+      clearTimeout(popupTimeout);
+      scheduleNextNotification();
+    });
+  }
+
+  setTimeout(showRandomNotification, 6000);
 });
