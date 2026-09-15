@@ -1,125 +1,112 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. FAQ ACCORDION
-  const questions = document.querySelectorAll(".faq-question");
+// Ano no rodapé
+document.getElementById('year').textContent = new Date().getFullYear();
 
-  questions.forEach((question) => {
-    question.addEventListener("click", () => {
-      const answer = question.nextElementSibling;
-      const isOpen = answer.classList.contains("open");
+// ---- Menu mobile ----
+const navToggle = document.getElementById('navToggle');
+const mainNav = document.getElementById('mainNav');
 
-      document.querySelectorAll(".faq-answer.open").forEach((item) => {
-        item.classList.remove("open");
-      });
+navToggle.addEventListener('click', () => {
+  const isOpen = mainNav.classList.toggle('is-open');
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+});
 
-      document.querySelectorAll(".faq-question.active").forEach((item) => {
-        item.classList.remove("active");
-      });
+mainNav.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mainNav.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  });
+});
 
-      if (!isOpen) {
-        answer.classList.add("open");
-        question.classList.add("active");
-      }
+// ---- Abas de preços ----
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.plans-grid, .table-note[data-panel]');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+
+    tabs.forEach(t => {
+      t.classList.toggle('is-active', t === tab);
+      t.setAttribute('aria-selected', String(t === tab));
+    });
+
+    panels.forEach(panel => {
+      panel.classList.toggle('is-hidden', panel.dataset.panel !== target);
     });
   });
+});
 
-  // 2. CRONÔMETRO REGRESSIVO (15 MINUTOS)
-  const countdownElement = document.getElementById("countdown");
-  let totalSeconds = 15 * 60;
+// ---- Revelação suave ao rolar a página ----
+const revealEls = document.querySelectorAll('.reveal');
 
-  function updateTimer() {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    const formattedMinutes = String(minutes).padStart(2, "0");
-    const formattedSeconds = String(seconds).padStart(2, "0");
-
-    if (countdownElement) {
-      countdownElement.textContent = `${formattedMinutes}:${formattedSeconds}`;
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      // pequeno atraso em cascata para os itens do mesmo grupo
+      const delay = (i % 3) * 90;
+      setTimeout(() => entry.target.classList.add('is-visible'), delay);
+      revealObserver.unobserve(entry.target);
     }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-    if (totalSeconds > 0) {
-      totalSeconds--;
-    } else {
-      totalSeconds = 15 * 60;
-    }
-  }
+revealEls.forEach(el => revealObserver.observe(el));
 
-  updateTimer();
-  setInterval(updateTimer, 1000);
+// ---- FAQ accordion ----
+document.querySelectorAll('.faq-question').forEach(button => {
+  button.addEventListener('click', () => {
+    const answer = button.nextElementSibling;
+    const isOpen = button.getAttribute('aria-expanded') === 'true';
 
-  // 3. ATUALIZAÇÃO DINÂMICA DE ESCASSEZ DE ESTOQUE
-  const stockCount = document.getElementById("stock-count");
-  let currentStock = 7;
-
-  // Reduz levemente o estoque a cada 45 segundos para aumentar urgência
-  setInterval(() => {
-    if (currentStock > 2) {
-      currentStock--;
-      if (stockCount) {
-        stockCount.textContent = `Apenas ${currentStock} restantes`;
+    // fecha os outros itens
+    document.querySelectorAll('.faq-question').forEach(other => {
+      if (other !== button) {
+        other.setAttribute('aria-expanded', 'false');
+        other.nextElementSibling.style.maxHeight = null;
       }
-    }
-  }, 45000);
+    });
 
-  // 4. POP-UP DINÂMICO DE COMPRA RECENTE (PROVA SOCIAL)
-  const salesPopup = document.getElementById("sales-popup");
-  const popupName = document.getElementById("popup-name");
-  const popupInitials = document.getElementById("popup-initials");
-  const popupTimeAgo = document.getElementById("popup-time-ago");
-  const popupClose = document.getElementById("popup-close");
+    button.setAttribute('aria-expanded', String(!isOpen));
+    answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
+  });
+});
 
-  const buyers = [
-    { name: "Lucas M.", initials: "LM" },
-    { name: "Mariana K.", initials: "MK" },
-    { name: "Gabriel S.", initials: "GS" },
-    { name: "Beatriz A.", initials: "BA" },
-    { name: "Felipe T.", initials: "FT" },
-    { name: "Camila R.", initials: "CR" },
-    { name: "Thiago P.", initials: "TP" },
-    { name: "Larissa V.", initials: "LV" },
-    { name: "Rafael C.", initials: "RC" },
-    { name: "Fernanda O.", initials: "FO" },
-    { name: "Eduardo B.", initials: "EB" },
-    { name: "Patricia L.", initials: "PL" }
-  ];
+// ---- Cascata das imagens vinculada à rolagem da página ----
+// Em vez de disparar uma animação única, cada imagem só "cai" na
+// proporção em que o usuário rola a página para baixo — como um
+// scrub ligado ao scroll, não como uma transição por tempo.
+const capaStack = document.getElementById('capaStack');
 
-  const timesAgo = ["1 min", "2 min", "3 min", "agora mesmo", "4 min"];
-  let popupTimeout;
+if (capaStack) {
+  const capaImgs = Array.from(capaStack.querySelectorAll('img'));
+  const FALL_DISTANCE = 22;  // movimento reduzido, em pixels
+  const SCROLL_RANGE = 500;  // distância de rolagem, em pixels, até a cascata completar
+  let ticking = false;
 
-  function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  function updateCascade() {
+    ticking = false;
+    let progress = window.scrollY / SCROLL_RANGE;
+    progress = Math.max(0, Math.min(1, progress));
 
-  function showRandomNotification() {
-    const randomBuyer = buyers[Math.floor(Math.random() * buyers.length)];
-    const randomTime = timesAgo[Math.floor(Math.random() * timesAgo.length)];
+    capaImgs.forEach((img, i) => {
+      // cada imagem seguinte exige um pouco mais de rolagem para começar a cair
+      const start = i * 0.12;
+      let imgProgress = (progress - start) / (1 - start);
+      imgProgress = Math.max(0, Math.min(1, imgProgress));
 
-    if (popupName && popupInitials && popupTimeAgo) {
-      popupName.textContent = randomBuyer.name;
-      popupInitials.textContent = randomBuyer.initials;
-      popupTimeAgo.textContent = randomTime;
-    }
-
-    salesPopup.classList.remove("hidden");
-
-    setTimeout(() => {
-      salesPopup.classList.add("hidden");
-      scheduleNextNotification();
-    }, 5000);
-  }
-
-  function scheduleNextNotification() {
-    const randomDelay = getRandomNumber(12, 22) * 1000;
-    popupTimeout = setTimeout(showRandomNotification, randomDelay);
-  }
-
-  if (popupClose) {
-    popupClose.addEventListener("click", () => {
-      salesPopup.classList.add("hidden");
-      clearTimeout(popupTimeout);
-      scheduleNextNotification();
+      img.style.opacity = imgProgress;
+      img.style.transform = `translateY(${(1 - imgProgress) * -FALL_DISTANCE}px)`;
     });
   }
 
-  setTimeout(showRandomNotification, 6000);
-});
+  function onScroll() {
+    if (!ticking) {
+      window.requestAnimationFrame(updateCascade);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  updateCascade();
+}
