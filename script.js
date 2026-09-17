@@ -1,112 +1,74 @@
-// Ano no rodapé
-document.getElementById('year').textContent = new Date().getFullYear();
+document.addEventListener('DOMContentLoaded', () => {
 
-// ---- Menu mobile ----
-const navToggle = document.getElementById('navToggle');
-const mainNav = document.getElementById('mainNav');
+    /* =========================================================
+       1. REVEAL SUAVE AO ROLAR A PÁGINA (SCROLL OBSERVER)
+       ========================================================= */
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
 
-navToggle.addEventListener('click', () => {
-  const isOpen = mainNav.classList.toggle('is-open');
-  navToggle.setAttribute('aria-expanded', String(isOpen));
-});
+    if (revealElements.length > 0) {
+        const revealObserverOptions = {
+            root: null,
+            rootMargin: '0px 0px -50px 0px',
+            threshold: 0.1
+        };
 
-mainNav.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    mainNav.classList.remove('is-open');
-    navToggle.setAttribute('aria-expanded', 'false');
-  });
-});
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, revealObserverOptions);
 
-// ---- Abas de preços ----
-const tabs = document.querySelectorAll('.tab');
-const panels = document.querySelectorAll('.plans-grid, .table-note[data-panel]');
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.dataset.tab;
-
-    tabs.forEach(t => {
-      t.classList.toggle('is-active', t === tab);
-      t.setAttribute('aria-selected', String(t === tab));
-    });
-
-    panels.forEach(panel => {
-      panel.classList.toggle('is-hidden', panel.dataset.panel !== target);
-    });
-  });
-});
-
-// ---- Revelação suave ao rolar a página ----
-const revealEls = document.querySelectorAll('.reveal');
-
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      // pequeno atraso em cascata para os itens do mesmo grupo
-      const delay = (i % 3) * 90;
-      setTimeout(() => entry.target.classList.add('is-visible'), delay);
-      revealObserver.unobserve(entry.target);
+        revealElements.forEach(el => revealObserver.observe(el));
     }
-  });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-revealEls.forEach(el => revealObserver.observe(el));
+    /* =========================================================
+       2. INTERATIVIDADE DO ACCORDION (FAQ)
+       ========================================================= */
+    const faqItems = document.querySelectorAll('.faq-item');
 
-// ---- FAQ accordion ----
-document.querySelectorAll('.faq-question').forEach(button => {
-  button.addEventListener('click', () => {
-    const answer = button.nextElementSibling;
-    const isOpen = button.getAttribute('aria-expanded') === 'true';
+    faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        const icon = item.querySelector('.faq-icon');
 
-    // fecha os outros itens
-    document.querySelectorAll('.faq-question').forEach(other => {
-      if (other !== button) {
-        other.setAttribute('aria-expanded', 'false');
-        other.nextElementSibling.style.maxHeight = null;
-      }
+        if (questionBtn) {
+            questionBtn.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Fecha todos os outros itens abertos
+                faqItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                    const otherIcon = otherItem.querySelector('.faq-icon');
+                    if (otherIcon) otherIcon.textContent = '+';
+                });
+
+                // Alterna o estado do item clicado
+                if (!isActive) {
+                    item.classList.add('active');
+                    if (icon) icon.textContent = '−';
+                }
+            });
+        }
     });
 
-    button.setAttribute('aria-expanded', String(!isOpen));
-    answer.style.maxHeight = isOpen ? null : answer.scrollHeight + 'px';
-  });
+    /* =========================================================
+       3. SCROLL SUAVE PARA LINKS INTERNOS DA NAVBAR
+       ========================================================= */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            if (targetId !== '#') {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+
 });
-
-// ---- Cascata das imagens vinculada à rolagem da página ----
-// Em vez de disparar uma animação única, cada imagem só "cai" na
-// proporção em que o usuário rola a página para baixo — como um
-// scrub ligado ao scroll, não como uma transição por tempo.
-const capaStack = document.getElementById('capaStack');
-
-if (capaStack) {
-  const capaImgs = Array.from(capaStack.querySelectorAll('img'));
-  const FALL_DISTANCE = 22;  // movimento reduzido, em pixels
-  const SCROLL_RANGE = 500;  // distância de rolagem, em pixels, até a cascata completar
-  let ticking = false;
-
-  function updateCascade() {
-    ticking = false;
-    let progress = window.scrollY / SCROLL_RANGE;
-    progress = Math.max(0, Math.min(1, progress));
-
-    capaImgs.forEach((img, i) => {
-      // cada imagem seguinte exige um pouco mais de rolagem para começar a cair
-      const start = i * 0.12;
-      let imgProgress = (progress - start) / (1 - start);
-      imgProgress = Math.max(0, Math.min(1, imgProgress));
-
-      img.style.opacity = imgProgress;
-      img.style.transform = `translateY(${(1 - imgProgress) * -FALL_DISTANCE}px)`;
-    });
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      window.requestAnimationFrame(updateCascade);
-      ticking = true;
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
-  updateCascade();
-}
