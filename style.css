@@ -108,15 +108,32 @@ body {
     padding: 80px 0 100px 0;
 }
 
-.hero-content {
-    display: grid;
-    grid-template-columns: 1fr 0.8fr;
-    gap: 40px;
-    align-items: center;
+/* O hero usa uma largura maior que o container padrão (1200px) para caber o
+   texto à esquerda sem precisar encolher a imagem dos dispositivos */
+.hero .hero-content {
+    max-width: 1700px;
 }
 
+.hero-content {
+    display: grid;
+    grid-template-columns: minmax(300px, 440px) minmax(380px, 1050px);
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-text { max-width: 440px; }
+
+.hero-brand {
+    display: block;
+    font-size: 2.125rem;
+    margin-bottom: 14px;
+}
+
+.hero-text .badge { font-size: 1.0625rem; padding: 6px 18px; }
+
 .hero-text h1 {
-    font-size: 3rem;
+    font-size: 3.25rem;
     font-weight: 800;
     color: var(--primary);
     line-height: 1.15;
@@ -124,67 +141,21 @@ body {
     margin-bottom: 20px;
 }
 
-.hero-text p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 28px; }
-.hero-social-proof p { font-size: 0.9rem; font-weight: 600; color: var(--park-green-dark); }
+.hero-text p { font-size: 1.3125rem; color: var(--text-muted); margin-bottom: 26px; }
+.hero-text .btn-primary { font-size: 1.25rem; padding: 20px 45px; }
+.hero-social-proof p { font-size: 1.0625rem; font-weight: 600; color: var(--park-green-dark); }
 
-/* VÍDEO VERTICAL (SHORTS) */
-.hero-video-wrapper {
-    display: flex;
-    justify-content: center;
+/* MOCKUP DO SITE EM MÚLTIPLOS DISPOSITIVOS */
+.hero-devices-mockup {
     width: 100%;
+    max-width: 1050px;
 }
 
-.video-container-vertical {
-    position: relative;
-    width: 100%;
-    max-width: 320px;
-    aspect-ratio: 9 / 16;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    border: 4px solid #ffffff;
-    background: #000000;
-}
-
-.video-container-vertical iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-/* MARGEM E PILHA VERTICAL DE IMAGENS */
-.hero-stack-margin {
-    margin-top: 60px;
-}
-
-.hero-vertical-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-    width: 100%;
-    max-width: 880px;
-    margin: 0 auto;
-}
-
-.hero-vertical-card {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    border: 3px solid #ffffff;
-    background: #ffffff;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.hero-vertical-card img {
+.hero-devices-mockup img {
     width: 100%;
     height: auto;
     display: block;
-    object-fit: cover;
-}
-
-.hero-vertical-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 24px 45px rgba(27, 67, 50, 0.22);
+    filter: drop-shadow(0 24px 45px rgba(27, 67, 50, 0.22));
 }
 
 /* PROBLEMAS / ANÁLISE DE MERCADO */
@@ -419,14 +390,16 @@ body {
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
     .hero-content, .solution-container { grid-template-columns: 1fr; gap: 40px; }
-    .hero-text h1 { font-size: 2.5rem; }
+    .hero-text { max-width: 100%; text-align: center; margin: 0 auto; }
+    .hero-devices-mockup { justify-self: center; }
+    .hero-text h1 { font-size: 3.125rem; }
     .footer-container { grid-template-columns: 1fr; gap: 32px; }
     .portfolio-grid-large { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
     .nav-links { display: none; }
-    .hero-text h1 { font-size: 2.1rem; }
+    .hero-text h1 { font-size: 2.625rem; }
     .pricing-box { padding: 32px 20px; }
     .footer-bottom-content { flex-direction: column; gap: 10px; text-align: center; }
 }
