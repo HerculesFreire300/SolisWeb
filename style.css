@@ -108,15 +108,15 @@ body {
     padding: 80px 0 100px 0;
 }
 
-/* O hero usa uma largura maior que o container padrão (1200px) para caber o
-   texto à esquerda sem precisar encolher a imagem dos dispositivos */
+/* Largura do bloco texto+imagem: menor que antes para que os dois fiquem
+   agrupados mais perto do centro da tela, em vez de espalhados nas bordas */
 .hero .hero-content {
-    max-width: 1700px;
+    max-width: 1280px;
 }
 
 .hero-content {
     display: grid;
-    grid-template-columns: minmax(300px, 440px) minmax(380px, 1050px);
+    grid-template-columns: minmax(300px, 440px) minmax(340px, 893px);
     justify-content: center;
     align-items: center;
     gap: 40px;
@@ -148,7 +148,7 @@ body {
 /* MOCKUP DO SITE EM MÚLTIPLOS DISPOSITIVOS */
 .hero-devices-mockup {
     width: 100%;
-    max-width: 1050px;
+    max-width: 893px;
 }
 
 .hero-devices-mockup img {
