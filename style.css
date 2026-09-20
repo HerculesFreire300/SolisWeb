@@ -150,6 +150,27 @@ body {
     mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
 }
 
+/* A imagem é muito larga/baixa (proporção ~2.9:1). Em telas estreitas, escalar
+   ela inteira faz o texto embutido ficar minúsculo e ilegível. Por isso, do
+   tablet pra baixo, fixamos uma altura maior e usamos object-fit:cover
+   focando no lado esquerdo (onde está o texto/CTA), cortando parte do
+   mockup de dispositivos à direita — assim o texto continua legível. */
+@media (max-width: 768px) {
+    .hero-image-link img {
+        height: 300px;
+        object-fit: cover;
+        object-position: left center;
+        /* Desliga o degradê nas bordas aqui: como a imagem agora está
+           recortada/ampliada, o fade cortaria o texto perto da borda esquerda */
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-image-link img { height: 230px; }
+}
+
 /* DESTAQUE RÁPIDO ABAIXO DO HERO */
 .hero-highlight-section {
     padding: 56px 0;
@@ -445,9 +466,20 @@ body {
 @media (max-width: 768px) {
     .nav-links { display: none; }
     .navbar-divider { display: none; }
+    /* Some o <nav> inteiro (não só os links) para não sobrar um item de
+       largura zero no flex, que rouba espaço do botão "Quero meu site" */
+    .navbar nav { display: none; }
+    .navbar { gap: 12px; }
+    .logo { font-size: 1.3rem; }
+    .btn-nav { padding: 10px 16px; font-size: 0.82rem; }
     .pricing-box { padding: 32px 20px; }
     .hero-highlight-features { grid-template-columns: 1fr; }
     .footer-bottom-content { flex-direction: column; gap: 10px; text-align: center; }
+}
+
+@media (max-width: 360px) {
+    .logo { font-size: 1.15rem; }
+    .btn-nav { padding: 9px 12px; font-size: 0.76rem; }
 }
 
 /* Seção do Processo (3 Passos) */
