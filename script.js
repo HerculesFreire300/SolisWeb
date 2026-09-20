@@ -71,4 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* =========================================================
+       4. DIFICULTAR O DOWNLOAD DAS IMAGENS DO SITE
+       (bloqueia clique direito "Salvar imagem como..." e o
+       arrastar da imagem para a área de trabalho/outra aba)
+       ========================================================= */
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('contextmenu', e => e.preventDefault());
+        img.setAttribute('draggable', 'false');
+        img.addEventListener('dragstart', e => e.preventDefault());
+    });
+
 });

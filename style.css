@@ -43,6 +43,19 @@ html {
     font-size: 16px;
 }
 
+/* Dificulta o download das imagens: impede selecionar/copiar e o "arrastar"
+   da imagem (funciona junto com o bloqueio de clique direito no script.js) */
+img {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    pointer-events: auto;
+}
+
 body {
     background-color: var(--bg-light);
     color: var(--text-dark);
@@ -201,8 +214,8 @@ body {
 
 /* DESTAQUE RÁPIDO ABAIXO DO HERO */
 .hero-highlight-section {
-    padding: 56px 0;
-    background-color: #ffffff;
+    padding: 76px 0;
+    background: linear-gradient(180deg, #ffffff 0%, var(--park-green-bg) 100%);
 }
 
 .hero-highlight-grid {
@@ -217,37 +230,55 @@ body {
     padding-left: 20px;
 }
 
-.hero-highlight-text h3 { font-size: 1.3rem; font-weight: 800; color: var(--primary); line-height: 1.3; margin-bottom: 10px; }
-.hero-highlight-text p { font-size: 0.92rem; color: var(--text-muted); }
+.hero-highlight-text h2 { font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1.3; margin-bottom: 10px; }
+.hero-highlight-text p { font-size: 0.95rem; color: var(--text-muted); }
 
 .hero-highlight-features {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
 }
 
+/* Cada item vira um card clicável/interativo, com sombra e efeito ao passar o mouse */
 .hero-highlight-item {
-    padding: 0 24px;
-    border-left: 1px solid var(--border-light);
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 28px 22px;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
-.hero-highlight-item:first-child { border-left: none; padding-left: 0; }
+.hero-highlight-item:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--park-green-light);
+}
 
 .hero-highlight-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
     background: var(--park-green-bg);
     color: var(--park-green);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    transition: background-color 0.35s ease, color 0.35s ease, transform 0.35s ease;
+}
+
+.hero-highlight-item:hover .hero-highlight-icon {
+    background: var(--park-green);
+    color: #ffffff;
+    transform: scale(1.08) rotate(-4deg);
 }
 
 .hero-highlight-icon svg { width: 22px; height: 22px; }
 
-.hero-highlight-item h4 { font-size: 0.98rem; font-weight: 700; color: var(--park-green-dark); margin-bottom: 6px; line-height: 1.3; }
-.hero-highlight-item p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+.hero-highlight-item h3 { font-size: 1rem; font-weight: 700; color: var(--park-green-dark); margin-bottom: 8px; line-height: 1.3; }
+.hero-highlight-item p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.55; }
 
 /* PROBLEMAS / ANÁLISE DE MERCADO */
 .problem-section { padding: 100px 0; background-color: #ffffff; }
@@ -485,8 +516,7 @@ body {
     .solution-container { grid-template-columns: 1fr; gap: 40px; }
     .navbar-tagline { display: none; }
     .hero-highlight-grid { grid-template-columns: 1fr; gap: 32px; }
-    .hero-highlight-features { grid-template-columns: repeat(2, 1fr); gap: 32px 16px; }
-    .hero-highlight-item { border-left: none; padding: 0; }
+    .hero-highlight-features { grid-template-columns: repeat(2, 1fr); gap: 18px; }
     .footer-container { grid-template-columns: 1fr; gap: 32px; }
     .portfolio-grid-large { grid-template-columns: 1fr; }
 }
