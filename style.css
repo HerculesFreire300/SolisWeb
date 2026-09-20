@@ -124,8 +124,10 @@ body {
 }
 
 .nav-links { display: flex; gap: 28px; list-style: none; }
-/* Cor "transparente"/suave em repouso, ganhando cor sólida no hover */
-.nav-links a { text-decoration: none; color: rgba(31, 41, 55, 0.5); font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease; white-space: nowrap; }
+/* Cinza suave em repouso, ganhando cor sólida no hover — usa var(--text-muted),
+   que já tem contraste adequado (>7:1) contra o fundo branco, ao contrário do
+   rgba() de baixa opacidade usado antes (ficava abaixo do mínimo de acessibilidade) */
+.nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease; white-space: nowrap; }
 .nav-links a:hover { color: var(--park-green); }
 
 .btn-nav { padding: 12px 26px; font-size: 0.9rem; white-space: nowrap; }
@@ -391,6 +393,32 @@ body {
 .feature-item .icon svg { width: 22px; height: 22px; }
 .feature-item h3 { font-size: 1.2rem; color: var(--park-green-dark); margin-bottom: 10px; }
 .feature-item p { color: var(--text-muted); font-size: 0.95rem; }
+
+/* VÍDEO DEMONSTRATIVO (SHORTS DO YOUTUBE) */
+.video-demo-section { padding: 100px 0; background-color: #ffffff; text-align: center; }
+.video-demo-section h2 { font-size: 2.4rem; font-weight: 800; color: var(--primary); margin-bottom: 16px; }
+
+.video-demo-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    aspect-ratio: 458 / 815;
+    margin: 50px auto 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: #000000;
+}
+
+.video-demo-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
 
 /* PORTFÓLIO - (IMAGENS AMPLIADAS) */
 .portfolio-section { padding: 100px 0; background-color: var(--bg-light); text-align: center; }

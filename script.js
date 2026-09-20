@@ -29,11 +29,20 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================= */
     const faqItems = document.querySelectorAll('.faq-item');
 
-    faqItems.forEach(item => {
+    faqItems.forEach((item, index) => {
         const questionBtn = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
         const icon = item.querySelector('.faq-icon');
 
         if (questionBtn) {
+            // Acessibilidade: liga o botão à resposta e avisa leitores de tela
+            // se a pergunta está aberta ou fechada (aria-expanded/aria-controls)
+            if (answer) {
+                if (!answer.id) answer.id = `faq-answer-${index + 1}`;
+                questionBtn.setAttribute('aria-controls', answer.id);
+            }
+            questionBtn.setAttribute('aria-expanded', 'false');
+
             questionBtn.addEventListener('click', () => {
                 const isActive = item.classList.contains('active');
 
@@ -42,12 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     otherItem.classList.remove('active');
                     const otherIcon = otherItem.querySelector('.faq-icon');
                     if (otherIcon) otherIcon.textContent = '+';
+                    const otherBtn = otherItem.querySelector('.faq-question');
+                    if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
                 });
 
                 // Alterna o estado do item clicado
                 if (!isActive) {
                     item.classList.add('active');
                     if (icon) icon.textContent = '−';
+                    questionBtn.setAttribute('aria-expanded', 'true');
                 }
             });
         }
