@@ -18,6 +18,17 @@
     --shadow-md: 0 8px 20px -6px rgba(17, 42, 33, 0.10);
     --shadow-lg: 0 14px 28px -10px rgba(17, 42, 33, 0.14);
     --radius: 10px;
+
+    /* Paleta Verde Parque (usada na seção "Como funciona") */
+    --verde-principal: #1b4d3e;   /* Verde Floresta/Escuro (para títulos e destaque do número) */
+    --verde-suave: #2d6a4f;       /* Verde Média Intensidade (para hover e detalhes) */
+    --verde-destaque: #52b788;    /* Verde Folha Acentuado */
+    --verde-fundo-card: #e8f5e9;  /* Verde Menta Suave (fundo das tags) */
+    --fundo-secao: #f4f9f5;       /* Fundo Neutro Verde Parque */
+    --texto-titulo: #112a21;      /* Verde Quase Preto para Títulos */
+    --texto-corpo: #3a4a42;       /* Verde Acizentado para Leitura */
+    --card-fundo: #ffffff;
+    --borda-card: #d8e6dd;
 }
 
 * {
@@ -47,7 +58,6 @@ body {
 }
 
 .logo-highlight { color: var(--park-green-light); }
-.badge-park-green { background-color: var(--park-green-soft); color: var(--park-green-dark); }
 .badge-light { background-color: rgba(255,255,255,0.2); color: #ffffff; }
 
 .section-park-green {
@@ -64,7 +74,10 @@ body {
     align-items: center;
     padding: 24px 0;
     border-bottom: 1px solid rgba(0,0,0,0.05);
+    gap: 24px;
 }
+
+.navbar-brand { display: flex; align-items: center; gap: 16px; }
 
 .logo {
     font-size: 1.6rem;
@@ -74,9 +87,20 @@ body {
     letter-spacing: -0.5px;
 }
 
+.navbar-divider { width: 1px; height: 30px; background: var(--border-light); }
+
+.navbar-tagline {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
 .nav-links { display: flex; gap: 28px; list-style: none; }
-.nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease; }
+.nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease; white-space: nowrap; }
 .nav-links a:hover { color: var(--park-green); }
+
+.btn-nav { padding: 12px 24px; font-size: 0.9rem; box-shadow: none; white-space: nowrap; }
 
 /* BOTÕES */
 .btn-primary {
@@ -102,61 +126,79 @@ body {
 
 .btn-large { width: 100%; font-size: 1.15rem; padding: 20px; margin-top: 24px; }
 
-/* HERO - VÍDEO + IMAGENS VERTICAIS */
+/* HERO (imagem única) */
 .hero {
-    background-color: var(--park-green-bg);
-    padding: 80px 0 100px 0;
+    background-color: #ffffff;
 }
 
-/* Largura do bloco texto+imagem: menor que antes para que os dois fiquem
-   agrupados mais perto do centro da tela, em vez de espalhados nas bordas */
-.hero .hero-content {
-    max-width: 1280px;
-}
-
-.hero-content {
-    display: grid;
-    grid-template-columns: minmax(300px, 440px) minmax(340px, 893px);
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-}
-
-.hero-text { max-width: 440px; }
-
-.hero-brand {
+.hero-image-link {
     display: block;
-    font-size: 2.125rem;
-    margin-bottom: 14px;
+    line-height: 0;
+    /* Centraliza a imagem e evita que ela seja esticada além do tamanho
+       original (1365px) em telas grandes, o que deixaria o hero borrado */
+    max-width: 1365px;
+    margin: 0 auto;
 }
 
-.hero-text .badge { font-size: 1.0625rem; padding: 6px 18px; }
-
-.hero-text h1 {
-    font-size: 3.25rem;
-    font-weight: 800;
-    color: var(--primary);
-    line-height: 1.15;
-    letter-spacing: -1px;
-    margin-bottom: 20px;
-}
-
-.hero-text p { font-size: 1.3125rem; color: var(--text-muted); margin-bottom: 26px; }
-.hero-text .btn-primary { font-size: 1.25rem; padding: 20px 45px; }
-.hero-social-proof p { font-size: 1.0625rem; font-weight: 600; color: var(--park-green-dark); }
-
-/* MOCKUP DO SITE EM MÚLTIPLOS DISPOSITIVOS */
-.hero-devices-mockup {
-    width: 100%;
-    max-width: 893px;
-}
-
-.hero-devices-mockup img {
+.hero-image-link img {
     width: 100%;
     height: auto;
     display: block;
-    filter: drop-shadow(0 24px 45px rgba(27, 67, 50, 0.22));
+    /* Degradê transparente nas bordas esquerda/direita, fundindo a imagem
+       com o fundo branco da seção */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
 }
+
+/* DESTAQUE RÁPIDO ABAIXO DO HERO */
+.hero-highlight-section {
+    padding: 56px 0;
+    background-color: #ffffff;
+}
+
+.hero-highlight-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.hero-highlight-text {
+    border-left: 3px solid var(--park-green);
+    padding-left: 20px;
+}
+
+.hero-highlight-text h3 { font-size: 1.3rem; font-weight: 800; color: var(--primary); line-height: 1.3; margin-bottom: 10px; }
+.hero-highlight-text p { font-size: 0.92rem; color: var(--text-muted); }
+
+.hero-highlight-features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.hero-highlight-item {
+    padding: 0 24px;
+    border-left: 1px solid var(--border-light);
+}
+
+.hero-highlight-item:first-child { border-left: none; padding-left: 0; }
+
+.hero-highlight-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--park-green-bg);
+    color: var(--park-green);
+    margin-bottom: 14px;
+}
+
+.hero-highlight-icon svg { width: 22px; height: 22px; }
+
+.hero-highlight-item h4 { font-size: 0.98rem; font-weight: 700; color: var(--park-green-dark); margin-bottom: 6px; line-height: 1.3; }
+.hero-highlight-item p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
 /* PROBLEMAS / ANÁLISE DE MERCADO */
 .problem-section { padding: 100px 0; background-color: #ffffff; }
@@ -328,8 +370,10 @@ body {
 .pricing-box { max-width: 640px; margin: 40px auto 0 auto; background: #ffffff; padding: 44px 36px; border-radius: 24px; border: 2px solid var(--park-green); box-shadow: var(--shadow-lg); }
 .pricing-header { font-size: 1.5rem; font-weight: 800; color: var(--park-green-dark); }
 .pricing-subheader { color: var(--text-muted); margin-bottom: 28px; font-size: 0.95rem; }
-.pricing-features { list-style: none; text-align: left; margin-bottom: 32px; }
-.pricing-features li { padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: var(--text-dark); font-weight: 500; font-size: 0.95rem; }
+.pricing-features { list-style: none; text-align: left; margin: 20px 0; padding: 0; }
+.pricing-features li { padding: 8px 0; border-bottom: 1px solid var(--park-green-bg); color: var(--texto-corpo); font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+.pricing-features li:last-child { border-bottom: none; }
+.pricing-features .check { color: var(--verde-principal); font-weight: bold; font-size: 1.1rem; }
 .price-container { margin: 28px 0; padding: 20px; background-color: var(--bg-light); border-radius: var(--radius); border: 1px solid var(--border-light); }
 .installments { font-size: 1.4rem; color: var(--park-green); margin: 4px 0; font-weight: 800; }
 .cash-price { font-size: 1rem; color: var(--text-muted); }
@@ -389,32 +433,21 @@ body {
 
 /* MEDIA QUERIES */
 @media (max-width: 992px) {
-    .hero-content, .solution-container { grid-template-columns: 1fr; gap: 40px; }
-    .hero-text { max-width: 100%; text-align: center; margin: 0 auto; }
-    .hero-devices-mockup { justify-self: center; }
-    .hero-text h1 { font-size: 3.125rem; }
+    .solution-container { grid-template-columns: 1fr; gap: 40px; }
+    .navbar-tagline { display: none; }
+    .hero-highlight-grid { grid-template-columns: 1fr; gap: 32px; }
+    .hero-highlight-features { grid-template-columns: repeat(2, 1fr); gap: 32px 16px; }
+    .hero-highlight-item { border-left: none; padding: 0; }
     .footer-container { grid-template-columns: 1fr; gap: 32px; }
     .portfolio-grid-large { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
     .nav-links { display: none; }
-    .hero-text h1 { font-size: 2.625rem; }
+    .navbar-divider { display: none; }
     .pricing-box { padding: 32px 20px; }
+    .hero-highlight-features { grid-template-columns: 1fr; }
     .footer-bottom-content { flex-direction: column; gap: 10px; text-align: center; }
-}
-
-/* Paleta Verde Parque */
-:root {
-    --verde-principal: #1b4d3e;   /* Verde Floresta/Escuro (para títulos e destaque do número) */
-    --verde-suave: #2d6a4f;       /* Verde Média Intensidade (para hover e detalhes) */
-    --verde-destaque: #52b788;    /* Verde Folha Acentuado */
-    --verde-fundo-card: #e8f5e9;  /* Verde Menta Suave (fundo das tags) */
-    --fundo-secao: #f4f9f5;       /* Fundo Neutro Verde Parque */
-    --texto-titulo: #112a21;      /* Verde Quase Preto para Títulos */
-    --texto-corpo: #3a4a42;       /* Verde Acizentado para Leitura */
-    --card-fundo: #ffffff;
-    --borda-card: #d8e6dd;
 }
 
 /* Seção do Processo (3 Passos) */
@@ -506,33 +539,6 @@ body {
     .steps-section {
         padding: 60px 15px;
     }
-}
-
-.pricing-features {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
-    text-align: left;
-}
-
-.pricing-features li {
-    font-size: 0.95rem;
-    color: #3a4a42; /* Verde acinzentado para leitura */
-    padding: 8px 0;
-    border-bottom: 1px solid #e8f5e9;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.pricing-features li:last-child {
-    border-bottom: none;
-}
-
-.pricing-features .check {
-    color: #1b4d3e; /* Verde Parque/Floresta */
-    font-weight: bold;
-    font-size: 1.1rem;
 }
 
 .payment-badge {
