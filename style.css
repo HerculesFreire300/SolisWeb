@@ -503,6 +503,25 @@ body {
     .pricing-box { padding: 32px 20px; }
     .hero-highlight-features { grid-template-columns: 1fr; }
     .footer-bottom-content { flex-direction: column; gap: 10px; text-align: center; }
+
+    /* Títulos de seção grandes demais no celular */
+    .problem-section h2,
+    .solution-text h2,
+    .features-section h2,
+    .steps-section h2,
+    .faq-section h2 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .problem-section h2,
+    .solution-text h2,
+    .features-section h2,
+    .steps-section h2,
+    .faq-section h2 {
+        font-size: 1.4rem;
+    }
 }
 
 @media (max-width: 360px) {
